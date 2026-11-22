@@ -17,8 +17,8 @@ public sealed class SiegeSession : MonoBehaviour, ISiegeDeploymentHost
     [SerializeField]
     private Transform[] shipDocks = new Transform[4];
     [SerializeField, Tooltip("大型建筑蓝图基地的运行管理器，独立于舰船。")]
-    private WorldBuildingManager buildings;
-    public WorldBuildingManager Buildings => buildings;
+    private BlueprintStructureRegistry buildings;
+    public BlueprintStructureRegistry Buildings => buildings;
 
     [SerializeField, Tooltip("机库自动出入库航线与失能报废参数。")]
     private SiegeFlightSettings flightSettings = new SiegeFlightSettings();

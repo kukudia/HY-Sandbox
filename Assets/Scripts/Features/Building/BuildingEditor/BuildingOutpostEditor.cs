@@ -252,7 +252,7 @@ public sealed class BuildingOutpostEditor : MonoBehaviour
 
     private static bool Parse(InputField field, out float value)
     {
-        return float.TryParse(field.text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) && WorldBuildingValidation.Finite(value);
+        return float.TryParse(field.text, NumberStyles.Float, CultureInfo.InvariantCulture, out value) && BlueprintStructureValidation.Finite(value);
     }
 
     public void RemoveDefender()

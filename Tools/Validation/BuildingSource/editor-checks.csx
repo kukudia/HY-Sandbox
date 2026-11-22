@@ -9,14 +9,13 @@ var saves = host.AddComponent<SaveManager>();
 var binding = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
 var assembly = typeof(SaveManager).Assembly;
 var storeType = assembly.GetType("BlueprintFileStore");
-var libraryType = assembly.GetType("WorldBuildingLibrary");
+var libraryType = assembly.GetType("BlueprintStructureLibrary");
 var store = System.Activator.CreateInstance(storeType, new object[] { directory });
 var source = Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings").First(asset => JsonUtility.FromJson<BlockDataList>(asset.text).blocks.Count > 0);
 var library = System.Activator.CreateInstance(libraryType, true);
 var load = libraryType.GetMethod("Load", binding);
 var names = (System.Collections.Generic.List<string>)libraryType.GetField("Names", binding).GetValue(library);
 var errors = (System.Collections.Generic.List<string>)libraryType.GetField("Errors", binding).GetValue(library);
-var catalog = ScriptableObject.CreateInstance<WorldBuildingCatalog>();
 System.Action<bool,string> assert = (ok,message) => { if (!ok) throw new System.Exception(message); checks.Add(message); };
 try
 {
@@ -48,21 +47,8 @@ try
     assert(!names.Contains(source.name) && names.Contains("UserOnly"), "World platform rejection does not resurrect same-name packaged template");
     System.IO.File.Delete(lockedPath);
     System.IO.File.Delete(System.IO.Path.Combine(directory,source.name+".json"));
-    var manager=host.AddComponent<WorldBuildingManager>();
-    catalog.blueprints=new[]{source};
-    catalog.initialBuildings=new[]{new WorldBuildingCatalog.InitialBuilding{blueprint=source}};
-    typeof(WorldBuildingManager).GetField("catalog",binding).SetValue(manager,catalog);
-    var palette=host.AddComponent<WorldBuildingPalette>();
-    typeof(WorldBuildingPalette).GetField("manager",binding).SetValue(palette,manager);
-    palette.RefreshCatalog();
-    var paletteNames=(System.Collections.Generic.List<string>)typeof(WorldBuildingPalette).GetField("names",binding).GetValue(palette);
-    assert(paletteNames.SequenceEqual(new[]{"UserOnly"}), "WorldLab palette reads the shared store and ignores Catalog blueprint content");
     System.IO.File.Delete(System.IO.Path.Combine(directory,source.name+".json"));
-    manager.ResetBuildings();
-    assert(manager.Buildings.Count==0 && manager.LastMessage.Contains("not found in BuildingBlueprints"), "Initial layout skips packaged blueprint missing from shared store");
     System.IO.File.Delete(System.IO.Path.Combine(directory,"UserOnly.json"));
-    palette.RefreshCatalog();
-    assert(paletteNames.Count==0, "Refreshing after deleting the last valid file leaves WorldLab palette empty");
     load.Invoke(library,new object[]{store});
     assert(names.Count==0, "Reusing the library after deletion clears previous templates");
     routine=(System.Collections.IEnumerator)libraryType.GetMethod("LoadRoutine",binding).Invoke(library,new object[]{store});
@@ -79,7 +65,6 @@ finally
 {
     SaveManager.instance=previous;
     UnityEngine.Object.DestroyImmediate(host);
-    UnityEngine.Object.DestroyImmediate(catalog);
     System.IO.Directory.Delete(directory,true);
 }
 System.IO.File.WriteAllText("Temp/BuildingSource/isolated.json",Newtonsoft.Json.JsonConvert.SerializeObject(checks,Newtonsoft.Json.Formatting.Indented));

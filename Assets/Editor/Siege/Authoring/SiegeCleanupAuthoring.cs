@@ -26,10 +26,10 @@ public static class SiegeCleanupAuthoring
         string[] paths =
         {
             "Assets/Scenes/SiegeGameplay.unity",
-            "Assets/Scenes/Siege.unity",
+            "Assets/Scenes/Research/Siege.unity",
             "Assets/Scenes/SiegeStress.unity",
-            "Assets/Scenes/SiegeMixedStress.unity",
-            "Assets/Scenes/SiegeLargeStress.unity"
+            "Assets/Scenes/Research/SiegeMixedStress.unity",
+            "Assets/Scenes/Research/SiegeLargeStress.unity"
         };
         foreach (string path in paths)
         {

@@ -161,11 +161,11 @@ public sealed class ProjectileTurret : Turret
         return targetPosition;
     }
 
-    protected override void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)
+    protected override bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)
     {
         if (_projectilePrefab == null)
         {
-            return;
+            return false;
         }
 
         bool fired = false;
@@ -199,5 +199,7 @@ public sealed class ProjectileTurret : Turret
             _recoilElapsed = 0f;
             _recoiling = true;
         }
+
+        return fired;
     }
 }

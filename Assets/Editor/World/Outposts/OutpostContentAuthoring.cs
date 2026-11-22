@@ -279,7 +279,7 @@ public static class OutpostContentAuthoring
                 block.posZ = position.z;
             }
 
-            WorldBuildingValidation.ValidateBlueprint(data);
+            BlueprintStructureValidation.ValidateBlueprint(data);
             File.WriteAllText(path, JsonUtility.ToJson(data, true), new UTF8Encoding(false));
         }
 
@@ -328,7 +328,7 @@ public static class OutpostContentAuthoring
 
     private static void Write(string name, BlockDataList data, bool overwrite)
     {
-        WorldBuildingValidation.ValidateBlueprint(data);
+        BlueprintStructureValidation.ValidateBlueprint(data);
         string path = Root + "/Buildings/" + name + ".json";
         if (overwrite || !File.Exists(path))
         {

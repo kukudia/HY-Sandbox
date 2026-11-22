@@ -99,10 +99,10 @@ public static class SiegeIslandAuthoring
         string[] paths =
         {
             "Assets/Scenes/SiegeGameplay.unity",
-            "Assets/Scenes/Siege.unity",
+            "Assets/Scenes/Research/Siege.unity",
             "Assets/Scenes/SiegeStress.unity",
-            "Assets/Scenes/SiegeMixedStress.unity",
-            "Assets/Scenes/SiegeLargeStress.unity"
+            "Assets/Scenes/Research/SiegeMixedStress.unity",
+            "Assets/Scenes/Research/SiegeLargeStress.unity"
         };
         foreach (string path in paths)
         {
@@ -191,7 +191,7 @@ public static class SiegeIslandAuthoring
             hostData.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        WorldBuildingManager buildings = stage != null ? stage.GetComponent<WorldBuildingManager>() : session != null ? session.Buildings : null;
+        BlueprintStructureRegistry buildings = stage != null ? stage.GetComponent<BlueprintStructureRegistry>() : session != null ? session.Buildings : null;
         if (buildings != null)
         {
             var buildingData = new SerializedObject(buildings);

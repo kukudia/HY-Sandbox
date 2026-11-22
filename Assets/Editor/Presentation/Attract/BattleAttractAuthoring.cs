@@ -71,9 +71,9 @@ public static class BattleAttractAuthoring
         sun.color = new Color(1f, .72f, .48f);
         sun.intensity = 1.7f;
         var rootStage = new GameObject("Battle Attract Stage");
-        WorldBuildingManager buildings = rootStage.AddComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry buildings = rootStage.AddComponent<BlueprintStructureRegistry>();
         var buildingData = new SerializedObject(buildings);
-        buildingData.FindProperty("initializeOnStart").boolValue = false;
+        buildingData.FindProperty("useIndividualRenderers").boolValue = false;
         buildingData.FindProperty("collapseUnsupported").boolValue = false;
         buildingData.ApplyModifiedPropertiesWithoutUndo();
         BattleAttractStage stage = rootStage.AddComponent<BattleAttractStage>();

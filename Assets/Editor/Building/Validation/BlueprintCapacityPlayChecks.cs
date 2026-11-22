@@ -83,13 +83,13 @@ public static class BlueprintCapacityPlayChecks
     {
         root = new GameObject("Owned large building capacity validation");
         root.SetActive(false);
-        WorldBuildingManager manager = root.AddComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = root.AddComponent<BlueprintStructureRegistry>();
         var settings = new SerializedObject(manager);
-        settings.FindProperty("initializeOnStart").boolValue = false;
+        settings.FindProperty("useIndividualRenderers").boolValue = false;
         settings.ApplyModifiedPropertiesWithoutUndo();
-        typeof(WorldBuildingManager).GetProperty("LoadingFrameBudgetMilliseconds", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(manager, 2f);
+        typeof(BlueprintStructureRegistry).GetProperty("LoadingFrameBudgetMilliseconds", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(manager, 2f);
         BlockDataList design = CreateDesign();
-        WorldBuildingState state = State(design, "cancelled", 0);
+        BlueprintStructureState state = State(design, "cancelled", 0);
         bool published = false;
         IEnumerator loading = Restore(manager, state, building => published = true);
         try
@@ -105,10 +105,10 @@ public static class BlueprintCapacityPlayChecks
         Require(
             !published && manager.Buildings.Count == 0 && root.transform.childCount == 0,
             "disposing staged restore rolls back all partial owned objects");
-        var buildings = new List<BuildingRuntime>();
+        var buildings = new List<BlueprintStructureRuntime>();
         for (int i = 0; i < 4; i++)
         {
-            BuildingRuntime restored = null;
+            BlueprintStructureRuntime restored = null;
             loading = Restore(manager, State(design, "building-" + i, i), building => restored = building);
             try
             {
@@ -132,9 +132,9 @@ public static class BlueprintCapacityPlayChecks
             manager.Buildings.Sum(building => building.Blocks.Count) == 8400 && manager.CanAddBlocks(1),
             "production manager owns8400 modules and still accepts additions");
         root.SetActive(true);
-        foreach (BuildingRuntime building in buildings)
+        foreach (BlueprintStructureRuntime building in buildings)
         {
-            IEnumerator activation = (IEnumerator)typeof(BuildingRuntime).GetMethod("ActivateRoutine", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(building, null);
+            IEnumerator activation = (IEnumerator)typeof(BlueprintStructureRuntime).GetMethod("ActivateRoutine", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(building, null);
             try
             {
                 while (activation.MoveNext())
@@ -151,7 +151,7 @@ public static class BlueprintCapacityPlayChecks
         Require(
             buildings.All(building => building.IsOperational && building.Anchored),
             "all four actual large buildings activate anchored");
-        BuildingRuntime first = buildings[0];
+        BlueprintStructureRuntime first = buildings[0];
         Block removed = first.Blocks.Last();
         string missing = removed.uniqueId;
         removed.canExplode = false;
@@ -162,7 +162,7 @@ public static class BlueprintCapacityPlayChecks
             design,
             null
         };
-        bool repaired = (bool)typeof(BuildingRuntime).GetMethod("TryRefit", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(first, arguments);
+        bool repaired = (bool)typeof(BlueprintStructureRuntime).GetMethod("TryRefit", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(first, arguments);
         Require(
             repaired && first.Blocks.Count == 2100 && first.Blocks.Any(block => block.uniqueId == missing),
             "production refit restores a missing identity beyond8192 aggregate modules");
@@ -171,9 +171,12 @@ public static class BlueprintCapacityPlayChecks
             "refit preserves total module count exactly");
     }
 
-    private static IEnumerator Restore(WorldBuildingManager manager, WorldBuildingState state, Action<BuildingRuntime> complete)
+    private static IEnumerator Restore(
+        BlueprintStructureRegistry manager,
+        BlueprintStructureState state,
+        Action<BlueprintStructureRuntime> complete)
     {
-        return (IEnumerator)typeof(WorldBuildingManager).GetMethod("RestoreBuildingRoutine", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(manager, new object[] { state, complete });
+        return (IEnumerator)typeof(BlueprintStructureRegistry).GetMethod("RestoreBuildingRoutine", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(manager, new object[] { state, complete });
     }
 
     private static BlockDataList CreateDesign()
@@ -199,9 +202,9 @@ public static class BlueprintCapacityPlayChecks
         return design;
     }
 
-    private static WorldBuildingState State(BlockDataList design, string id, int slot)
+    private static BlueprintStructureState State(BlockDataList design, string id, int slot)
     {
-        return new WorldBuildingState
+        return new BlueprintStructureState
         {
             instanceId = "capacity-" + id,
             blueprintName = "Owned capacity fixture",

@@ -170,14 +170,14 @@ public static class HangarShellBlueprint
         return result;
     }
 
-    public static WorldBuildingState ExpandState(WorldBuildingState source)
+    public static BlueprintStructureState ExpandState(BlueprintStructureState source)
     {
         if (source.blueprint.hangarShellVersion == Version)
         {
             return source;
         }
 
-        WorldBuildingState result = JsonUtility.FromJson<WorldBuildingState>(JsonUtility.ToJson(source));
+        BlueprintStructureState result = JsonUtility.FromJson<BlueprintStructureState>(JsonUtility.ToJson(source));
         result.blueprint = Expand(result.blueprint);
         float[] health = new float[result.blueprint.blocks.Count];
         Array.Copy(source.durability, health, source.durability.Length);

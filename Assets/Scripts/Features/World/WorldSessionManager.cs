@@ -20,7 +20,7 @@ public sealed class WorldSessionManager : MonoBehaviour
     [SerializeField]
     private ProceduralVoxelWorld world;
     [SerializeField]
-    private WorldBuildingManager buildings;
+    private BlueprintStructureRegistry buildings;
     [SerializeField]
     private GameObject worldRoot;
     [SerializeField]
@@ -28,7 +28,7 @@ public sealed class WorldSessionManager : MonoBehaviour
     [SerializeField]
     private WorldLoadingPanel loadingPanel;
     private readonly Dictionary<GameObject, bool> environmentStates = new Dictionary<GameObject, bool>();
-    private WorldBuildingStreaming buildingStreaming;
+    private BlueprintStructureStreaming buildingStreaming;
     private OutpostEncounterDirector outposts;
     public OutpostEncounterDirector Outposts => outposts;
 
@@ -72,7 +72,7 @@ public sealed class WorldSessionManager : MonoBehaviour
     public bool IsEntering => entering;
     public int DormantBuildingCount => buildingStreaming?.DormantCount ?? 0;
     public ProceduralVoxelWorld World => world;
-    public WorldBuildingManager Buildings => buildings;
+    public BlueprintStructureRegistry Buildings => buildings;
     public WorldGenerationSettings Settings => sessionSettings != null ? sessionSettings : settings;
     public IReadOnlyList<string> BuildingTemplates { get; private set; } = Array.Empty<string>();
 
@@ -140,7 +140,7 @@ public sealed class WorldSessionManager : MonoBehaviour
     {
         // 先让UI呈现一帧，再读取和预加载资源；Resources异步请求避免首次同步加载整套模型。
         yield return null;
-        var library = new WorldBuildingLibrary();
+        var library = new BlueprintStructureLibrary();
         IEnumerator load = library.LoadRoutine(SaveManager.GetBuildingBlueprintFiles());
         try
         {
@@ -164,7 +164,7 @@ public sealed class WorldSessionManager : MonoBehaviour
 
         buildings.LoadingFrameBudgetMilliseconds = Settings.LoadingFrameBudgetMilliseconds;
         world.InitializeStreaming(Settings, SessionSeed, library.Templates);
-        buildingStreaming = new WorldBuildingStreaming(world, buildings, Settings, library);
+        buildingStreaming = new BlueprintStructureStreaming(world, buildings, Settings, library);
         outposts = new OutpostEncounterDirector(buildings);
         regionStreaming = new WorldRegionStreaming(world, buildingStreaming, Settings);
         streamingFocus = world.SpawnPosition;

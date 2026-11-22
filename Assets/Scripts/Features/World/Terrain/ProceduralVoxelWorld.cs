@@ -124,7 +124,7 @@ public sealed class ProceduralVoxelWorld : MonoBehaviour
     /// <summary>Install caller-generated finite data; meshes, colliders and destruction use the normal world pipeline.</summary>
     public void InitializeFinite(VoxelWorldData terrain, float cellWidth, int terrainSeed)
     {
-        if (terrain == null || !terrain.IsValid || terrain.IsStreaming || !WorldBuildingValidation.Finite(cellWidth) || cellWidth <= 0f)
+        if (terrain == null || !terrain.IsValid || terrain.IsStreaming || !BlueprintStructureValidation.Finite(cellWidth) || cellWidth <= 0f)
         {
             throw new ArgumentException("Finite terrain requires valid data and a positive cell width.");
         }

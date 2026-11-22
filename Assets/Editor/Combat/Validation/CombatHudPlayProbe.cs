@@ -52,7 +52,7 @@ public static class CombatHudPlayProbe
     [MenuItem("Tools/HY-Sandbox/Combat/Validate shared HUD in legacy Siege")]
     public static void RunLegacy()
     {
-        Begin("legacy", "Assets/Scenes/Siege.unity");
+        Begin("legacy", "Assets/Scenes/Research/Siege.unity");
     }
 
     public static void RunFlow()

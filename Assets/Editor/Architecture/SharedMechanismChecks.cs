@@ -257,9 +257,9 @@ public static class SharedMechanismChecks
         source.maxLinearVelocity = 100f;
         source.maxAngularVelocity = 20f;
         object motion = Activator.CreateInstance(RuntimeType("RigidbodyMotion"), Members, null, new object[] { source }, null);
-        WorldBuildingManager manager = NewObject("Debris manager").AddComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = NewObject("Debris manager").AddComponent<BlueprintStructureRegistry>();
         manager.enabled = false;
-        BuildingRuntime building = source.gameObject.AddComponent<BuildingRuntime>();
+        BlueprintStructureRuntime building = source.gameObject.AddComponent<BlueprintStructureRuntime>();
         Set(building, "manager", manager);
         Set(building, "body", source);
         Set(building, "foundationData", new BuildingFoundationData());

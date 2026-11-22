@@ -252,7 +252,7 @@ public static class WorldSessionEdgeChecks
         Check(
             !session.World.HasColumn(missingColumn),
             "the dynamic-building destination is within unload radius but has no generated ground");
-        BuildingRuntime building = session.Buildings.Buildings.First();
+        BlueprintStructureRuntime building = session.Buildings.Buildings.First();
         string identity = building.InstanceId;
         Durability durability = building.GetComponentsInChildren<Durability>().First();
         durability.currentDurability = durability.maxDurability * 0.73f;

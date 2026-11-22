@@ -27,6 +27,7 @@ internal sealed class TurretTargetSelector
     }
 
     private Vector3 localHit;
+    private Collider hitSurface;
     internal int LastSearchProbes
     {
         get; private set;
@@ -92,9 +93,20 @@ internal sealed class TurretTargetSelector
         _hitLayers = hitLayers;
     }
 
+    internal bool UpdateTrackedPoint(ControlUnit target, float range)
+    {
+        if (hitSurface == null || !hitSurface.enabled || !hitSurface.gameObject.activeInHierarchy || !hitSurface.transform.IsChildOf(target.transform))
+        {
+            return false;
+        }
+
+        SurfacePoint = hitSurface.transform.TransformPoint(localHit);
+        return (SurfacePoint - _origin).sqrMagnitude <= range * range;
+    }
+
     internal bool HasLineOfSight(ControlUnit owner, ControlUnit target, float range)
     {
-        return Probe(owner, target, target.transform.TransformPoint(localHit), range);
+        return Probe(owner, target, SurfacePoint, range);
     }
 
     private bool Probe(ControlUnit owner, ControlUnit target, Vector3 point, float range)
@@ -155,6 +167,11 @@ internal sealed class TurretTargetSelector
             bool belongs = hit.collider.GetComponentInParent<ControlUnit>() == target;
             visible = belongs;
             end = hit.point;
+            if (visible)
+            {
+                hitSurface = hit.collider;
+            }
+
             if (!visible)
             {
                 break;
@@ -170,7 +187,7 @@ internal sealed class TurretTargetSelector
         if (visible)
         {
             SurfacePoint = end;
-            localHit = target.transform.InverseTransformPoint(end);
+            localHit = hitSurface.transform.InverseTransformPoint(end);
         }
 
         return visible;
@@ -193,6 +210,7 @@ internal sealed class TurretTargetSelector
         ControlUnit best = null;
         float bestDistance = float.PositiveInfinity;
         Vector3 bestPoint = default;
+        Collider bestSurface = null;
         int start = phase;
         phase = (phase + 1) % 6;
         foreach (ControlUnit unit in units)
@@ -238,6 +256,7 @@ internal sealed class TurretTargetSelector
                     best = unit;
                     bestDistance = distance;
                     bestPoint = SurfacePoint;
+                    bestSurface = hitSurface;
                 }
 
                 break;
@@ -247,7 +266,8 @@ internal sealed class TurretTargetSelector
         if (best != null)
         {
             SurfacePoint = bestPoint;
-            localHit = best.transform.InverseTransformPoint(bestPoint);
+            hitSurface = bestSurface;
+            localHit = bestSurface.transform.InverseTransformPoint(bestPoint);
         }
 
         return best;

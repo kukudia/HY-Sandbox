@@ -30,7 +30,7 @@ public static class SiegeRefit
         string ignoredUnitId,
         out string reason)
     {
-        WorldBuildingValidation.ValidateBlueprint(blueprint);
+        BlueprintStructureValidation.ValidateBlueprint(blueprint);
         return IsGeometryClear(blueprint, position, rotation, ignoredUnitId, out reason);
     }
 

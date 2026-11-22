@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public static class WorldLabAuthoring
 {
-    public const string ScenePath = "Assets/Scenes/WorldLab.unity";
+    public const string ScenePath = "Assets/Scenes/Research/WorldLab.unity";
     private const string AssetRoot = "Assets/WorldLab";
     [MenuItem("Tools/HY-Sandbox/World/Create or open World Lab")]
     public static void CreateOrOpen()

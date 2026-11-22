@@ -1,14 +1,22 @@
 # HY-Sandbox 风险登记与行为契约
+### R36 · 共享蓝图装配和炮口检查（2026-11-22）
+
+| 入口 | 触发、范围与失效条件 | 保留原因与验证范围 |
+| --- | --- | --- |
+| BlueprintAssemblyBuilder.Build / BlueprintStructureRuntime.InitializeRoutine / ActivateRoutine | 每次生成只访问该蓝图方块。建筑分帧创建和启用，按原始顺序应用耐久，整批生成连接后发布为可战斗单位。取消恢复时销毁未完成实例。 | 尺寸、材质、耐久与碰撞面依赖块实例。飞船批量连接和建筑批量连接使用同一构建器。 |
+| BlockConnectionGraph.Prepare | 每次结构分析检查当前成员。首次索引直接复用有效批量连接。连接失效、根缩放或新增成员会重新探测。移除成员保留局部重探。 | 断裂与支撑共用同一有界连接结果。建筑占地回归通过，密集战斗还需复录。 |
+| Turret.RefreshTarget / AimAndFire | 每物理步只读取上次命中的碰撞体及其局部坐标。碰撞体禁用、重组或超出射程即失效。完整索敌仍有共享预算。只有冷却完成且炮口对准才做发射前遮挡查询。 | 保留实际命中和阻挡优先级。隔离 Siege 伤害门控后炮塔 32 项 Play 检查全部通过；尚未采集 Player 波次的可见性查询数量和帧时间。 |
+
 
 地形失撑只在当前同步调用中移交 BFS 分组；合并地基会修改列表，调用前必须放弃缓存。两块建筑失撑的 Play 探针确认连接图准备一次、主体清空、碎块共享动态刚体。战斗长帧仍需同场景复录。
 
 ControlUnit.UpdatePower 只在成员、工作请求或功率配置变化后遍历本单位发电机与负载。请求者退出时须撤销请求；没有周期校正。RefreshChildren 在结构变化时重新绑定后代，按最近的 ControlUnit 隔离嵌套成员。原本依赖邻近建筑或其他舰船发电的蓝图需要本机电源；独立模块无电。
 
-BuildingRuntime.RefreshTerrainSupport 在地形脏区域命中后按建筑检查支撑：连接图版本变化才重建组清单，地面接触每次重新取样，任一组失撑仍走完整重组。连接组检查只适用于建筑主体；脱锚阈值仍由经理逐次判定。SiegeRefit 自动维修只在单舰同步调用内复用归属快照，不跨船缓存；阻挡、扣费规则不变。需用相同破坏与返航窗口复测耗时。
+BlueprintStructureRuntime.RefreshTerrainSupport 在地形脏区域命中后按建筑检查支撑：连接图版本变化才重建组清单，地面接触每次重新取样，任一组失撑仍走完整重组。连接组检查只适用于建筑主体；脱锚阈值仍由经理逐次判定。SiegeRefit 自动维修只在单舰同步调用内复用归属快照，不跨船缓存；阻挡、扣费规则不变。需用相同破坏与返航窗口复测耗时。
 
 EnemyController.ConfigureHoverThrusters 遍历本机悬停器：移动决策刷新、数组替换、重新启用或每 0.25 模拟秒校正；保留外部改写恢复能力，需验证接管与返航切换。炮塔按同一射线最近距离判断遮挡，等距遮挡优先。建筑按单次爆炸的保守包围盒排队，可能包含空隙中的建筑；逐格存档事件保持原序。以上需 Player 复测。
 
-BuildingRuntime.OnFragmentDetached：每次多块碎片分离时扫描一次该碎片与主体成员，保留存档顺序；临时集合在回调结束时清空。基线建筑回调峰值 162.06 ms，未证明全部来自移除操作；仍需大建筑断裂与存档回读复测。
+BlueprintStructureRuntime.OnFragmentDetached：每次多块碎片分离时扫描一次该碎片与主体成员，保留存档顺序；临时集合在回调结束时清空。基线建筑回调峰值 162.06 ms，未证明全部来自移除操作；仍需大建筑断裂与存档回读复测。
 
 Siege 地形变化按建筑去重，每物理步每个受影响建筑最多调用一次 RefreshTerrainSupport，重新分组需要检查该建筑连接与支撑；重算前清除支撑缓存。CheckFleetStalemate 在战斗中每 0.25 秒最多检查一次在场舰艇的缓存推进器及可用武器，遇到可行动舰立即终止，连续五秒才允许无击杀奖励退场；需要实际双失能场景验证。虚空检查每半秒只查询单位及 Debris 标记。
 
@@ -177,7 +185,7 @@ P1：优先处理的数据安全问题；P2：条件性行为/性能风险或关
 ### R17 · P2 · 条件性风险：世界快照接受未知版本
 
 - 触发/后果：未来版本快照被旧程序读取；LoadSnapshot仅特殊迁移version1，其余直接返回。字段默认化后可能把未知格式当成当前格式使用。
-- 证据：[WorldLabPersistence.LoadSnapshot](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs)。已具备16MB上限、严格UTF8与临时写入/备份，不将它误报为裸写文件。
+- 证据：[WorldLabPersistence.LoadSnapshot](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs)。已具备16MB上限、严格UTF8与临时写入/备份，不将它误报为裸写文件。
 - 下一步：显式支持版本范围、逐版本迁移；旧版/当前/未来/损坏样本验证拒绝未知版本且不覆盖原文件。
 
 ### R18 · P2 · 条件性风险：对象池限制空闲数量但不限制活跃峰值

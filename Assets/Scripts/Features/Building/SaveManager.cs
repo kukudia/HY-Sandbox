@@ -293,7 +293,7 @@ public class SaveManager : MonoBehaviour
         }
 
         data.foundation = BuildingFootprint.Calculate(data.blocks, BuildManager.instance.FootprintPadding);
-        WorldBuildingValidation.ValidateBlueprint(data);
+        BlueprintStructureValidation.ValidateBlueprint(data);
         string name = template;
         for (int i = 1; File.Exists(GetEditedStructurePath(name)); i++)
         {

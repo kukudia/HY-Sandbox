@@ -52,7 +52,7 @@ public static class SiegeBuildingDamageChecks
 
     private static void CheckPartialBlast(List<string> checks, bool reverse)
     {
-        GameObject owner = CreateTower(reverse, out WorldBuildingManager manager, out BuildingRuntime tower);
+        GameObject owner = CreateTower(reverse, out BlueprintStructureRegistry manager, out BlueprintStructureRuntime tower);
         try
         {
             Block bottom = tower.Blocks.Single(block => block.transform.localPosition.y == 0.5f);
@@ -87,7 +87,7 @@ public static class SiegeBuildingDamageChecks
 
     private static void CheckExplosiveLoss(List<string> checks, bool projectile)
     {
-        GameObject owner = CreateTower(false, out WorldBuildingManager manager, out BuildingRuntime tower);
+        GameObject owner = CreateTower(false, out BlueprintStructureRegistry manager, out BlueprintStructureRuntime tower);
         try
         {
             foreach (Block block in tower.Blocks)
@@ -141,7 +141,7 @@ public static class SiegeBuildingDamageChecks
 
     private static void CheckImmediate(List<string> checks)
     {
-        GameObject owner = CreateTower(false, out _, out BuildingRuntime tower);
+        GameObject owner = CreateTower(false, out _, out BlueprintStructureRuntime tower);
         try
         {
             Block bottom = tower.Blocks[0];
@@ -166,7 +166,7 @@ public static class SiegeBuildingDamageChecks
 
     private static void CheckSecondaryFragments(List<string> checks)
     {
-        GameObject owner = CreateTower(false, out WorldBuildingManager manager, out BuildingRuntime tower, 4);
+        GameObject owner = CreateTower(false, out BlueprintStructureRegistry manager, out BlueprintStructureRuntime tower, 4);
         try
         {
             Block[] levels = tower.Blocks.ToArray();
@@ -211,13 +211,17 @@ public static class SiegeBuildingDamageChecks
         }
     }
 
-    private static GameObject CreateTower(bool reverse, out WorldBuildingManager manager, out BuildingRuntime tower, int height = 2)
+    private static GameObject CreateTower(
+        bool reverse,
+        out BlueprintStructureRegistry manager,
+        out BlueprintStructureRuntime tower,
+        int height = 2)
     {
         var owner = new GameObject("Owned building damage checks");
         owner.SetActive(false);
-        manager = owner.AddComponent<WorldBuildingManager>();
+        manager = owner.AddComponent<BlueprintStructureRegistry>();
         var config = new SerializedObject(manager);
-        config.FindProperty("initializeOnStart").boolValue = false;
+        config.FindProperty("useIndividualRenderers").boolValue = false;
         config.ApplyModifiedPropertiesWithoutUndo();
         owner.SetActive(true);
         var design = new BlockDataList
@@ -231,7 +235,7 @@ public static class SiegeBuildingDamageChecks
             design.blocks.Add(new BlockData(prefab) { id = "level" + y, resourcePath = "Blocks/1x1x1", x = 1, y = 1, z = 1, posX = -0.5f, posY = y + 0.5f, posZ = -0.5f, rotX = 0f, rotY = 0f, rotZ = 0f, rotW = 1f, cargo = null });
         }
 
-        tower = manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Damage checks", faction = UnitFaction.Player, position = new Vector3(10000f, 1000f, 0f), rotation = Quaternion.identity, anchored = true, blueprint = design, durability = Enumerable.Repeat(100f, height).ToArray() });
+        tower = manager.RestoreBuilding(new BlueprintStructureState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Damage checks", faction = UnitFaction.Player, position = new Vector3(10000f, 1000f, 0f), rotation = Quaternion.identity, anchored = true, blueprint = design, durability = Enumerable.Repeat(100f, height).ToArray() });
         foreach (Block block in tower.Blocks)
         {
             block.canExplode = false;

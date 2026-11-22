@@ -73,7 +73,7 @@ public static class OutpostPlayerChecks
             Object.FindObjectsByType<EnemySpawner>().All(item => !item.IsAutomaticSpawningAllowed),
             "World session suppresses global EnemySpawner scheduling");
         Vector3 previous = player.transform.position;
-        BuildingRuntime site = session.Buildings.Buildings.FirstOrDefault(item => item != null && item.Outpost != null);
+        BlueprintStructureRuntime site = session.Buildings.Buildings.FirstOrDefault(item => item != null && item.Outpost != null);
         for (int waypoint = 0; waypoint < 8 && site == null; waypoint++)
         {
             Vector3 offset = Quaternion.Euler(0f, waypoint * 45f, 0f) * Vector3.right * 240f;
@@ -299,7 +299,7 @@ public static class OutpostPlayerChecks
         check(
             data.garrison.All(guard => !session.Outposts.TryGetDefender(siteId, guard.id, out ControlUnit unit) || !unit.HasValidCockpit),
             "Defeated slots have no replacement enemy");
-        BuildingRuntime revisited = session.Buildings.Buildings.FirstOrDefault(item => item != null && item.InstanceId == siteId);
+        BlueprintStructureRuntime revisited = session.Buildings.Buildings.FirstOrDefault(item => item != null && item.InstanceId == siteId);
         if (revisited != null)
         {
             foreach (Block block in revisited.Blocks.Where(block => block != null && block.GetComponent<Turret>() != null).ToArray())

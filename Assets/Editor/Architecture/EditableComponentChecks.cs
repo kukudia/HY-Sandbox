@@ -41,7 +41,7 @@ public static class EditableComponentChecks
     public static string RunWorldPlay()
     {
         Require(
-            Application.isPlaying && SceneManager.GetActiveScene().path == "Assets/Scenes/WorldLab.unity",
+            Application.isPlaying && SceneManager.GetActiveScene().path == "Assets/Scenes/Research/WorldLab.unity",
             "WorldLab Play required");
         var checks = new List<string>();
         ProceduralVoxelWorld world = SceneObjectQuery.FindInActiveScene<ProceduralVoxelWorld>();

@@ -18,7 +18,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     [SerializeField]
     private SiegeConstructionSettings settings;
     [SerializeField]
-    private WorldBuildingManager buildings;
+    private BlueprintStructureRegistry buildings;
     [SerializeField]
     private SiegeIsland island;
     [SerializeField]

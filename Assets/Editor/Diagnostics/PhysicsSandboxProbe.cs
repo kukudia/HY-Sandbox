@@ -221,7 +221,7 @@ public static class PhysicsSandboxProbe
     {
         var host = new GameObject("Building impact probe");
         SceneManager.MoveGameObjectToScene(host, scene);
-        WorldBuildingManager manager = host.AddComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = host.AddComponent<BlueprintStructureRegistry>();
         BlockDataList blueprint = WorldBuildingAuthoring.CreateSample();
         var health = new float[blueprint.blocks.Count];
         for (int i = 0; i < health.Length; i++)
@@ -229,7 +229,7 @@ public static class PhysicsSandboxProbe
             health[i] = float.MaxValue;
         }
 
-        BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Impact probe", blueprint = blueprint, position = Vector3.right * 2000f, rotation = Quaternion.identity, faction = UnitFaction.Enemy, anchored = true, durability = health });
+        BlueprintStructureRuntime building = manager.RestoreBuilding(new BlueprintStructureState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Impact probe", blueprint = blueprint, position = Vector3.right * 2000f, rotation = Quaternion.identity, faction = UnitFaction.Enemy, anchored = true, durability = health });
         Block source = building.Blocks[0];
         source.canExplode = true;
         source.explosionForce = 0f;

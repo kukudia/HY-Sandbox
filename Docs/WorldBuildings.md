@@ -2,7 +2,7 @@
 
 Main 已通过独立世界会话接入大世界生成和真实建筑：建造期间隐藏预热，进入后显示并模拟，退出丢弃世界。配置、生命周期和流式休眠边界见 [Main大世界](WorldStreaming.md)。本文的F5/F9、目录选择和手工放置入口仅指WorldLab。
 
-打开 `Assets/Scenes/WorldLab.unity` 并进入 Play。右侧建筑库包含项目内 Outpost 示例，以及 `Application.persistentDataPath/BuildingBlueprints` 中由 Main 开发者建筑编辑器制作的 JSON。文件修改后点击 Refresh；坏文件跳过并显示原因，不自动修复或改写模板。
+打开 `Assets/Scenes/Research/WorldLab.unity` 并进入 Play。右侧建筑库包含项目内 Outpost 示例，以及 `Application.persistentDataPath/BuildingBlueprints` 中由 Main 开发者建筑编辑器制作的 JSON。文件修改后点击 Refresh；坏文件跳过并显示原因，不自动修复或改写模板。
 
 - 点击蓝图或按 B 进入放置；Q/T 左右旋转90°，鼠标左键放置，Esc取消。放置期间左键不会同时采掘。
 - 预览绿色可放、红色拒绝；只接受完整支撑的平坦地形，按世界局部1m网格移动，不自动整平。地形仍是2m体素。
@@ -15,7 +15,7 @@ Main 已通过独立世界会话接入大世界生成和真实建筑：建造期
 
 `Assets/WorldLab/Buildings/Catalog.asset`：blueprints是项目随附模板；initialBuildings指定模板、世界局部位置、90°旋转次数和阵营。`Outpost.json`是默认4×4底座示例，包含发电机、中继、货仓、普通方块和激光炮塔。
 
-场景的 WorldLab Buildings 对象持有 WorldBuildingManager：可配置支撑比例、是否脱锚、建筑数和残骸预算。默认支撑率低于50%时整栋转为动态刚体；断裂残骸默认每片最多32块、最多12片、12秒寿命，超出预算移除断裂部分。最多64栋、每栋2048块、世界总计8192块属于保护上限，尚不是性能承诺。
+场景的 WorldLab Buildings 对象持有 BlueprintStructureRegistry：可配置支撑比例、是否脱锚、建筑数和残骸预算。默认支撑率低于50%时整栋转为动态刚体；断裂残骸默认每片最多32块、最多12片、12秒寿命，超出预算移除断裂部分。最多64栋、每栋2048块、世界总计8192块属于保护上限，尚不是性能承诺。
 
 菜单 Tools → HY-Sandbox → World → Install building integration 为 WorldLab 安装缺失模板/目录和组件，保存真实场景与配置资产；不会覆盖已有模板、目录或初始布局。Main 保留 Ctrl+Alt+F 建筑编辑入口。
 
@@ -23,7 +23,7 @@ Main 已通过独立世界会话接入大世界生成和真实建筑：建造期
 
 建筑保留1m方块、Connector及真实Prefab，地形保留数组和分块网格。编辑器底座仅作为制作网格；WorldLab实例和放置预览均不生成底座模型、碰撞体或底座方块，也不创建或整平脚下地形。尺寸元数据仅供定位、支撑与连通检测。模板内坐标以编辑器底座根为原点，不以底座几何中心为原点；底座尺寸变化仍保留原左下格原点。实例位置与旋转在加载时应用一次，支持同模板多栋独立身份。
 
-ControlUnit新增运行有效性和当前场景单位注册；载具仍要求一个有效驾驶舱，建筑由BuildingRuntime和存活方块维持有效性。WorldLab建筑不注册到Main的载具重组/距离清理列表。供电仍沿用现有无线网络，未引入阵营隔离供电。
+ControlUnit新增运行有效性和当前场景单位注册；载具仍要求一个有效驾驶舱，建筑由BlueprintStructureRuntime和存活方块维持有效性。WorldLab建筑不注册到Main的载具重组/距离清理列表。供电仍沿用现有无线网络，未引入阵营隔离供电。
 
 地形编辑仅将附近固定建筑标记为待检查；下个FixedUpdate读取体素数据计算虚拟范围内每格中心的地形支撑。脱锚前同步刷新地形碰撞，避免旧碰撞托住建筑。当前是直接接触支撑，不验证脚下整片地形是否最终连接世界底层，也没有应力、承重或弯曲模拟。
 

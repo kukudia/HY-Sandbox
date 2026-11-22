@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 internal static class OutpostSalvagePlayerChecks
 {
     internal static IEnumerator Run(
-        BuildingRuntime building,
+        BlueprintStructureRuntime building,
         ControlUnit player,
         Action<bool, string> check,
         bool recoverAllParts = false)

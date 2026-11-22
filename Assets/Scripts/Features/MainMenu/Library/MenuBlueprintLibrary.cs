@@ -105,7 +105,7 @@ public static class MenuBlueprintLibrary
         if (entry.Building)
         {
             data.foundation = BuildingFootprint.Calculate(data.blocks, BuildManager.instance != null ? BuildManager.instance.FootprintPadding : 1);
-            WorldBuildingValidation.ValidateBlueprint(data);
+            BlueprintStructureValidation.ValidateBlueprint(data);
             playable = siege.Validate(data, out reason);
         }
         else
@@ -120,7 +120,7 @@ public static class MenuBlueprintLibrary
                 }
 
                 GameObject prefab = BlockPrefabCache.GetPrefab(BlueprintBlockFactory.ToResourcePath(block.resourcePath));
-                if (prefab.GetComponent<Block>() == null || block.x < 1 || block.y < 1 || block.z < 1 || block.x > 64 || block.y > 64 || block.z > 64 || string.IsNullOrEmpty(block.id) || !identities.Add(block.id) || !WorldBuildingValidation.Finite(new Vector3(block.posX, block.posY, block.posZ)) || !WorldBuildingValidation.ValidRotation(new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW)))
+                if (prefab.GetComponent<Block>() == null || block.x < 1 || block.y < 1 || block.z < 1 || block.x > 64 || block.y > 64 || block.z > 64 || string.IsNullOrEmpty(block.id) || !identities.Add(block.id) || !BlueprintStructureValidation.Finite(new Vector3(block.posX, block.posY, block.posZ)) || !BlueprintStructureValidation.ValidRotation(new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW)))
                 {
                     throw new InvalidDataException("Blueprint contains invalid module dimensions, identity or pose.");
                 }

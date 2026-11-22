@@ -19,13 +19,13 @@ public static class SiegeFoundationCacheChecks
             throw new InvalidOperationException("Requires fresh Siege deployment Play.");
         }
 
-        BuildingRuntime building = session.Fleet.Base.Building;
+        BlueprintStructureRuntime building = session.Fleet.Base.Building;
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
         object graph = typeof(ControlUnit).GetProperty("Connections", flags).GetValue(building.GetComponent<ControlUnit>());
         MethodInfo prepare = graph.GetType().GetMethod("Prepare", flags);
-        MethodInfo cached = typeof(BuildingRuntime).GetMethod("HasPreparedGroundConnector", flags);
-        MethodInfo direct = typeof(BuildingRuntime).GetMethod("HasGroundConnector", flags);
-        BuildingFoundationData foundation = (BuildingFoundationData)typeof(BuildingRuntime).GetField("foundationData", flags).GetValue(building);
+        MethodInfo cached = typeof(BlueprintStructureRuntime).GetMethod("HasPreparedGroundConnector", flags);
+        MethodInfo direct = typeof(BlueprintStructureRuntime).GetMethod("HasGroundConnector", flags);
+        BuildingFoundationData foundation = (BuildingFoundationData)typeof(BlueprintStructureRuntime).GetField("foundationData", flags).GetValue(building);
         int width = foundation.width;
         int length = foundation.length;
         var checks = new List<string>();

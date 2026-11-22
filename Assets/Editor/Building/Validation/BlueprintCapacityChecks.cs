@@ -31,13 +31,13 @@ public static class BlueprintCapacityChecks
             blueprint.blocks.Add(block);
         }
 
-        WorldBuildingValidation.ValidateBlueprint(blueprint);
+        BlueprintStructureValidation.ValidateBlueprint(blueprint);
         checks.Add("9001 valid building modules pass without former2048/8192 caps");
         blueprint.blocks[1].id = blueprint.blocks[0].id;
         bool refused = false;
         try
         {
-            WorldBuildingValidation.ValidateBlueprint(blueprint);
+            BlueprintStructureValidation.ValidateBlueprint(blueprint);
         }
         catch (InvalidOperationException)
         {
@@ -50,7 +50,7 @@ public static class BlueprintCapacityChecks
         root.SetActive(false);
         try
         {
-            WorldBuildingManager manager = root.AddComponent<WorldBuildingManager>();
+            BlueprintStructureRegistry manager = root.AddComponent<BlueprintStructureRegistry>();
             Require(
                 manager.HasCapacity(9001) && manager.CanAddBlocks(int.MaxValue),
                 "manager does not silently replace removed caps",

@@ -8,7 +8,7 @@
 
 ## 使用
 
-打开 `Assets/Scenes/WorldLab.unity` 或 Tools → HY-Sandbox → World → Create or open World Lab，然后 Play。
+打开 `Assets/Scenes/Research/WorldLab.unity` 或 Tools → HY-Sandbox → World → Create or open World Lab，然后 Play。
 
 - 右键拖动观察，WASD飞行、Space/Ctrl升降、Shift加速，F回到初始视角。
 - 鼠标指向地表：左键持续采掘，E范围爆破，中键填补金属单元，R恢复当前种子世界。

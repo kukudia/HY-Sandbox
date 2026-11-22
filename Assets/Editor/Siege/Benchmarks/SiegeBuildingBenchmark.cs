@@ -99,9 +99,9 @@ public static class SiegeBuildingBenchmark
     {
         var owner = new GameObject("Owned building CPU fixture");
         owner.SetActive(false);
-        WorldBuildingManager manager = owner.AddComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = owner.AddComponent<BlueprintStructureRegistry>();
         var config = new SerializedObject(manager);
-        config.FindProperty("initializeOnStart").boolValue = false;
+        config.FindProperty("useIndividualRenderers").boolValue = false;
         config.ApplyModifiedPropertiesWithoutUndo();
         try
         {
@@ -144,7 +144,7 @@ public static class SiegeBuildingBenchmark
                 }
             }
 
-            BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "CPU fixture", faction = UnitFaction.Player, position = new Vector3(10000f, 1000f, 0f), rotation = Quaternion.identity, anchored = true, blueprint = design, durability = Enumerable.Repeat(float.MaxValue, count).ToArray() });
+            BlueprintStructureRuntime building = manager.RestoreBuilding(new BlueprintStructureState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "CPU fixture", faction = UnitFaction.Player, position = new Vector3(10000f, 1000f, 0f), rotation = Quaternion.identity, anchored = true, blueprint = design, durability = Enumerable.Repeat(float.MaxValue, count).ToArray() });
             foreach (Block block in building.Blocks)
             {
                 block.canExplode = false;

@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 671e359a7ca65f14ca3f7ce2d071d0be, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::BuildingRuntime
+  m_EditorClassIdentifier: Assembly-CSharp::BlueprintStructureRuntime
 --- !u!114 &8256930900376454441
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -103,7 +103,7 @@ public static class OutpostBaseDesigner
             }
         };
         data.outpost.garrison.Add(new OutpostGarrisonData { id = "resident-0", name = name, position = position, yaw = 0f, blueprint = new OutpostEnemyBlueprint { blocks = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(enemy)).blocks } });
-        WorldBuildingValidation.ValidateBlueprint(data);
+        BlueprintStructureValidation.ValidateBlueprint(data);
         return data;
     }
 

@@ -223,9 +223,9 @@ public static class SiegeHangarPlayChecks
 
         GameObject managerRoot = new GameObject("Hangar validation owner");
         managerRoot.SetActive(false);
-        WorldBuildingManager manager = managerRoot.AddComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = managerRoot.AddComponent<BlueprintStructureRegistry>();
         SerializedObject config = new SerializedObject(manager);
-        config.FindProperty("initializeOnStart").boolValue = false;
+        config.FindProperty("useIndividualRenderers").boolValue = false;
         config.ApplyModifiedPropertiesWithoutUndo();
         managerRoot.SetActive(true);
         SiegeBase fortress = null;
@@ -482,10 +482,10 @@ public static class SiegeHangarPlayChecks
         }
     }
 
-    private static void SetSimulation(WorldBuildingManager manager, bool active)
+    private static void SetSimulation(BlueprintStructureRegistry manager, bool active)
     {
         // This runtime-owned setter is intentionally internal; the isolated Editor fixture opts in explicitly.
-        typeof(WorldBuildingManager).GetProperty(nameof(WorldBuildingManager.SimulationEnabled)).GetSetMethod(true).Invoke(manager, new object[] { active });
+        typeof(BlueprintStructureRegistry).GetProperty(nameof(BlueprintStructureRegistry.SimulationEnabled)).GetSetMethod(true).Invoke(manager, new object[] { active });
     }
 
     private static IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)

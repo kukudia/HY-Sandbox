@@ -76,7 +76,7 @@ public static class SiegeStressCancellationChecks
         {
             Check(
                 "canceled partial building leaves no inactive root",
-                session != null && session.Buildings.GetComponentsInChildren<BuildingRuntime>(true).Length == 1);
+                session != null && session.Buildings.GetComponentsInChildren<BlueprintStructureRuntime>(true).Length == 1);
             Check(
                 "base and world capacity remain intact",
                 session.Fleet.Base.IsAlive && session.Buildings.Buildings.Count == 1 && session.Buildings.HasCapacity(1));

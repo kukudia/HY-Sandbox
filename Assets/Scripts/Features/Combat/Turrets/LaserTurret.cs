@@ -32,7 +32,7 @@ public sealed class LaserTurret : Turret
         _fireBeam.SetVisible(false);
     }
 
-    protected override void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)
+    protected override bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)
     {
         _beamEnd = _hitscan.Fire(
             origin,
@@ -47,6 +47,7 @@ public sealed class LaserTurret : Turret
         _fireBeam.SetIntensity(1f);
         _fireBeam.SetVisible(true);
         _hideLineTime = Time.time + beamDuration;
+        return true;
     }
 
     protected override void HideShotFeedback()

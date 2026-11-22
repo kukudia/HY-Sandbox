@@ -27,12 +27,12 @@ public static class SiegeBaseBlueprintAuthoring
         SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         var serialized = new SerializedObject(session);
         var settings = (SiegeSettings)serialized.FindProperty("settings").objectReferenceValue;
-        WorldBuildingManager buildings = session.GetComponentInChildren<WorldBuildingManager>();
+        BlueprintStructureRegistry buildings = session.GetComponentInChildren<BlueprintStructureRegistry>();
         if (buildings == null)
         {
             var owner = new GameObject("Base Building Manager");
             owner.transform.SetParent(session.transform, false);
-            buildings = Undo.AddComponent<WorldBuildingManager>(owner);
+            buildings = Undo.AddComponent<BlueprintStructureRegistry>(owner);
         }
 
         ConfigureManager(buildings);
@@ -52,10 +52,10 @@ public static class SiegeBaseBlueprintAuthoring
         Debug.Log("Siege upgraded to a real large building blueprint; existing ship bays and UI preserved.");
     }
 
-    internal static void ConfigureManager(WorldBuildingManager buildings)
+    internal static void ConfigureManager(BlueprintStructureRegistry buildings)
     {
         var serialized = new SerializedObject(buildings);
-        serialized.FindProperty("initializeOnStart").boolValue = false;
+        serialized.FindProperty("useIndividualRenderers").boolValue = false;
         serialized.ApplyModifiedPropertiesWithoutUndo();
     }
 
@@ -142,7 +142,7 @@ public static class SiegeBaseBlueprintAuthoring
                     new Vector3(tower.x < 0 ? 3.5f : 24.5f, 2.5f, tower.y < 0 ? 3.5f : 24.5f));
             }
 
-            WorldBuildingValidation.ValidateBlueprint(blueprint);
+            BlueprintStructureValidation.ValidateBlueprint(blueprint);
             File.WriteAllText(BlueprintPath, JsonUtility.ToJson(blueprint, true));
             AssetDatabase.ImportAsset(BlueprintPath);
         }

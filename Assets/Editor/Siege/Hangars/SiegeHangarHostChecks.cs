@@ -52,7 +52,7 @@ public static class SiegeHangarHostChecks
     [MenuItem("Tools/HY-Sandbox/Siege/Validate prototype hangar host")]
     public static void RunPrototype()
     {
-        Start("prototype", "Assets/Scenes/Siege.unity");
+        Start("prototype", "Assets/Scenes/Research/Siege.unity");
     }
 
     private static void Start(string target, string path)

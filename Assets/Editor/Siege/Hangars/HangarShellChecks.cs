@@ -92,18 +92,18 @@ public static class HangarShellChecks
             excessive.blocks[0].y = 64;
             excessive.blocks[0].z = 64;
             BlockDataList largeShell = HangarShellBlueprint.Expand(excessive);
-            WorldBuildingValidation.ValidateBlueprint(largeShell);
+            BlueprintStructureValidation.ValidateBlueprint(largeShell);
             Check(
                 report,
                 "large valid shell expands beyond the former2048 cap",
                 largeShell.blocks.Count > 2048 && largeShell.blocks.Count == 1 + HangarShellBlueprint.TileCount(new Vector3Int(64, 64, 64)));
             owner = new GameObject("Isolated modular hangar checks");
             owner.SetActive(false);
-            WorldBuildingManager manager = owner.AddComponent<WorldBuildingManager>();
+            BlueprintStructureRegistry manager = owner.AddComponent<BlueprintStructureRegistry>();
             var config = new SerializedObject(manager);
-            config.FindProperty("initializeOnStart").boolValue = false;
+            config.FindProperty("useIndividualRenderers").boolValue = false;
             config.ApplyModifiedPropertiesWithoutUndo();
-            BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = "shell-probe", blueprintName = "Shell probe", faction = UnitFaction.Player, position = new Vector3(12000, 2000, 12000), rotation = Quaternion.identity, blueprint = logical, durability = new[] { 1190f }, anchored = true });
+            BlueprintStructureRuntime building = manager.RestoreBuilding(new BlueprintStructureState { instanceId = "shell-probe", blueprintName = "Shell probe", faction = UnitFaction.Player, position = new Vector3(12000, 2000, 12000), rotation = Quaternion.identity, blueprint = logical, durability = new[] { 1190f }, anchored = true });
             owner.SetActive(true);
             building.Activate();
             Check(
@@ -151,7 +151,7 @@ public static class HangarShellChecks
                 report,
                 "one wall is independently destructible while the hangar survives",
                 building.Blocks.Count == 372 && building.Blocks[0].GetComponent<HangarModule>().IsOperational);
-            WorldBuildingState damaged = building.Capture();
+            BlueprintStructureState damaged = building.Capture();
             Check(
                 report,
                 "damaged capture preserves version and the missing tile",
@@ -165,7 +165,7 @@ public static class HangarShellChecks
                 design,
                 null
             };
-            bool repaired = (bool)typeof(BuildingRuntime).GetMethod("TryRefit", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(building, arguments);
+            bool repaired = (bool)typeof(BlueprintStructureRuntime).GetMethod("TryRefit", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(building, arguments);
             Check(
                 report,
                 "production refit restores the original wall identity",
@@ -183,7 +183,7 @@ public static class HangarShellChecks
             platform.rotW = 1f;
             elevated.blocks.Add(platform);
             elevated.foundation = BuildingFootprint.Calculate(elevated.blocks, 1);
-            BuildingRuntime raised = manager.RestoreBuilding(new WorldBuildingState { instanceId = "raised-shell-probe", blueprintName = "Raised shell probe", faction = UnitFaction.Player, position = new Vector3(12200, 2000, 12000), rotation = Quaternion.identity, blueprint = elevated, durability = new[] { 1190f, float.MaxValue }, anchored = true });
+            BlueprintStructureRuntime raised = manager.RestoreBuilding(new BlueprintStructureState { instanceId = "raised-shell-probe", blueprintName = "Raised shell probe", faction = UnitFaction.Player, position = new Vector3(12200, 2000, 12000), rotation = Quaternion.identity, blueprint = elevated, durability = new[] { 1190f, float.MaxValue }, anchored = true });
             // RestoreBuilding stages an inactive root; explicit activation makes this
             // assertion independent of the manager's isolated hierarchy enable state.
             raised.Activate();

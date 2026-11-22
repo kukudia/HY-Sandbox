@@ -72,7 +72,7 @@ internal sealed class ExplosionDamageSession
 
     private static bool ValidSphere(Vector3 center, float radius, float damage)
     {
-        return WorldBuildingValidation.Finite(center) && WorldBuildingValidation.Finite(radius) && radius > 0f && WorldBuildingValidation.Finite(damage) && damage > 0f;
+        return BlueprintStructureValidation.Finite(center) && BlueprintStructureValidation.Finite(radius) && radius > 0f && BlueprintStructureValidation.Finite(damage) && damage > 0f;
     }
 
     private void Execute(Action action)

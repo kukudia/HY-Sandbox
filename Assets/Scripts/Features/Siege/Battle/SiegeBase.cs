@@ -10,7 +10,7 @@ public sealed class SiegeBase : IDisposable
     private readonly float repairCoinsPerHealth;
     private readonly int replacementValue;
     private readonly Action coreLost;
-    public BuildingRuntime Building
+    public BlueprintStructureRuntime Building
     {
         get;
     }
@@ -24,14 +24,14 @@ public sealed class SiegeBase : IDisposable
     }
     public ControlUnit Unit => Building != null ? Building.GetComponent<ControlUnit>() : null;
     public string Id => Building.InstanceId;
-    public bool IsAlive => Building != null && Core != null && Core.isActiveAndEnabled && Core.GetComponentInParent<BuildingRuntime>() == Building;
+    public bool IsAlive => Building != null && Core != null && Core.isActiveAndEnabled && Core.GetComponentInParent<BlueprintStructureRuntime>() == Building;
 
     private SiegeBase(
         SiegeMatch match,
         float repairCoinsPerHealth,
         int replacementValue,
         Action coreLost,
-        BuildingRuntime building,
+        BlueprintStructureRuntime building,
         BlockDataList blueprint,
         Block core)
     {
@@ -45,7 +45,7 @@ public sealed class SiegeBase : IDisposable
         Building.BlockDestroyed += OnBlockDestroyed;
     }
 
-    public static SiegeBase Create(SiegeSession session, WorldBuildingManager buildings, Transform anchor)
+    public static SiegeBase Create(SiegeSession session, BlueprintStructureRegistry buildings, Transform anchor)
     {
         if (buildings == null || session.Settings.BaseBlueprint == null)
         {
@@ -53,7 +53,7 @@ public sealed class SiegeBase : IDisposable
         }
 
         BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(session.Settings.BaseBlueprint.text);
-        WorldBuildingValidation.ValidateBlueprint(blueprint);
+        BlueprintStructureValidation.ValidateBlueprint(blueprint);
         if (!blueprint.blocks.Any(block => block.id == session.Settings.BaseCoreBlockId))
         {
             throw new InvalidOperationException("The configured base core is missing from the building blueprint.");
@@ -75,7 +75,7 @@ public sealed class SiegeBase : IDisposable
     public static SiegeBase Create(
         SiegeMatch match,
         SiegeSettings settings,
-        WorldBuildingManager buildings,
+        BlueprintStructureRegistry buildings,
         BlockDataList source,
         string coreId,
         string name,
@@ -86,7 +86,7 @@ public sealed class SiegeBase : IDisposable
     {
         // Own an isolated snapshot; stripping cargo and later refits must never mutate the editor cache.
         BlockDataList blueprint = HangarShellBlueprint.Expand(JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(source)));
-        WorldBuildingValidation.ValidateBlueprint(blueprint);
+        BlueprintStructureValidation.ValidateBlueprint(blueprint);
         if (blueprint.blocks.Count(block => block.id == coreId) != 1)
         {
             throw new InvalidOperationException("Choose exactly one existing base core.");
@@ -97,7 +97,7 @@ public sealed class SiegeBase : IDisposable
             block.cargo = null;
         }
 
-        var state = new WorldBuildingState
+        var state = new BlueprintStructureState
         {
             instanceId = Guid.NewGuid().ToString("N"),
             blueprintName = name,
@@ -108,7 +108,7 @@ public sealed class SiegeBase : IDisposable
             blueprint = blueprint,
             durability = Enumerable.Repeat(float.MaxValue, blueprint.blocks.Count).ToArray()
         };
-        BuildingRuntime building = buildings.RestoreBuilding(state);
+        BlueprintStructureRuntime building = buildings.RestoreBuilding(state);
         Block core = building.Blocks.Single(block => block.uniqueId == state.instanceId + ":" + coreId);
         return new SiegeBase(
             match,

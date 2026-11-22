@@ -63,22 +63,16 @@ public static class ModularUnitFactory
         // 组装碰撞形状和同步连接时保持运动学，避免插值历史与未完成的复合体进入物理模拟。
         body.isKinematic = true;
         var blocks = new List<Block>(blueprint.blocks.Count);
-        float mass = 0f;
         float maximumHealth = 0f;
-        foreach (BlockData data in blueprint.blocks)
+        if (!BlueprintAssemblyBuilder.Build(blueprint, root.transform, faction, blocks, out float mass))
         {
-            if (!BlueprintBlockFactory.TryRestore(data, root.transform, faction, out Block block))
-            {
-                root.SetActive(false);
-                Object.Destroy(root);
-                return null;
-            }
+            root.SetActive(false);
+            Object.Destroy(root);
+            return null;
+        }
 
-            block.transform.SetLocalPositionAndRotation(
-                new Vector3(data.posX, data.posY, data.posZ),
-                new Quaternion(data.rotX, data.rotY, data.rotZ, data.rotW));
-            blocks.Add(block);
-            mass += block.mass;
+        foreach (Block block in blocks)
+        {
             foreach (Durability health in block.GetComponentsInChildren<Durability>())
             {
                 if (health.enabled)
@@ -88,17 +82,13 @@ public static class ModularUnitFactory
             }
         }
 
-        body.mass = Mathf.Max(1f, mass);
-        new BatchConnectionBuilder(blocks).RebuildBatchImmediate();
         body.position = position;
         body.rotation = rotation;
+        ControlUnit unit = root.GetComponent<ControlUnit>();
+        BlueprintAssemblyBuilder.FinalizeUnit(unit, mass, faction);
         body.isKinematic = false;
         body.linearVelocity = Vector3.zero;
         body.angularVelocity = Vector3.zero;
-        ControlUnit unit = root.GetComponent<ControlUnit>();
-        unit.faction = faction;
-        unit.RefreshChildren();
-        unit.AssignRuntimeOwnershipToBlocks(true);
         if (unit.cockpit != null)
         {
             EnemyIdentity identity = unit.cockpit.GetComponent<EnemyIdentity>();

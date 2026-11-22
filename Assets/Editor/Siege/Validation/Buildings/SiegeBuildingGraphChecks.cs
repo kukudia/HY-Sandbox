@@ -19,7 +19,7 @@ public static class SiegeBuildingGraphChecks
         }
 
         var checks = new List<string>();
-        Type graphType = typeof(BuildingRuntime).Assembly.GetType("BlockConnectionGraph");
+        Type graphType = typeof(BlueprintStructureRuntime).Assembly.GetType("BlockConnectionGraph");
         object graph = Activator.CreateInstance(graphType, true);
         MethodInfo prepare = graphType.GetMethod("Prepare", BindingFlags.Instance | BindingFlags.NonPublic);
         MethodInfo collect = graphType.GetMethod("CollectNeighbors", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -192,7 +192,7 @@ public static class SiegeBuildingGraphChecks
             root.GetComponent<Rigidbody>().isKinematic = true;
             if (building)
             {
-                root.AddComponent<BuildingRuntime>();
+                root.AddComponent<BlueprintStructureRuntime>();
             }
 
             try
@@ -254,7 +254,7 @@ public static class SiegeBuildingGraphChecks
             root.GetComponent<Rigidbody>().isKinematic = true;
             if (building)
             {
-                root.AddComponent<BuildingRuntime>();
+                root.AddComponent<BlueprintStructureRuntime>();
             }
 
             try
@@ -267,7 +267,7 @@ public static class SiegeBuildingGraphChecks
                     block.RefreshRuntimeData(true);
                     if (building)
                     {
-                        // Match WorldBuildingManager's authored runtime decoration policy.
+                        // Match BlueprintStructureRegistry's authored runtime decoration policy.
                         block.connectorPrefab = null;
                     }
 
@@ -299,7 +299,7 @@ public static class SiegeBuildingGraphChecks
                     throw new InvalidOperationException("Connection visual policy invalidated otherwise unchanged geometry.");
                 }
 
-                checks.Add(building ? "PASS real BuildingRuntime keeps reciprocal cached topology without connection decorations regardless of Gizmo flag" : "PASS vehicle keeps its shared connection decoration and cached topology regardless of Gizmo flag");
+                checks.Add(building ? "PASS real BlueprintStructureRuntime keeps reciprocal cached topology without connection decorations regardless of Gizmo flag" : "PASS vehicle keeps its shared connection decoration and cached topology regardless of Gizmo flag");
             }
             finally
             {

@@ -79,14 +79,14 @@ public static class SiegeConstructionAuthoring
             Object.DestroyImmediate(oldStatus.gameObject);
         }
 
-        WorldBuildingManager buildings = stage.GetComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry buildings = stage.GetComponent<BlueprintStructureRegistry>();
         if (buildings == null)
         {
-            buildings = stage.gameObject.AddComponent<WorldBuildingManager>();
+            buildings = stage.gameObject.AddComponent<BlueprintStructureRegistry>();
         }
 
         var buildingData = new SerializedObject(buildings);
-        buildingData.FindProperty("initializeOnStart").boolValue = false;
+        buildingData.FindProperty("useIndividualRenderers").boolValue = false;
         buildingData.ApplyModifiedPropertiesWithoutUndo();
         if (root.Find("Arena Light") == null)
         {

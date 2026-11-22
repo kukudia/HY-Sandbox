@@ -104,7 +104,7 @@ public static class SiegeIslandChecks
             Check(
                 report,
                 "the whole real base foundation has voxel ground support",
-                WorldBuildingPlacement.Support(world, stage.Base.Building.Footprint, stage.Base.Building.transform) == 1f);
+                BlueprintStructurePlacement.Support(world, stage.Base.Building.Footprint, stage.Base.Building.transform) == 1f);
             Vector3 outside = island.PlayableBounds.center + new Vector3(island.PlayableBounds.extents.x + 10, 40, 0);
             Check(
                 report,

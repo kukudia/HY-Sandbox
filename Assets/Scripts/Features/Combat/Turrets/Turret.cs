@@ -79,12 +79,6 @@ public abstract class Turret : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        if (RuntimePerformanceSwitches.DisableTurretCombat)
-        {
-            StopWorking();
-            return;
-        }
-
         Supply.TrackAvailability(_isStarted);
         Owner = GetComponentInParent<ControlUnit>();
         if (!_isStarted || Owner == null || !Owner.IsSimulationActive || !Owner.IsOperational)
@@ -132,8 +126,8 @@ public abstract class Turret : MonoBehaviour
             return;
         }
 
-        // 即使排队等扫描，也不能继续锁定失效或被遮挡的目标。
-        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || !_targetSelector.HasLineOfSight(Owner, _target, range)))
+        // 追踪阶段只更新已知命中点。开火前从转动后的炮口重新确认遮挡。
+        if (_target != null && (!_target.isActiveAndEnabled || _target.faction != GetEffectiveTargetFaction() || _target.gameObject.scene != gameObject.scene || !_target.IsOperational || !_target.IsSimulationActive || !_targetSelector.UpdateTrackedPoint(_target, range)))
         {
             _target = null;
             if (Time.time < _nextSearchTime)
@@ -169,21 +163,45 @@ public abstract class Turret : MonoBehaviour
             return;
         }
 
-        AimAt(direction.normalized);
+        Vector3 aimDirection = direction.normalized;
+        AimAt(aimDirection);
         if (Time.time < _nextFireTime)
         {
             return;
         }
 
         origin = GetMuzzlePosition();
-        Vector3 aimDirection = (GetAimPosition(aimTarget, origin) - origin).normalized;
         Vector3 fireDirection = GetAimForward();
-        if (Vector3.Angle(fireDirection, aimDirection) <= maxFireAngle)
+        direction = GetAimPosition(aimTarget, origin) - origin;
+        if (!IsAligned(fireDirection, direction))
         {
-            using var fireSample = FireMarker.Auto();
-            Fire(origin, fireDirection, GetEffectiveTargetFaction());
-            _nextFireTime = Time.time + Mathf.Max(0.01f, fireInterval) / Mathf.Max(Supply.efficiency, 0.0001f);
+            return;
         }
+
+        using var fireSample = FireMarker.Auto();
+        _targetSelector.ConfigureVisibility(origin, hitLayers);
+        if (!_targetSelector.HasLineOfSight(Owner, aimTarget, range))
+        {
+            StopWorking();
+            return;
+        }
+
+        direction = GetAimPosition(aimTarget, origin) - origin;
+        if (IsAligned(fireDirection, direction) && Fire(origin, fireDirection, GetEffectiveTargetFaction()))
+        {
+            ScheduleNextFire();
+        }
+    }
+
+    private bool IsAligned(Vector3 forward, Vector3 direction)
+    {
+        return direction.sqrMagnitude >= 0.01f && Vector3.Angle(forward, direction) <= maxFireAngle;
+    }
+
+    private void ScheduleNextFire()
+    {
+        float efficiency = Mathf.Max(Supply.efficiency, 0.0001f);
+        _nextFireTime = Time.time + Mathf.Max(0.01f, fireInterval) / efficiency;
     }
 
     private void AimAt(Vector3 worldDirection)
@@ -280,7 +298,7 @@ public abstract class Turret : MonoBehaviour
         return TargetSurfacePoint;
     }
 
-    protected abstract void Fire(Vector3 origin, Vector3 direction, UnitFaction faction);
+    protected abstract bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction);
     protected virtual void HideShotFeedback()
     {
     }

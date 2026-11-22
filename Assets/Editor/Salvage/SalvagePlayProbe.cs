@@ -235,7 +235,7 @@ public static class SalvagePlayProbe
         resourcePath = "Blocks/UniversalThruster",
         amount = 1
     };
-    private static BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction, bool withBot = false)
+    private static BlueprintStructureRuntime SalvageBuilding(BlueprintStructureRegistry manager, UnitFaction faction, bool withBot = false)
     {
         var blueprint = new BlockDataList
         {
@@ -276,16 +276,16 @@ public static class SalvagePlayProbe
             blueprint.blocks.Add(data);
         }
 
-        return manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Salvage probe", faction = faction, position = new Vector3(200, 100, 200), blueprint = blueprint, durability = Enumerable.Repeat(100f, blueprint.blocks.Count).ToArray() });
+        return manager.RestoreBuilding(new BlueprintStructureState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Salvage probe", faction = faction, position = new Vector3(200, 100, 200), blueprint = blueprint, durability = Enumerable.Repeat(100f, blueprint.blocks.Count).ToArray() });
     }
 
     private static IEnumerator BuildingSalvage()
     {
         var root = new GameObject("Building salvage probe");
         root.SetActive(false);
-        var manager = root.AddComponent<WorldBuildingManager>();
+        var manager = root.AddComponent<BlueprintStructureRegistry>();
         var serialized = new SerializedObject(manager);
-        serialized.FindProperty("initializeOnStart").boolValue = false;
+        serialized.FindProperty("useIndividualRenderers").boolValue = false;
         serialized.ApplyModifiedPropertiesWithoutUndo();
         root.SetActive(true);
         SalvageSettings settings = WreckSalvage.Settings;
@@ -307,7 +307,7 @@ public static class SalvagePlayProbe
                 serialized.Update();
                 serialized.FindProperty("maximumDebrisPieces").intValue = exhausted ? 0 : 12;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
-                BuildingRuntime building = SalvageBuilding(manager, UnitFaction.Enemy);
+                BlueprintStructureRuntime building = SalvageBuilding(manager, UnitFaction.Enemy);
                 Block target = building.Blocks[0];
                 target.canExplode = false;
                 Block detached = building.Blocks[1];
@@ -320,10 +320,10 @@ public static class SalvagePlayProbe
                     LootDrop.Active.Count(d => d.Item.kind == CargoKind.SpecialPart) == 2 && LootDrop.Active.Where(d => d.Item.kind == CargoKind.Coins).Sum(d => d.Item.amount) == settings.coinsPerBlock);
                 WreckSalvage.Convert(detached);
                 Check("Detached building salvage cannot convert twice " + exhausted, LootDrop.Active.Count() == 3);
-                WorldBuildingState captured = building.Capture();
+                BlueprintStructureState captured = building.Capture();
                 manager.RemoveBuilding(building);
                 yield return 0.15f;
-                BuildingRuntime restored = manager.RestoreBuilding(captured);
+                BlueprintStructureRuntime restored = manager.RestoreBuilding(captured);
                 Check(
                     "Reloading destroyed building cannot respawn salvaged modules " + exhausted,
                     restored.Blocks.Count == 0 && LootDrop.Active.Count() == 3);
@@ -338,7 +338,7 @@ public static class SalvagePlayProbe
                 serialized.Update();
                 serialized.FindProperty("maximumDebrisPieces").intValue = exhausted ? 0 : 12;
                 serialized.ApplyModifiedPropertiesWithoutUndo();
-                BuildingRuntime carrier = SalvageBuilding(manager, UnitFaction.Player, true);
+                BlueprintStructureRuntime carrier = SalvageBuilding(manager, UnitFaction.Player, true);
                 CollectionBot flying = carrier.GetComponentInChildren<CollectionBot>();
                 flying.targetRange = 30;
                 foreach (Power power in carrier.GetComponentsInChildren<Power>())
@@ -359,7 +359,7 @@ public static class SalvagePlayProbe
                     flying.HasCargo && flying.transform.parent != flying.home);
                 if (exhausted)
                 {
-                    WorldBuildingState sleep = carrier.Capture();
+                    BlueprintStructureState sleep = carrier.Capture();
                     if (unloadMode == 2)
                     {
                         manager.PrepareForUnload();
@@ -375,7 +375,7 @@ public static class SalvagePlayProbe
                     Check(
                         "Unload mode " + unloadMode + " releases carried cargo before hierarchy deactivation",
                         transported != null && transported.Available && transported.transform.parent == null);
-                    BuildingRuntime wake = manager.RestoreBuilding(sleep);
+                    BlueprintStructureRuntime wake = manager.RestoreBuilding(sleep);
                     Check(
                         "Waking building keeps only stored cargo, without duplicating in-flight delivery",
                         wake.Blocks[1].GetComponent<CargoHold>().Used == 2);
@@ -398,7 +398,7 @@ public static class SalvagePlayProbe
                 LootDrop.ClearSession();
             }
 
-            BuildingRuntime player = SalvageBuilding(manager, UnitFaction.Player);
+            BlueprintStructureRuntime player = SalvageBuilding(manager, UnitFaction.Player);
             player.Blocks[0].canExplode = false;
             player.Blocks[0].GetComponent<Durability>().ApplyDamage(10000f, null);
             Check(
@@ -407,11 +407,11 @@ public static class SalvagePlayProbe
             manager.RemoveBuilding(player);
             yield return 0.15f;
             LootDrop.ClearSession();
-            BuildingRuntime sleeper = SalvageBuilding(manager, UnitFaction.Enemy);
-            WorldBuildingState sleeping = sleeper.Capture();
+            BlueprintStructureRuntime sleeper = SalvageBuilding(manager, UnitFaction.Enemy);
+            BlueprintStructureState sleeping = sleeper.Capture();
             manager.RemoveBuilding(sleeper);
             yield return 0.15f;
-            BuildingRuntime waking = manager.RestoreBuilding(sleeping);
+            BlueprintStructureRuntime waking = manager.RestoreBuilding(sleeping);
             Check(
                 "Streaming unload/reload preserves cargo without emitting salvage",
                 !LootDrop.Active.Any() && waking.Blocks[1].GetComponent<CargoHold>().Used == 2);

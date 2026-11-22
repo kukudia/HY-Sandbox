@@ -1,6 +1,6 @@
 # HY-Sandbox 源码目录分类
 
-运行时代码位于 `Assets/Scripts/Features`。目录本身按递归功能树组织：父目录保留主要入口、协调器和核心契约；独立职责进入具名子目录，内部存在不同生命周期或独立算法时继续细分。类型沿用原名称和全局命名空间，源码位置不改变 Unity 脚本身份。
+运行时代码位于 `Assets/Scripts/Features`。目录本身按递归功能树组织：父目录保留主要入口、协调器和核心契约；独立职责进入具名子目录，内部存在不同生命周期或独立算法时继续细分。源码位置不改变 Unity 脚本身份。建筑类型迁移保留原脚本 GUID。
 
 ## 主入口与子功能
 
@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | Bootstrap | GameManager | 单一启动入口，保持简单 |
 | Bots | Bot | Navigation；Repair（含维修专属搜索/表现）；Collection；Presentation |
-| Building | BuildManager、SaveManager | Actions；BlueprintLoading；BlockDataTables；BuildingEditor；Interaction；Interface |
+| Building | BuildManager、SaveManager | Actions；BlueprintLoading（共享装配）；Structures（地基、放置、快照、渲染、流式加载和修缮）；BlockDataTables；BuildingEditor；Interaction；Interface |
 | Combat | DestroyManager | Damage；Enemies；Meteors；Turrets（再分 Projectiles）；Interface；Skirmish（含 Diagnostics 实战追踪） |
 | Diagnostics | DebugManager | Physics；Bots；Interface |
 | Flight | HoverFlightController、FlightControlMath、FlightPropulsionControl | Hover；Thrusters；Presentation；共用响应/航迹与朝向油门转换不依赖场景 |
@@ -22,7 +22,8 @@
 | Salvage | SalvageSettings | Cargo；Drops；Economy |
 | Siege | SiegeSession、SiegeMatch、SiegeSettings、SiegeProgress | Battle；Fleet；Gameplay（新版基地战）；Interface；Workshop；Validation |
 | Simulation | PlayManager、Block | Connections；Groups；Units；Modes（副场景选择与原稿）；Physics；Presentation；Diagnostics |
-| World | WorldSessionManager、WorldGenerationSettings | Terrain；Buildings；Outposts；Streaming；Persistence；Presentation；WorldLab；Validation |
+| World | WorldSessionManager、WorldGenerationSettings | Terrain；Outposts；Streaming；Presentation；Validation |
+| Research | 由场景手动开启 | WorldLab（实验布局、快照、建造面板）；Siege（压力人口与独立 Player 探针） |
 
 ## World 的递归结构
 
@@ -37,20 +38,10 @@ World/
 │   ├── VoxelWorldChunk.cs          单块对象与网格提交
 │   ├── Meshing/                    纯网格算法及工作线程快照
 │   └── Destruction/                支撑、塌落与碎片生命周期
-├── Buildings/
-│   ├── WorldBuildingManager.cs     建筑集合与生命周期
-│   ├── BuildingRuntime.cs          单栋建筑运行主体
-│   ├── Topology/                   邻接、损伤与修缮
-│   ├── Placement/                  放置、净空、预览选择与验证
-│   ├── Data/                       模板、文件库与建筑快照
-│   └── Presentation/               渲染缓存
 ├── Outposts/                       驻军数据、遭遇调度与据点HUD
 ├── Streaming/                      地形列/建筑加载、休眠与玩家保护
-├── Persistence/                    世界差量和WorldLab文件存储
 ├── Presentation/                   远景、过渡网格与加载面板
-├── WorldLab/                       独立实验场入口
 └── Validation/                     显式Player路线
-    └── WorldLab/                   实验场物理/碎片探针
 ```
 
 目录代表职责归属，不引入新的程序集、命名空间、反射装配或运行顺序。仅有一个文件且职责独立的子功能可以保留单文件目录；小而内聚的顶层功能不强制拆分。运行时Player验证仍位于运行时编译范围，只有显式参数启用，不移入 Editor 导致正式Player失去验证入口。

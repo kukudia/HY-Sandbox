@@ -6064,7 +6064,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0c76dc90ada29a42823329a16472909, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldBuildingManager
+  m_EditorClassIdentifier: Assembly-CSharp::BlueprintStructureRegistry
   world: {fileID: 13068935}
   catalog: {fileID: 0}
   initializeOnStart: 0

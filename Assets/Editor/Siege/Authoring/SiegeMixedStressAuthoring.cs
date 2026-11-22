@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 public static class SiegeMixedStressAuthoring
 {
-    public const string ScenePath = "Assets/Scenes/SiegeMixedStress.unity";
+    public const string ScenePath = "Assets/Scenes/Research/SiegeMixedStress.unity";
     public const string SettingsPath = "Assets/Siege/SiegeMixedStress.asset";
     [MenuItem("HY-Sandbox/Siege/Create Editable Mixed 10k Stress Profile")]
     public static void Create()

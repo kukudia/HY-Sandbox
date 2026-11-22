@@ -8,7 +8,7 @@ using UnityEngine;
 internal sealed class WorldRegionStreaming
 {
     private readonly ProceduralVoxelWorld world;
-    private readonly WorldBuildingStreaming buildings;
+    private readonly BlueprintStructureStreaming buildings;
     private readonly WorldGenerationSettings settings;
     private readonly List<Vector2Int> retiring = new List<Vector2Int>();
     private Vector2Int lastCenter;
@@ -21,7 +21,7 @@ internal sealed class WorldRegionStreaming
 
     internal WorldRegionStreaming(
         ProceduralVoxelWorld terrain,
-        WorldBuildingStreaming structures,
+        BlueprintStructureStreaming structures,
         WorldGenerationSettings configuration)
     {
         world = terrain;
@@ -73,7 +73,7 @@ internal sealed class WorldRegionStreaming
 
         // Terrain nearest the player wins over restoring far structures in the same ring.
         // Otherwise a large blueprint can delay collision-ready columns during travel.
-        if (LoadedWork && WorldBuildingStreaming.Distance(coordinate, center) <= 2)
+        if (LoadedWork && BlueprintStructureStreaming.Distance(coordinate, center) <= 2)
         {
             observedVersion = world.ColumnVersion;
             nextMaintenanceTime = 0f;
@@ -141,7 +141,7 @@ internal sealed class WorldRegionStreaming
         retiring.Clear();
         foreach (Vector2Int column in world.LoadedColumns)
         {
-            if (WorldBuildingStreaming.Distance(column, center) > settings.UnloadRadius)
+            if (BlueprintStructureStreaming.Distance(column, center) > settings.UnloadRadius)
             {
                 retiring.Add(column);
             }

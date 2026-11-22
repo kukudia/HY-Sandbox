@@ -315,6 +315,7 @@ HY-Sandbox/
 │           │   │   ├── BaseBlueprintMigration.cs
 │           │   │   ├── BlockData.cs
 │           │   │   ├── BlockPrefabCache.cs
+│           │   │   ├── BlueprintAssemblyBuilder.cs
 │           │   │   ├── BlueprintBlockFactory.cs
 │           │   │   ├── BlueprintFileStore.cs
 │           │   │   ├── BlueprintLoadCamera.cs
@@ -350,11 +351,27 @@ HY-Sandbox/
 │           │   │   ├── BuildPalette.cs
 │           │   │   ├── BuildPaletteItem.cs
 │           │   │   └── SaveUIPanel.cs
-│           │   └── Materials/
-│           │       ├── BlockMaterial.cs
-│           │       ├── BlockMaterialCatalog.cs
-│           │       ├── BuildMaterialSelector.cs
-│           │       └── MaterialBreakEffect.cs
+│           │   ├── Materials/
+│           │   │   ├── BlockMaterial.cs
+│           │   │   ├── BlockMaterialCatalog.cs
+│           │   │   ├── BuildMaterialSelector.cs
+│           │   │   └── MaterialBreakEffect.cs
+│           │   └── Structures/
+│           │       ├── BlueprintStructureRegistry.cs
+│           │       ├── BlueprintStructureRuntime.cs
+│           │       ├── Data/
+│           │       │   ├── BlueprintStructureLibrary.cs
+│           │       │   └── BlueprintStructureState.cs
+│           │       ├── Placement/
+│           │       │   ├── BlueprintStructureFootprints.cs
+│           │       │   ├── BlueprintStructurePlacement.cs
+│           │       │   └── BlueprintStructureValidation.cs
+│           │       ├── Presentation/
+│           │       │   └── BlueprintStructureRenderCache.cs
+│           │       ├── Streaming/
+│           │       │   └── BlueprintStructureStreaming.cs
+│           │       └── Topology/
+│           │           └── BlueprintStructureRefit.cs
 │           ├── Combat/
 │           │   ├── DestroyManager.cs
 │           │   ├── Damage/
@@ -470,6 +487,8 @@ HY-Sandbox/
 │           │   └── Vessels/
 │           │       ├── VesselNavigation.cs
 │           │       └── VesselNavigationSettings.cs
+│           ├── Performance/
+│           │   └── RuntimePerformanceSwitches.cs
 │           ├── Player/
 │           │   ├── InputManager.cs
 │           │   ├── Player.cs
@@ -526,6 +545,19 @@ HY-Sandbox/
 │           │       ├── ReturnStatusPanel.cs
 │           │       ├── StatusIcon.cs
 │           │       └── UIInteractionFeedback.cs
+│           ├── Research/
+│           │   ├── Siege/
+│           │   │   ├── SiegeDrivingPlayerChecks.cs
+│           │   │   ├── SiegePlayerChecks.cs
+│           │   │   ├── SiegePlayerSurvey.cs
+│           │   │   └── SiegeStressPopulation.cs
+│           │   └── WorldLab/
+│           │       ├── BlueprintStructureCatalog.cs
+│           │       ├── BlueprintStructurePalette.cs
+│           │       ├── WorldLabController.cs
+│           │       ├── WorldLabDebrisProbe.cs
+│           │       ├── WorldLabPersistence.cs
+│           │       └── WorldLabPhysicsProbe.cs
 │           ├── Salvage/
 │           │   ├── SalvageSettings.cs
 │           │   ├── Cargo/
@@ -586,12 +618,8 @@ HY-Sandbox/
 │           │   │   ├── SiegeHud.cs
 │           │   │   └── SiegeObserverCamera.cs
 │           │   ├── Validation/
-│           │   │   ├── SiegeDrivingPlayerChecks.cs
 │           │   │   ├── SiegeEngineCounters.cs
-│           │   │   ├── SiegeGameplayPlayerChecks.cs
-│           │   │   ├── SiegePlayerChecks.cs
-│           │   │   ├── SiegePlayerSurvey.cs
-│           │   │   └── SiegeStressPopulation.cs
+│           │   │   └── SiegeGameplayPlayerChecks.cs
 │           │   └── Workshop/
 │           │       ├── SiegeWorkshop.cs
 │           │       └── SiegeWorkshopStage.cs
@@ -634,35 +662,17 @@ HY-Sandbox/
 │           └── World/
 │               ├── WorldGenerationSettings.cs
 │               ├── WorldSessionManager.cs
-│               ├── Buildings/
-│               │   ├── BuildingRuntime.cs
-│               │   ├── WorldBuildingManager.cs
-│               │   ├── Data/
-│               │   │   ├── WorldBuildingCatalog.cs
-│               │   │   ├── WorldBuildingLibrary.cs
-│               │   │   └── WorldBuildingState.cs
-│               │   ├── Placement/
-│               │   │   ├── WorldBuildingFootprints.cs
-│               │   │   ├── WorldBuildingPalette.cs
-│               │   │   ├── WorldBuildingPlacement.cs
-│               │   │   └── WorldBuildingValidation.cs
-│               │   ├── Presentation/
-│               │   │   └── WorldBuildingRenderCache.cs
-│               │   └── Topology/
-│               │       └── BuildingRefit.cs
 │               ├── Outposts/
 │               │   ├── EnemyOutpostData.cs
 │               │   ├── OutpostEncounterDirector.cs
 │               │   └── OutpostHud.cs
 │               ├── Persistence/
-│               │   ├── VoxelWorldEdits.cs
-│               │   └── WorldLabPersistence.cs
+│               │   └── VoxelWorldEdits.cs
 │               ├── Presentation/
 │               │   ├── WorldDistanceView.cs
 │               │   ├── WorldLoadingPanel.cs
 │               │   └── WorldTerrainTransitionMesh.cs
 │               ├── Streaming/
-│               │   ├── WorldBuildingStreaming.cs
 │               │   ├── WorldPlayerStreamingGuard.cs
 │               │   └── WorldRegionStreaming.cs
 │               ├── Terrain/
@@ -678,21 +688,16 @@ HY-Sandbox/
 │               │   └── Meshing/
 │               │       ├── VoxelMeshData.cs
 │               │       └── VoxelSurfaceMesher.cs
-│               ├── Validation/
-│               │   ├── EnemyFlightPlayerChecks.cs
-│               │   ├── OutpostEditorPlayerChecks.cs
-│               │   ├── OutpostPlayerChecks.cs
-│               │   ├── OutpostPursuitPlayerChecks.cs
-│               │   ├── OutpostSalvagePlayerChecks.cs
-│               │   ├── WorldCombatPlayerChecks.cs
-│               │   ├── WorldPlayerSmokeChecks.cs
-│               │   ├── WorldReturnPlayerChecks.cs
-│               │   ├── WorldSessionValidationHost.cs
-│               │   └── WorldLab/
-│               │       ├── WorldLabDebrisProbe.cs
-│               │       └── WorldLabPhysicsProbe.cs
-│               └── WorldLab/
-│                   └── WorldLabController.cs
+│               └── Validation/
+│                   ├── EnemyFlightPlayerChecks.cs
+│                   ├── OutpostEditorPlayerChecks.cs
+│                   ├── OutpostPlayerChecks.cs
+│                   ├── OutpostPursuitPlayerChecks.cs
+│                   ├── OutpostSalvagePlayerChecks.cs
+│                   ├── WorldCombatPlayerChecks.cs
+│                   ├── WorldPlayerSmokeChecks.cs
+│                   ├── WorldReturnPlayerChecks.cs
+│                   └── WorldSessionValidationHost.cs
 ├── Blueprints/
 │   ├── CODEX/
 │   │   ├── Generate.cs
@@ -771,10 +776,10 @@ HY-Sandbox/
 | EditableComponentBaker | [`T Template(string name, Action<GameObject> compose)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L153) | private static |
 | EditableComponentBaker | [`void ConfigurePool(VfxEffectPool pool)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L183) | private static |
 | EditableComponentBaker | [`void BakeTemplates()`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L197) | private static |
-| EditableComponentBaker | [`void MigrateTree(GameObject root)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L316) | private static |
-| EditableComponentBaker | [`T Service(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L459) | private static |
-| EditableComponentBaker | [`void ConfigureServices(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L473) | private static |
-| EditableComponentBuildStripper | [`void OnProcessScene(Scene scene, BuildReport report)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L513) | public |
+| EditableComponentBaker | [`void MigrateTree(GameObject root)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L319) | private static |
+| EditableComponentBaker | [`T Service(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L462) | private static |
+| EditableComponentBaker | [`void ConfigureServices(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L476) | private static |
+| EditableComponentBuildStripper | [`void OnProcessScene(Scene scene, BuildReport report)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L516) | public |
 
 ## Assets/Editor/Architecture/EditableComponentChecks.cs
 
@@ -801,7 +806,7 @@ HY-Sandbox/
 | FragmentRetentionChecks | [`void Tick()`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L46) | private static |
 | FragmentRetentionChecks | [`void Finish()`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L85) | private static |
 | FragmentRetentionChecks | [`IEnumerator RunRoutine()`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L107) | private static |
-| FragmentRetentionChecks | [`GameObject CreateDebris(WorldBuildingManager host, int count, float height)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L241) | private static |
+| FragmentRetentionChecks | [`GameObject CreateDebris(BlueprintStructureRegistry host, int count, float height)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L241) | private static |
 | FragmentRetentionChecks | [`ControlUnit NewUnit(string name)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L257) | private static |
 | FragmentRetentionChecks | [`Block NewBlock(string name, Transform parent)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L265) | private static |
 | FragmentRetentionChecks | [`GameObject NewObject(string name, Transform parent = null)`](../Assets/Editor/Architecture/FragmentRetentionChecks.cs#L276) | private static |
@@ -1217,11 +1222,11 @@ HY-Sandbox/
 | BlueprintCapacityPlayChecks | [`void Start()`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L29) | public static |
 | BlueprintCapacityPlayChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L46) | private static |
 | BlueprintCapacityPlayChecks | [`IEnumerator Run()`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L82) | private static |
-| BlueprintCapacityPlayChecks | [`IEnumerator Restore(WorldBuildingManager manager, WorldBuildingState state, Action<BuildingRuntime> complete)`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L174) | private static |
-| BlueprintCapacityPlayChecks | [`BlockDataList CreateDesign()`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L179) | private static |
-| BlueprintCapacityPlayChecks | [`WorldBuildingState State(BlockDataList design, string id, int slot)`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L202) | private static |
-| BlueprintCapacityPlayChecks | [`void Require(bool value, string name)`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L217) | private static |
-| BlueprintCapacityPlayChecks | [`void Save()`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L228) | private static |
+| BlueprintCapacityPlayChecks | [`IEnumerator Restore( BlueprintStructureRegistry manager, BlueprintStructureState state, Action<BlueprintStructureRuntime> complete)`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L174) | private static |
+| BlueprintCapacityPlayChecks | [`BlockDataList CreateDesign()`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L182) | private static |
+| BlueprintCapacityPlayChecks | [`BlueprintStructureState State(BlockDataList design, string id, int slot)`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L205) | private static |
+| BlueprintCapacityPlayChecks | [`void Require(bool value, string name)`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L220) | private static |
+| BlueprintCapacityPlayChecks | [`void Save()`](../Assets/Editor/Building/Validation/BlueprintCapacityPlayChecks.cs#L231) | private static |
 
 ## Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs
 
@@ -1246,7 +1251,7 @@ HY-Sandbox/
 | BlueprintSupportAudit | [`void Start()`](../Assets/Editor/Building/Validation/BlueprintSupportAudit.cs#L39) | public static |
 | BlueprintSupportAudit | [`void Tick()`](../Assets/Editor/Building/Validation/BlueprintSupportAudit.cs#L54) | private static |
 | BlueprintSupportAudit | [`IEnumerator Run()`](../Assets/Editor/Building/Validation/BlueprintSupportAudit.cs#L90) | private static |
-| BlueprintSupportAudit | [`void Save()`](../Assets/Editor/Building/Validation/BlueprintSupportAudit.cs#L181) | private static |
+| BlueprintSupportAudit | [`void Save()`](../Assets/Editor/Building/Validation/BlueprintSupportAudit.cs#L183) | private static |
 
 ## Assets/Editor/Building/Validation/BuildHotbarChecks.cs
 
@@ -1656,9 +1661,9 @@ HY-Sandbox/
 | ExplosionIntegrationChecks | [`string Run()`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L21) | public static |
 | ExplosionIntegrationChecks | [`void TerrainCheck(Scene scene, Report report)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L159) | private static |
 | ExplosionIntegrationChecks | [`void ShipConnections(Scene scene, Vector3 origin, float probability, Report report)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L183) | private static |
-| ExplosionIntegrationChecks | [`void FoundationConnections(WorldBuildingManager manager, Vector3 origin, float probability, Report report)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L228) | private static |
-| ExplosionIntegrationChecks | [`WorldBuildingManager Manager(Scene scene)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L269) | private static |
-| ExplosionIntegrationChecks | [`BuildingRuntime Building(WorldBuildingManager manager, Vector3 center, params Vector3[] parts)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L282) | private static |
+| ExplosionIntegrationChecks | [`void FoundationConnections(BlueprintStructureRegistry manager, Vector3 origin, float probability, Report report)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L228) | private static |
+| ExplosionIntegrationChecks | [`BlueprintStructureRegistry Manager(Scene scene)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L269) | private static |
+| ExplosionIntegrationChecks | [`BlueprintStructureRuntime Building(BlueprintStructureRegistry manager, Vector3 center, params Vector3[] parts)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L282) | private static |
 | ExplosionIntegrationChecks | [`Block Ship(Scene scene, Vector3 position)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L311) | private static |
 | ExplosionIntegrationChecks | [`Block ShipPart(Transform owner, Vector3 position)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L330) | private static |
 | ExplosionIntegrationChecks | [`void Configure(Block block, float damage, float radius)`](../Assets/Editor/Combat/Validation/ExplosionIntegrationChecks.cs#L341) | private static |
@@ -2386,7 +2391,7 @@ HY-Sandbox/
 | SalvagePlayProbe | [`GameObject Spawn(string name, ControlUnit unit, Vector3 local)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L212) | private static |
 | SalvagePlayProbe | [`CargoItem Coins(int count)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L227) | private static |
 | SalvagePlayProbe | [`CargoItem Part()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L232) | private static |
-| SalvagePlayProbe | [`BuildingRuntime SalvageBuilding(WorldBuildingManager manager, UnitFaction faction, bool withBot = false)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L238) | private static |
+| SalvagePlayProbe | [`BlueprintStructureRuntime SalvageBuilding(BlueprintStructureRegistry manager, UnitFaction faction, bool withBot = false)`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L238) | private static |
 | SalvagePlayProbe | [`IEnumerator BuildingSalvage()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L282) | private static |
 | SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L432) | private static |
 
@@ -2407,7 +2412,7 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeBaseBlueprintAuthoring | [`void UpgradeScene()`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L14) | public static |
-| SiegeBaseBlueprintAuthoring | [`void ConfigureManager(WorldBuildingManager buildings)`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L55) | internal static |
+| SiegeBaseBlueprintAuthoring | [`void ConfigureManager(BlueprintStructureRegistry buildings)`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L55) | internal static |
 | SiegeBaseBlueprintAuthoring | [`TextAsset Generate(bool replace = false)`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L62) | public static |
 | SiegeBaseBlueprintAuthoring | [`void Add(BlockDataList blueprint, string resource, Vector3 position, string id = null)`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L153) | private static |
 
@@ -2805,7 +2810,7 @@ HY-Sandbox/
 | SiegeHangarPlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L170) | private static |
 | SiegeHangarPlayChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L190) | private static |
 | SiegeHangarPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L216) | private static |
-| SiegeHangarPlayChecks | [`void SetSimulation(WorldBuildingManager manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L485) | private static |
+| SiegeHangarPlayChecks | [`void SetSimulation(BlueprintStructureRegistry manager, bool active)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L485) | private static |
 | SiegeHangarPlayChecks | [`IEnumerator GuideFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase, Action completed)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L491) | private static |
 | SiegeHangarPlayChecks | [`void SampleFlight(SiegeReturnFlight flight, SiegeFleetEntry entry, string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L513) | private static |
 | SiegeHangarPlayChecks | [`void CheckGuidedFeedback(string phase)`](../Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs#L598) | private static |
@@ -2879,18 +2884,18 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeSceneAuthoring | [`void Create()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L20) | public static |
-| SiegeSceneAuthoring | [`void Open()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L85) | public static |
-| SiegeSceneAuthoring | [`void FitHudToViewport()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L96) | public static |
-| SiegeSceneAuthoring | [`void RegenerateDefaultBase()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L122) | public static |
-| SiegeSceneAuthoring | [`TextAsset CreateBaseBlueprint(bool replace = false)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L140) | private static |
-| SiegeSceneAuthoring | [`SiegeSettings CreateSettings(TextAsset baseBlueprint)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L145) | private static |
-| SiegeSceneAuthoring | [`void CreateManagers()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L190) | private static |
-| SiegeSceneAuthoring | [`void CreateEnvironment()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L206) | private static |
-| SiegeSceneAuthoring | [`Transform[] CreateDocks(Transform parent)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L229) | private static |
-| SiegeSceneAuthoring | [`Material MaterialAsset(string name, Color color)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L250) | private static |
-| SiegeSceneAuthoring | [`void CreateCamera()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L267) | private static |
-| SiegeSceneAuthoring | [`void CreateHud(SiegeSession session, SiegeSettings settings, int bays)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L284) | private static |
-| SiegeSceneAuthoring | [`void SetArray(SerializedProperty property, Object[] values)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L298) | private static |
+| SiegeSceneAuthoring | [`void Open()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L79) | public static |
+| SiegeSceneAuthoring | [`void FitHudToViewport()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L90) | public static |
+| SiegeSceneAuthoring | [`void RegenerateDefaultBase()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L116) | public static |
+| SiegeSceneAuthoring | [`TextAsset CreateBaseBlueprint(bool replace = false)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L134) | private static |
+| SiegeSceneAuthoring | [`SiegeSettings CreateSettings(TextAsset baseBlueprint)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L139) | private static |
+| SiegeSceneAuthoring | [`void CreateManagers()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L184) | private static |
+| SiegeSceneAuthoring | [`void CreateEnvironment()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L200) | private static |
+| SiegeSceneAuthoring | [`Transform[] CreateDocks(Transform parent)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L223) | private static |
+| SiegeSceneAuthoring | [`Material MaterialAsset(string name, Color color)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L244) | private static |
+| SiegeSceneAuthoring | [`void CreateCamera()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L261) | private static |
+| SiegeSceneAuthoring | [`void CreateHud(SiegeSession session, SiegeSettings settings, int bays)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L278) | private static |
+| SiegeSceneAuthoring | [`void SetArray(SerializedProperty property, Object[] values)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L292) | private static |
 
 ## Assets/Editor/Siege/Validation/Buildings/SiegeBuildingChecks.cs
 
@@ -2912,8 +2917,8 @@ HY-Sandbox/
 | SiegeBuildingDamageChecks | [`void CheckExplosiveLoss(List<string> checks, bool projectile)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L88) | private static |
 | SiegeBuildingDamageChecks | [`void CheckImmediate(List<string> checks)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L142) | private static |
 | SiegeBuildingDamageChecks | [`void CheckSecondaryFragments(List<string> checks)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L167) | private static |
-| SiegeBuildingDamageChecks | [`GameObject CreateTower(bool reverse, out WorldBuildingManager manager, out BuildingRuntime tower, int height = 2)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L214) | private static |
-| SiegeBuildingDamageChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L246) | private static |
+| SiegeBuildingDamageChecks | [`GameObject CreateTower( bool reverse, out BlueprintStructureRegistry manager, out BlueprintStructureRuntime tower, int height = 2)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L214) | private static |
+| SiegeBuildingDamageChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Buildings/SiegeBuildingDamageChecks.cs#L250) | private static |
 
 ## Assets/Editor/Siege/Validation/Buildings/SiegeBuildingGraphChecks.cs
 
@@ -3234,9 +3239,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | WorldBuildingAuthoring | [`void Install()`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L12) | public static |
-| WorldBuildingAuthoring | [`BlockDataList CreateSample()`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L93) | public static |
-| WorldBuildingAuthoring | [`void Add(BlockDataList blueprint, string resource, Vector3 position)`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L107) | private static |
-| WorldBuildingAuthoring | [`Vector3 FindFlatPosition(ProceduralVoxelWorld world, BlockDataList blueprint)`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L113) | private static |
+| WorldBuildingAuthoring | [`BlockDataList CreateSample()`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L94) | public static |
+| WorldBuildingAuthoring | [`void Add(BlockDataList blueprint, string resource, Vector3 position)`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L108) | private static |
+| WorldBuildingAuthoring | [`Vector3 FindFlatPosition(ProceduralVoxelWorld world, BlockDataList blueprint)`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L114) | private static |
 
 ## Assets/Editor/World/Outposts/OutpostContentAuthoring.cs
 
@@ -3296,7 +3301,7 @@ HY-Sandbox/
 | --- | --- | --- |
 | OutpostContentChecks | [`string Run()`](../Assets/Editor/World/Validation/Outposts/OutpostContentChecks.cs#L14) | public static |
 | OutpostContentChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/World/Validation/Outposts/OutpostContentChecks.cs#L157) | private static |
-| OutpostContentChecks | [`void Render(BuildingRuntime building, string path)`](../Assets/Editor/World/Validation/Outposts/OutpostContentChecks.cs#L167) | private static |
+| OutpostContentChecks | [`void Render(BlueprintStructureRuntime building, string path)`](../Assets/Editor/World/Validation/Outposts/OutpostContentChecks.cs#L167) | private static |
 
 ## Assets/Editor/World/Validation/Outposts/OutpostResidentChecks.cs
 
@@ -3312,17 +3317,17 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ProbeFixture | [`void Install()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L63) | public |
-| ProbeFixture | [`void Dispose()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L98) | public |
-| WorldBuildingPlayProbe | [`void Run()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L139) | public static |
-| WorldBuildingPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L151) | private static |
-| WorldBuildingPlayProbe | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L169) | private static |
-| WorldBuildingPlayProbe | [`void Tick()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L177) | private static |
-| WorldBuildingPlayProbe | [`void Check(bool result, string description)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L206) | private static |
-| WorldBuildingPlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L216) | private static |
-| WorldBuildingPlayProbe | [`void InvokeUpdate(MonoBehaviour behaviour)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L522) | private static |
-| WorldBuildingPlayProbe | [`void ExpectRejected(WorldBuildingManager manager, WorldLabSnapshot snapshot, string name)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L527) | private static |
-| WorldBuildingPlayProbe | [`void Finish()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L542) | private static |
+| ProbeFixture | [`void Install()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L66) | public |
+| ProbeFixture | [`void Dispose()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L101) | public |
+| WorldBuildingPlayProbe | [`void Run()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L142) | public static |
+| WorldBuildingPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L154) | private static |
+| WorldBuildingPlayProbe | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L172) | private static |
+| WorldBuildingPlayProbe | [`void Tick()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L180) | private static |
+| WorldBuildingPlayProbe | [`void Check(bool result, string description)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L209) | private static |
+| WorldBuildingPlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L219) | private static |
+| WorldBuildingPlayProbe | [`void InvokeUpdate(MonoBehaviour behaviour)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L525) | private static |
+| WorldBuildingPlayProbe | [`void ExpectRejected(WorldLabController controller, WorldLabSnapshot snapshot, string name)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L530) | private static |
+| WorldBuildingPlayProbe | [`void Finish()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L545) | private static |
 
 ## Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs
 
@@ -3763,6 +3768,16 @@ HY-Sandbox/
 | --- | --- | --- |
 | BlockPrefabCache | [`GameObject GetPrefab(string resourcePath)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L13) | public static |
 | BlockPrefabCache | [`void Clear()`](../Assets/Scripts/Features/Building/BlueprintLoading/BlockPrefabCache.cs#L37) | public static |
+
+## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintAssemblyBuilder.cs
+
+// 职责：从蓝图恢复模块并完成共享连接、质量和单位归属初始化。 // 入口：Build(); 仅处理可复用的装配步骤，不读取存档、不决定建筑地基或载具驾驶权。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintAssemblyBuilder | [`bool Build(BlockDataList blueprint, Transform root, UnitFaction faction, List<Block> blocks, out float mass)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintAssemblyBuilder.cs#L8) | internal static |
+| BlueprintAssemblyBuilder | [`bool TryRestoreLocal(BlockData data, Transform root, UnitFaction faction, out Block block)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintAssemblyBuilder.cs#L32) | internal static |
+| BlueprintAssemblyBuilder | [`void FinalizeUnit(ControlUnit unit, float mass, UnitFaction faction, bool assignOwnership = true)`](../Assets/Scripts/Features/Building/BlueprintLoading/BlueprintAssemblyBuilder.cs#L45) | internal static |
 
 ## Assets/Scripts/Features/Building/BlueprintLoading/BlueprintBlockFactory.cs
 
@@ -4331,6 +4346,145 @@ HY-Sandbox/
 | SaveManager | [`string GetEnemyBlueprintPath(string blueprintName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L549) | public |
 | SaveManager | [`string GetSaveFileSize(string saveName)`](../Assets/Scripts/Features/Building/SaveManager.cs#L554) | public |
 
+## Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs
+
+// 职责：管理蓝图结构的实例、地基失效通知与残骸生命周期。 // 入口：Place() / RestoreBuilding() / RestoreBuildingRoutine()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructureRegistry | [`void OnEnable()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L38) | private |
+| BlueprintStructureRegistry | [`void OnDisable()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L54) | private |
+| BlueprintStructureRegistry | [`bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L64) | public |
+| BlueprintStructureRegistry | [`BlueprintStructureRuntime Place(BlockDataList blueprint, string name, Vector3 position, Quaternion rotation, UnitFaction faction)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L76) | public |
+| BlueprintStructureRegistry | [`BlueprintStructureRuntime RestoreBuilding(BlueprintStructureState state)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L106) | public |
+| BlueprintStructureRegistry | [`IEnumerator RestoreBuildingRoutine(BlueprintStructureState state, Action<BlueprintStructureRuntime> restored)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L127) | internal |
+| BlueprintStructureRegistry | [`void OptimizeVisuals(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L176) | internal |
+| BlueprintStructureRegistry | [`bool HasCapacity(int additionalBlocks)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L191) | public |
+| BlueprintStructureRegistry | [`bool CanAddBlocks(int additionalBlocks)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L196) | public |
+| BlueprintStructureRegistry | [`void RemoveBuilding(BlueprintStructureRuntime building)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L203) | public |
+| BlueprintStructureRegistry | [`void PrepareForUnload()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L216) | public |
+| BlueprintStructureRegistry | [`void ClearSession()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L227) | public |
+| BlueprintStructureRegistry | [`void OnDestroy()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L234) | private |
+| BlueprintStructureRegistry | [`BlueprintStructureRuntime Stage(BlueprintStructureState state, Transform parent)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L239) | private |
+| BlueprintStructureRegistry | [`void ReplaceStructures(IReadOnlyList<BlueprintStructureState> states, Action commitEnvironment)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L257) | internal |
+| BlueprintStructureRegistry | [`void ClearBuildings()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L308) | private |
+| BlueprintStructureRegistry | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L324) | private |
+| BlueprintStructureRegistry | [`void FixedUpdate()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L335) | private |
+| BlueprintStructureRegistry | [`void DamageSphere(Vector3 center, float radius, float damageAmount)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L353) | public |
+| BlueprintStructureRegistry | [`void TrackFragment(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L376) | internal |
+| BlueprintStructureRegistry | [`IEnumerator RetireFragment(ControlUnit fragment, float delay)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L396) | private |
+| BlueprintStructureRegistry | [`void ClearDebris()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRegistry.cs#L408) | private |
+
+## Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs
+
+// 职责：拥有一栋世界建筑的方块、虚拟支撑范围与刚体；处理损坏、断裂和脱锚。 // 入口：Initialize() / Activate() / ReleaseAnchor() / Capture()；订阅所属单位的方块销毁通知维护主体快照。 // 生命周期：世界存档只捕获主体；断裂残骸由 BlueprintStructureRegistry 限量管理。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructureRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L49) | internal |
+| BlueprintStructureRuntime | [`void Initialize(BlueprintStructureRegistry owner, BlueprintStructureState state)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L63) | public |
+| BlueprintStructureRuntime | [`IEnumerator InitializeRoutine(BlueprintStructureRegistry owner, BlueprintStructureState state)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L71) | internal |
+| BlueprintStructureRuntime | [`void Activate()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L116) | public |
+| BlueprintStructureRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L124) | internal |
+| BlueprintStructureRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L174) | public |
+| BlueprintStructureRuntime | [`BlueprintStructureState Capture()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L182) | public |
+| BlueprintStructureRuntime | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L232) | private |
+| BlueprintStructureRuntime | [`bool Supports(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L242) |  |
+| BlueprintStructureRuntime | [`void OnFragmentDetached(List<Block> group, ControlUnit fragment)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L247) |  |
+| BlueprintStructureRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L262) | public |
+| BlueprintStructureRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L283) | private |
+| BlueprintStructureRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L307) | internal |
+| BlueprintStructureRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L332) | private |
+| BlueprintStructureRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L357) | public |
+| BlueprintStructureRuntime | [`float TotalMass()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L368) | private |
+
+## Assets/Scripts/Features/Building/Structures/Data/BlueprintStructureLibrary.cs
+
+// 职责：仅从SaveManager共用文件仓读取建筑快照；World与WorldLab共用解析和错误隔离。 // 入口：LoadRoutine()预热世界资源；Load()刷新WorldLab目录；仅世界生成检查平台范围，不修改源文件。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructureLibrary | [`IEnumerator LoadRoutine(BlueprintFileStore files)`](../Assets/Scripts/Features/Building/Structures/Data/BlueprintStructureLibrary.cs#L19) | internal |
+| BlueprintStructureLibrary | [`void Load(BlueprintFileStore files)`](../Assets/Scripts/Features/Building/Structures/Data/BlueprintStructureLibrary.cs#L51) | internal |
+| BlueprintStructureLibrary | [`IEnumerable<string> ReadSources(BlueprintFileStore files, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/Building/Structures/Data/BlueprintStructureLibrary.cs#L59) | private |
+| BlueprintStructureLibrary | [`void ReadSource(string name, string path, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/Building/Structures/Data/BlueprintStructureLibrary.cs#L82) | private |
+| BlueprintStructureLibrary | [`void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)`](../Assets/Scripts/Features/Building/Structures/Data/BlueprintStructureLibrary.cs#L115) | private static |
+
+## Assets/Scripts/Features/Building/Structures/Data/BlueprintStructureState.cs
+
+// 职责：保存世界建筑独立身份、根姿态、蓝图快照与逐块耐久；坐标相对建筑底座。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureFootprints.cs
+
+// 职责：快照每套建筑真实支撑范围，并让地形和建筑生成使用同一确定性模板索引。 // 入口：构造后Get()读取；不包含驻军飞行范围，不访问场景或用户文件。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructureFootprints | [`Bounds Get(int seed, Vector2Int column)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureFootprints.cs#L32) | public |
+| BlueprintStructureFootprints | [`int SelectTemplate(int seed, Vector2Int column, int count)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureFootprints.cs#L37) | public static |
+
+## Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs
+
+// 职责：在1m建筑网格与体素地形间转换位置，检测支撑、体素穿插和其他碰撞体。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructurePlacement | [`Vector3 Snap(ProceduralVoxelWorld world, Vector3 hit)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs#L6) | public static |
+| BlueprintStructurePlacement | [`bool Check( ProceduralVoxelWorld world, BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs#L15) | public static |
+| BlueprintStructurePlacement | [`bool IntersectsTerrain(ProceduralVoxelWorld world, Vector3 center, Vector3 half, Quaternion rotation)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs#L77) | private static |
+| BlueprintStructurePlacement | [`Vector3 LocalAnchor(int x, int z)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs#L106) | public static |
+| BlueprintStructurePlacement | [`Vector3 LocalAnchor(BuildingFoundationData footprint, int x, int z)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs#L111) | public static |
+| BlueprintStructurePlacement | [`float Support(ProceduralVoxelWorld world, Vector2Int size, Transform pose)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs#L116) | public static |
+| BlueprintStructurePlacement | [`float Support(ProceduralVoxelWorld world, BuildingFoundationData footprint, Transform pose)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs#L121) | public static |
+| BlueprintStructurePlacement | [`Bounds Footprint(BlueprintStructureRuntime building)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructurePlacement.cs#L140) | public static |
+
+## Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureValidation.cs
+
+// 职责：创建前校验建筑模板、实例状态和资源，拒绝部分加载与非法尺寸/坐标。 // 入口：ValidateBlueprint() / ValidateState()；不会修改资源或活动世界。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructureValidation | [`void ValidateBlueprint(BlockDataList blueprint)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureValidation.cs#L9) | public static |
+| BlueprintStructureValidation | [`void ValidateState(BlueprintStructureState state)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureValidation.cs#L70) | public static |
+| BlueprintStructureValidation | [`bool Finite(float value)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureValidation.cs#L92) | public static |
+| BlueprintStructureValidation | [`bool Finite(Vector3 value)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureValidation.cs#L97) | public static |
+| BlueprintStructureValidation | [`bool ValidRotation(Quaternion value)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureValidation.cs#L102) | public static |
+| BlueprintStructureValidation | [`void ValidateWorldTemplate(BlockDataList blueprint)`](../Assets/Scripts/Features/Building/Structures/Placement/BlueprintStructureValidation.cs#L108) | public static |
+
+## Assets/Scripts/Features/Building/Structures/Presentation/BlueprintStructureRenderCache.cs
+
+// 职责：将世界建筑同父刚性装饰网格按材质合并，并在本会话的同类模块间共享。 // 入口：Apply()/Clear()；只替换表现，保留方块、碰撞、损坏及可移动炮塔/机械层级。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructureRenderCache | [`void Apply(Block block)`](../Assets/Scripts/Features/Building/Structures/Presentation/BlueprintStructureRenderCache.cs#L10) | internal |
+| BlueprintStructureRenderCache | [`bool IsVisible(Transform part, Transform model)`](../Assets/Scripts/Features/Building/Structures/Presentation/BlueprintStructureRenderCache.cs#L87) | private static |
+| BlueprintStructureRenderCache | [`string RelativePath(Transform parent, Transform model)`](../Assets/Scripts/Features/Building/Structures/Presentation/BlueprintStructureRenderCache.cs#L100) | private static |
+| BlueprintStructureRenderCache | [`Visual Build(Transform model, MeshRenderer[] renderers)`](../Assets/Scripts/Features/Building/Structures/Presentation/BlueprintStructureRenderCache.cs#L111) | private static |
+| BlueprintStructureRenderCache | [`void Clear()`](../Assets/Scripts/Features/Building/Structures/Presentation/BlueprintStructureRenderCache.cs#L191) | internal |
+
+## Assets/Scripts/Features/Building/Structures/Streaming/BlueprintStructureStreaming.cs
+
+// 职责：按世界区块生成建筑，将远处建筑休眠为快照，并保留本次探索中的损坏和货仓。 // 入口：LoadColumn() / UnloadDistantRoutine()；实例归BlueprintStructureRegistry，缓存随会话退出丢弃。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructureStreaming | [`void LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/Building/Structures/Streaming/BlueprintStructureStreaming.cs#L34) | internal |
+| BlueprintStructureStreaming | [`IEnumerator RestoreAvailable()`](../Assets/Scripts/Features/Building/Structures/Streaming/BlueprintStructureStreaming.cs#L61) | internal |
+| BlueprintStructureStreaming | [`IEnumerator UnloadDistantRoutine(Vector2Int center)`](../Assets/Scripts/Features/Building/Structures/Streaming/BlueprintStructureStreaming.cs#L105) | internal |
+| BlueprintStructureStreaming | [`int Distance(Vector2Int a, Vector2Int b)`](../Assets/Scripts/Features/Building/Structures/Streaming/BlueprintStructureStreaming.cs#L146) | internal static |
+| BlueprintStructureStreaming | [`bool HasLoadedGround(Vector3 position, Quaternion rotation, BuildingFoundationData footprint)`](../Assets/Scripts/Features/Building/Structures/Streaming/BlueprintStructureStreaming.cs#L151) | private |
+
+## Assets/Scripts/Features/Building/Structures/Topology/BlueprintStructureRefit.cs
+
+// 职责：先暂存建筑缺件，再按原蓝图恢复模块身份/姿态/耐久；存活模块保留原对象和货物。 // 入口：Apply()；调用者负责整备权限、空间净空和扣费，本类不替换建筑根或核心。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructureRefit | [`bool Apply( BlueprintStructureRuntime building, List<Block> blocks, BlueprintStructureRegistry manager, BlockDataList design, out string reason)`](../Assets/Scripts/Features/Building/Structures/Topology/BlueprintStructureRefit.cs#L9) | internal static |
+
 ## Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs
 
 // 职责：将单次碰撞的法向求解器能量分摊给本控制单元实际接触的模块。 // 入口：ApplyContactDamage()；仅由 ControlUnit.OnCollisionEnter() 调用。 // 约束：爆炸保护检查双方；伤害前记录玩家冲击，避免重组丢失原事件信息。
@@ -4451,9 +4605,9 @@ HY-Sandbox/
 | EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L704) | private |
 | EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L722) | private |
 | EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L739) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L793) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L798) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L861) | private static |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L805) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L810) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L873) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -4665,9 +4819,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | LaserTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L20) | protected override |
-| LaserTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L35) | protected override |
-| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L52) | protected override |
-| LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L58) | protected override |
+| LaserTurret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L35) | protected override |
+| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L53) | protected override |
+| LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L59) | protected override |
 
 ## Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs
 
@@ -4690,7 +4844,7 @@ HY-Sandbox/
 | ProjectileTurret | [`void ApplyRecoilPose()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L104) | private |
 | ProjectileTurret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L125) | protected override |
 | ProjectileTurret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L133) | protected override |
-| ProjectileTurret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164) | protected override |
+| ProjectileTurret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164) | protected override |
 
 ## Assets/Scripts/Features/Combat/Turrets/Projectiles/ProjectileTracer.cs
 
@@ -4749,15 +4903,17 @@ HY-Sandbox/
 | Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118) | private |
 | Turret | [`void SearchTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L144) | private |
 | Turret | [`void AimAndFire(ControlUnit aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L156) | private |
-| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L183) | private |
-| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L213) | private |
-| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L247) | protected |
-| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L258) | protected |
-| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L264) | protected |
-| Turret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L272) | protected virtual |
-| Turret | [`void Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L277) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L278) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L282) | protected virtual |
+| Turret | [`bool IsAligned(Vector3 forward, Vector3 direction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L196) | private |
+| Turret | [`void ScheduleNextFire()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L201) | private |
+| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L207) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L237) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L271) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L282) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L288) | protected |
+| Turret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L296) | protected virtual |
+| Turret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L301) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L302) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L306) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -4782,12 +4938,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L44) | internal |
-| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L79) | internal |
-| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L89) | internal |
-| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L95) | internal |
-| TurretTargetSelector | [`bool Probe(ControlUnit owner, ControlUnit target, Vector3 point, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L100) | private |
-| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L179) | internal |
+| TurretTargetSelector | [`bool TryScheduleSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L45) | internal |
+| TurretTargetSelector | [`void CancelScheduledSearch()`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L80) | internal |
+| TurretTargetSelector | [`void ConfigureVisibility(Vector3 origin, LayerMask hitLayers)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L90) | internal |
+| TurretTargetSelector | [`bool UpdateTrackedPoint(ControlUnit target, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L96) | internal |
+| TurretTargetSelector | [`bool HasLineOfSight(ControlUnit owner, ControlUnit target, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L107) | internal |
+| TurretTargetSelector | [`bool Probe(ControlUnit owner, ControlUnit target, Vector3 point, float range)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L112) | private |
+| TurretTargetSelector | [`ControlUnit FindNearestTarget( IReadOnlyList<ControlUnit> units, ControlUnit owner, UnitFaction faction, float range, bool prioritizeCockpit)`](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L196) | internal |
 
 ## Assets/Scripts/Features/Diagnostics/Bots/BotNavigationProbeDriver.cs
 
@@ -5439,6 +5596,12 @@ HY-Sandbox/
 ## Assets/Scripts/Features/Navigation/Vessels/VesselNavigationSettings.cs
 
 // 职责：传递舰船 Inspector 导航参数的单次快照；不持有单位或运行状态。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Performance/RuntimePerformanceSwitches.cs
+
+// 职责：集中保存用于性能对照录制的运行时开关。 // 生命周期：仅用于临时采样；完成对照后将开关恢复为 false，再进行行为验证。
 
 数据/配置/接口定义，无方法体。
 
@@ -6100,6 +6263,133 @@ HY-Sandbox/
 | VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L503) | private |
 | VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L543) | private |
 
+## Assets/Scripts/Features/Research/Siege/SiegeDrivingPlayerChecks.cs
+
+// 职责：显式Player验证通过虚拟Input System设备走键盘、HUD点击与真实飞行物理链。 // 入口：Run()；只由-siege-checks-driving调用，finally恢复设备与后台输入设置。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeDrivingPlayerChecks | [`IEnumerator Run(SiegeSession session, Action<string, bool> check, Report report)`](../Assets/Scripts/Features/Research/Siege/SiegeDrivingPlayerChecks.cs#L15) | internal static |
+| SiegeDrivingPlayerChecks | [`Thruster[] DirectionalThrusters(ControlUnit unit)`](../Assets/Scripts/Features/Research/Siege/SiegeDrivingPlayerChecks.cs#L194) | private static |
+| SiegeDrivingPlayerChecks | [`float HorizontalDistance(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Research/Siege/SiegeDrivingPlayerChecks.cs#L199) | private static |
+
+## Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs
+
+// 职责：仅显式-siege-checks-report参数启动独立Player验证，记录真实帧、玩法契约与自然多波结果。 // 入口：Initialize()；smoke使用明确损伤刺激验证闭环，soak只自然战斗/整备，不把两种结果混用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L30) | private static |
+| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L93) | private |
+| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L114) | private |
+| SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L132) | private |
+| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L140) | private |
+| SiegePlayerChecks | [`bool SupportsDriving(SiegeShipOption option)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L474) | private static |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L481) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L488) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L498) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L506) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L525) | private |
+
+## Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs
+
+// 职责：显式Player检查的低频规模普查、有限慢帧记录和可选嵌套CPU计时；不参与正常游戏。 // 入口：Observe() / Dispose()；帧间隔对应前一观察窗口，普查自身开销单独记录，不能据相关性推断瓶颈。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegePlayerSurvey | [`void Observe(SiegeSession session, float milliseconds)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L39) | public |
+| SiegePlayerSurvey | [`BodyCounts Classify(Rigidbody[] bodies)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L75) | public static |
+| SiegePlayerSurvey | [`Census TakeCensus(SiegeSession session, float seconds, Work work)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L128) | private static |
+| SiegePlayerSurvey | [`void KeepSlowFrame(SlowFrame frame)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L156) | private |
+| SiegePlayerSurvey | [`Work ReadWork()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L175) | private |
+| SiegePlayerSurvey | [`StageWork ReadStage(SimulationWorkMetrics.Stage stage)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L203) | private static |
+| SiegePlayerSurvey | [`void Dispose()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L214) | public |
+| Work | [`Work Subtract(Work current, Work previous)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L315) | public static |
+| Work | [`StageWork Difference(StageWork current, StageWork previous)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L337) | private static |
+
+## Assets/Scripts/Features/Research/Siege/SiegeStressPopulation.cs
+
+// 职责：在独立压力场景分帧恢复附加建筑，沿用生产建筑预算/支撑/损毁，不参与基地胜负。 // 入口：Start()；Inspector配置真实建筑蓝图与锚点，加载期间暂停HUD交互，场景退出释放拥有的建筑。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| SiegeStressPopulation | [`IEnumerator Start()`](../Assets/Scripts/Features/Research/Siege/SiegeStressPopulation.cs#L40) | private |
+| SiegeStressPopulation | [`void OnDestroy()`](../Assets/Scripts/Features/Research/Siege/SiegeStressPopulation.cs#L138) | private |
+| SiegeStressPopulation | [`void RestoreHud()`](../Assets/Scripts/Features/Research/Siege/SiegeStressPopulation.cs#L154) | private |
+
+## Assets/Scripts/Features/Research/WorldLab/BlueprintStructureCatalog.cs
+
+// 职责：保存建筑制作参考与WorldLab初始布局；运行时内容只从BuildingBlueprints按名称解析。
+
+数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs
+
+// 职责：WorldLab 建筑库面板、只含网格的放置预览与输入；模板读取失败不影响世界。 // 入口：Update() / OnGUI()；B开关建筑模式，Q/T旋转，左键放置，Esc取消。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| BlueprintStructurePalette | [`void Start()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L37) | private |
+| BlueprintStructurePalette | [`void RefreshCatalog()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L42) | public |
+| BlueprintStructurePalette | [`void Update()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L56) | private |
+| BlueprintStructurePalette | [`void BeginPlacement()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L131) | public |
+| BlueprintStructurePalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L161) | private |
+| BlueprintStructurePalette | [`void Cancel()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L203) | public |
+| BlueprintStructurePalette | [`void OnDisable()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L218) | private |
+| BlueprintStructurePalette | [`void OnGUI()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L223) | private |
+
+## Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs
+
+// 职责：独立世界实验场的自由镜头、采掘/爆破/填补输入及性能读数。 // 入口：Update()读取Input System；不接管Main场景的玩家、蓝图与存档。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabController | [`void Awake()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L38) | private |
+| WorldLabController | [`void Start()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L47) | private |
+| WorldLabController | [`void OnEnable()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L52) | private |
+| WorldLabController | [`void OnDisable()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L65) | private |
+| WorldLabController | [`WorldLabSnapshot CaptureWorld()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L78) | public |
+| WorldLabController | [`void RestoreWorld(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L97) | public |
+| WorldLabController | [`void ResetBuildings()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L113) | public |
+| WorldLabController | [`void Update()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L156) | private |
+| WorldLabController | [`void MoveView(Keyboard keyboard, Mouse mouse)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L249) | private |
+| WorldLabController | [`void ResetView()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L270) | private |
+| WorldLabController | [`void TransferEdits(bool save)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L281) | private |
+| WorldLabController | [`void OnGUI()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L321) | private |
+
+## Assets/Scripts/Features/Research/WorldLab/WorldLabDebrisProbe.cs
+
+// 职责：记录真实帧物理碎片下落，并在完成后重生成清理测试碎片。 // 入口：Begin()；2秒后比较真实位置，非手动Physics.Simulate。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabDebrisProbe | [`void Begin(VoxelStructureCollapse owner, ProceduralVoxelWorld source)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabDebrisProbe.cs#L13) | public |
+| WorldLabDebrisProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabDebrisProbe.cs#L21) | private |
+
+## Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs
+
+// 职责：独立WorldLab差量JSON的原子保存、上一份备份与有大小限制的读取。 // 入口：Save() / Load()；仅写调用者传入路径，不接触玩家载具蓝图和货仓。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPersistence | [`void Save(string path, VoxelWorldEdits edits)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L10) | public static |
+| WorldLabPersistence | [`void SaveSnapshot(string path, WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L15) | public static |
+| WorldLabPersistence | [`void WriteJson(string path, string json)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L20) | private static |
+| WorldLabPersistence | [`VoxelWorldEdits Load(string path)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L57) | public static |
+| WorldLabPersistence | [`WorldLabSnapshot LoadSnapshot(string path, float legacyCellSize)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L68) | public static |
+| WorldLabPersistence | [`string ReadJson(string path)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L90) | private static |
+
+## Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs
+
+// 职责：实验场真实帧落体与体素地面接触探针，输出接触证据而不驱动Physics.Simulate。 // 入口：Begin()由WorldLabChecks调用；10秒超时失败，结束移除探针对象。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WorldLabPhysicsProbe | [`void Begin(string path)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs#L11) | public |
+| WorldLabPhysicsProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs#L17) | private |
+| WorldLabPhysicsProbe | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs#L26) | private |
+| WorldLabPhysicsProbe | [`void Save(bool contact)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs#L34) | private |
+
 ## Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs
 
 // 职责：管理货仓容量、内容增减、恢复和快照，不负责无人机导航。 // 入口：CanReceive() / Reserve() / ReleaseReservation()。
@@ -6202,8 +6492,8 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeBase | [`SiegeBase Create(SiegeSession session, WorldBuildingManager buildings, Transform anchor)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48) | public static |
-| SiegeBase | [`SiegeBase Create( SiegeMatch match, SiegeSettings settings, WorldBuildingManager buildings, BlockDataList source, string coreId, string name, Vector3 position, Quaternion rotation, int replacementValue, Action coreLost)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L75) | public static |
+| SiegeBase | [`SiegeBase Create(SiegeSession session, BlueprintStructureRegistry buildings, Transform anchor)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48) | public static |
+| SiegeBase | [`SiegeBase Create( SiegeMatch match, SiegeSettings settings, BlueprintStructureRegistry buildings, BlockDataList source, string coreId, string name, Vector3 position, Quaternion rotation, int replacementValue, Action coreLost)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L75) | public static |
 | SiegeBase | [`long Quote()`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L123) | public |
 | SiegeBase | [`bool Repair(out string reason)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L151) | public |
 | SiegeBase | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L176) | private |
@@ -6572,7 +6862,7 @@ HY-Sandbox/
 | HangarShellBlueprint | [`int TileCount(Vector3Int size, HangarEntrance entrance = HangarEntrance.Front)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L66) | public static |
 | HangarShellBlueprint | [`BlockData Normalize(BlockData source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L76) | public static |
 | HangarShellBlueprint | [`BlockDataList Expand(BlockDataList source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L103) | public static |
-| HangarShellBlueprint | [`WorldBuildingState ExpandState(WorldBuildingState source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L173) | public static |
+| HangarShellBlueprint | [`BlueprintStructureState ExpandState(BlueprintStructureState source)`](../Assets/Scripts/Features/Siege/Hangars/HangarShellBlueprint.cs#L173) | public static |
 
 ## Assets/Scripts/Features/Siege/Hangars/ResizeHangarAction.cs
 
@@ -6747,16 +7037,6 @@ HY-Sandbox/
 | --- | --- | --- |
 | SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L116) | public |
 
-## Assets/Scripts/Features/Siege/Validation/SiegeDrivingPlayerChecks.cs
-
-// 职责：显式Player验证通过虚拟Input System设备走键盘、HUD点击与真实飞行物理链。 // 入口：Run()；只由-siege-checks-driving调用，finally恢复设备与后台输入设置。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeDrivingPlayerChecks | [`IEnumerator Run(SiegeSession session, Action<string, bool> check, Report report)`](../Assets/Scripts/Features/Siege/Validation/SiegeDrivingPlayerChecks.cs#L15) | internal static |
-| SiegeDrivingPlayerChecks | [`Thruster[] DirectionalThrusters(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Validation/SiegeDrivingPlayerChecks.cs#L194) | private static |
-| SiegeDrivingPlayerChecks | [`float HorizontalDistance(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Siege/Validation/SiegeDrivingPlayerChecks.cs#L199) | private static |
-
 ## Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs
 
 // 职责：显式性能诊断时读取可用的引擎计时/GC计数，记录缺失和缓冲溢出，避免旧值冒充新帧。 // 入口：Read() / Dispose()；只读已完成样本并清空缓冲，跨帧发布延迟不保证与delta严格对齐。
@@ -6785,50 +7065,6 @@ HY-Sandbox/
 | SiegeGameplayPlayerChecks | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L379) | private |
 | SiegeGameplayPlayerChecks | [`void Save()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L390) | private |
 | SiegeGameplayPlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs#L396) | private |
-
-## Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs
-
-// 职责：仅显式-siege-checks-report参数启动独立Player验证，记录真实帧、玩法契约与自然多波结果。 // 入口：Initialize()；smoke使用明确损伤刺激验证闭环，soak只自然战斗/整备，不把两种结果混用。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L30) | private static |
-| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L93) | private |
-| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L114) | private |
-| SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L132) | private |
-| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L140) | private |
-| SiegePlayerChecks | [`bool SupportsDriving(SiegeShipOption option)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L470) | private static |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L477) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L484) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L494) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L502) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerChecks.cs#L521) | private |
-
-## Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs
-
-// 职责：显式Player检查的低频规模普查、有限慢帧记录和可选嵌套CPU计时；不参与正常游戏。 // 入口：Observe() / Dispose()；帧间隔对应前一观察窗口，普查自身开销单独记录，不能据相关性推断瓶颈。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegePlayerSurvey | [`void Observe(SiegeSession session, float milliseconds)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L39) | public |
-| SiegePlayerSurvey | [`BodyCounts Classify(Rigidbody[] bodies)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L75) | public static |
-| SiegePlayerSurvey | [`Census TakeCensus(SiegeSession session, float seconds, Work work)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L128) | private static |
-| SiegePlayerSurvey | [`void KeepSlowFrame(SlowFrame frame)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L156) | private |
-| SiegePlayerSurvey | [`Work ReadWork()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L175) | private |
-| SiegePlayerSurvey | [`StageWork ReadStage(SimulationWorkMetrics.Stage stage)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L203) | private static |
-| SiegePlayerSurvey | [`void Dispose()`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L214) | public |
-| Work | [`Work Subtract(Work current, Work previous)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L315) | public static |
-| Work | [`StageWork Difference(StageWork current, StageWork previous)`](../Assets/Scripts/Features/Siege/Validation/SiegePlayerSurvey.cs#L337) | private static |
-
-## Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs
-
-// 职责：在独立压力场景分帧恢复附加建筑，沿用生产建筑预算/支撑/损毁，不参与基地胜负。 // 入口：Start()；Inspector配置真实建筑蓝图与锚点，加载期间暂停HUD交互，场景退出释放拥有的建筑。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeStressPopulation | [`IEnumerator Start()`](../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L40) | private |
-| SiegeStressPopulation | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L138) | private |
-| SiegeStressPopulation | [`void RestoreHud()`](../Assets/Scripts/Features/Siege/Validation/SiegeStressPopulation.cs#L154) | private |
 
 ## Assets/Scripts/Features/Siege/Workshop/SiegeWorkshop.cs
 
@@ -6912,9 +7148,9 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | BlockConnectionGraph | [`void Prepare(List<Block> blocks, Transform root)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L19) | internal |
-| BlockConnectionGraph | [`Bounds ProbeBounds(Block block, Matrix4x4 worldToRoot)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L87) | private static |
-| BlockConnectionGraph | [`bool PrepareBlocks(List<Block> blocks, bool force = false)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L109) | internal static |
-| BlockConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L135) | internal |
+| BlockConnectionGraph | [`Bounds ProbeBounds(Block block, Matrix4x4 worldToRoot)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L88) | private static |
+| BlockConnectionGraph | [`bool PrepareBlocks(List<Block> blocks, bool force = false)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L110) | internal static |
+| BlockConnectionGraph | [`void CollectNeighbors(Block block, List<Block> result)`](../Assets/Scripts/Features/Simulation/Connections/BlockConnectionGraph.cs#L136) | internal |
 
 ## Assets/Scripts/Features/Simulation/Connections/BlockConnectionSnapshot.cs
 
@@ -7162,34 +7398,34 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | ControlUnit | [`void SetDebris(bool debris)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L24) | internal |
-| ControlUnit | [`void RefreshCombatMembership()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L38) | private |
+| ControlUnit | [`void RefreshCombatMembership()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L38) | internal |
 | ControlUnit | [`IReadOnlyList<Durability> GetDamageTargets()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L60) | internal |
 | ControlUnit | [`Vector3 HullSample(int side)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L73) | internal |
 | ControlUnit | [`bool TryGetTargetBounds(out Bounds bounds)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L76) | internal |
 | ControlUnit | [`void ApplySurfaceDamage(Collider hit, ControlUnit attacker, UnitFaction targetFaction, float damage)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L126) | internal |
-| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L140) | private |
-| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L153) | private |
-| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L159) | public static |
-| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L178) | internal |
-| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L185) | internal |
-| ControlUnit | [`void BindBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L224) | public |
-| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L230) | private |
-| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L240) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L276) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L288) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L313) | private |
-| ControlUnit | [`void UpdatePower()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L329) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L359) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L407) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L488) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L509) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L517) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L527) | public |
-| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L532) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L539) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L544) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L588) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L599) | private |
+| ControlUnit | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L145) | private |
+| ControlUnit | [`void OnTransformChildrenChanged()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L158) | private |
+| ControlUnit | [`bool IsSceneSimulationActive(UnityEngine.SceneManagement.Scene scene)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L164) | public static |
+| ControlUnit | [`void NotifyFragmentCreated(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L183) | internal |
+| ControlUnit | [`void NotifyBlockDestroyed(Block block)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L190) | internal |
+| ControlUnit | [`void BindBuilding(BlueprintStructureRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L229) | public |
+| ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L235) | private |
+| ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L245) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L293) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L318) | private |
+| ControlUnit | [`void UpdatePower()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L334) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L364) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L412) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L493) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L514) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L522) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L532) | public |
+| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L537) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L544) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L549) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L593) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L604) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 
@@ -7229,157 +7465,6 @@ HY-Sandbox/
 // 职责：定义阵营和运行单元归属，支持友敌判断与残骸追踪。
 
 数据/配置/接口定义，无方法体。
-
-## Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs
-
-// 职责：拥有一栋世界建筑的方块、虚拟支撑范围与刚体；处理损坏、断裂和脱锚。 // 入口：Initialize() / Activate() / ReleaseAnchor() / Capture()；订阅所属单位的方块销毁通知维护主体快照。 // 生命周期：世界存档只捕获主体；断裂残骸由 WorldBuildingManager 限量管理。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| BuildingRuntime | [`bool TryRefit(BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L49) | internal |
-| BuildingRuntime | [`void Initialize(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L63) | public |
-| BuildingRuntime | [`IEnumerator InitializeRoutine(WorldBuildingManager owner, WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L71) | internal |
-| BuildingRuntime | [`void Activate()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L119) | public |
-| BuildingRuntime | [`IEnumerator ActivateRoutine()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L127) | internal |
-| BuildingRuntime | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L171) | public |
-| BuildingRuntime | [`WorldBuildingState Capture()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L179) | public |
-| BuildingRuntime | [`void OnBlockDestroyed(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L229) | private |
-| BuildingRuntime | [`bool Supports(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L239) |  |
-| BuildingRuntime | [`void OnFragmentDetached(List<Block> group, ControlUnit fragment)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L244) |  |
-| BuildingRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L259) | public |
-| BuildingRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L280) | private |
-| BuildingRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L304) | internal |
-| BuildingRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L329) | private |
-| BuildingRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L354) | public |
-| BuildingRuntime | [`float TotalMass()`](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L365) | private |
-
-## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingCatalog.cs
-
-// 职责：保存建筑制作参考与WorldLab初始布局；运行时内容只从BuildingBlueprints按名称解析。
-
-数据/配置/接口定义，无方法体。
-
-## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs
-
-// 职责：仅从SaveManager共用文件仓读取建筑快照；World与WorldLab共用解析和错误隔离。 // 入口：LoadRoutine()预热世界资源；Load()刷新WorldLab目录；仅世界生成检查平台范围，不修改源文件。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingLibrary | [`IEnumerator LoadRoutine(BlueprintFileStore files)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19) | internal |
-| WorldBuildingLibrary | [`void Load(BlueprintFileStore files)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L51) | internal |
-| WorldBuildingLibrary | [`IEnumerable<string> ReadSources(BlueprintFileStore files, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L59) | private |
-| WorldBuildingLibrary | [`void ReadSource(string name, string path, bool forWorldGeneration, HashSet<string> warmupResources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L82) | private |
-| WorldBuildingLibrary | [`void CollectBlueprintResources(BlockDataList blueprint, HashSet<string> resources)`](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L115) | private static |
-
-## Assets/Scripts/Features/World/Buildings/Data/WorldBuildingState.cs
-
-// 职责：保存世界建筑独立身份、根姿态、蓝图快照与逐块耐久；坐标相对建筑底座。
-
-数据/配置/接口定义，无方法体。
-
-## Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingFootprints.cs
-
-// 职责：快照每套建筑真实支撑范围，并让地形和建筑生成使用同一确定性模板索引。 // 入口：构造后Get()读取；不包含驻军飞行范围，不访问场景或用户文件。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingFootprints | [`Bounds Get(int seed, Vector2Int column)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingFootprints.cs#L32) | public |
-| WorldBuildingFootprints | [`int SelectTemplate(int seed, Vector2Int column, int count)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingFootprints.cs#L37) | public static |
-
-## Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs
-
-// 职责：WorldLab 建筑库面板、只含网格的放置预览与输入；模板读取失败不影响世界。 // 入口：Update() / OnGUI()；B开关建筑模式，Q/T旋转，左键放置，Esc取消。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingPalette | [`void Start()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L37) | private |
-| WorldBuildingPalette | [`void RefreshCatalog()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L42) | public |
-| WorldBuildingPalette | [`void Update()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L56) | private |
-| WorldBuildingPalette | [`void BeginPlacement()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L131) | public |
-| WorldBuildingPalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L161) | private |
-| WorldBuildingPalette | [`void Cancel()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L203) | public |
-| WorldBuildingPalette | [`void OnDisable()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L218) | private |
-| WorldBuildingPalette | [`void OnGUI()`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPalette.cs#L223) | private |
-
-## Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs
-
-// 职责：在1m建筑网格与体素地形间转换位置，检测支撑、体素穿插和其他碰撞体。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingPlacement | [`Vector3 Snap(ProceduralVoxelWorld world, Vector3 hit)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L6) | public static |
-| WorldBuildingPlacement | [`bool Check( ProceduralVoxelWorld world, BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L15) | public static |
-| WorldBuildingPlacement | [`bool IntersectsTerrain(ProceduralVoxelWorld world, Vector3 center, Vector3 half, Quaternion rotation)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L77) | private static |
-| WorldBuildingPlacement | [`Vector3 LocalAnchor(int x, int z)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L106) | public static |
-| WorldBuildingPlacement | [`Vector3 LocalAnchor(BuildingFoundationData footprint, int x, int z)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L111) | public static |
-| WorldBuildingPlacement | [`float Support(ProceduralVoxelWorld world, Vector2Int size, Transform pose)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L116) | public static |
-| WorldBuildingPlacement | [`float Support(ProceduralVoxelWorld world, BuildingFoundationData footprint, Transform pose)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L121) | public static |
-| WorldBuildingPlacement | [`Bounds Footprint(BuildingRuntime building)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingPlacement.cs#L140) | public static |
-
-## Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs
-
-// 职责：创建前校验建筑模板、实例状态和资源，拒绝部分加载与非法尺寸/坐标。 // 入口：ValidateBlueprint() / ValidateState()；不会修改资源或活动世界。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingValidation | [`void ValidateBlueprint(BlockDataList blueprint)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L9) | public static |
-| WorldBuildingValidation | [`void ValidateState(WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L70) | public static |
-| WorldBuildingValidation | [`bool Finite(float value)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L92) | public static |
-| WorldBuildingValidation | [`bool Finite(Vector3 value)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L97) | public static |
-| WorldBuildingValidation | [`bool ValidRotation(Quaternion value)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L102) | public static |
-| WorldBuildingValidation | [`void ValidateWorldTemplate(BlockDataList blueprint)`](../Assets/Scripts/Features/World/Buildings/Placement/WorldBuildingValidation.cs#L108) | public static |
-
-## Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs
-
-// 职责：将世界建筑同父刚性装饰网格按材质合并，并在本会话的同类模块间共享。 // 入口：Apply()/Clear()；只替换表现，保留方块、碰撞、损坏及可移动炮塔/机械层级。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingRenderCache | [`void Apply(Block block)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L10) | internal |
-| WorldBuildingRenderCache | [`bool IsVisible(Transform part, Transform model)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L87) | private static |
-| WorldBuildingRenderCache | [`string RelativePath(Transform parent, Transform model)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L100) | private static |
-| WorldBuildingRenderCache | [`Visual Build(Transform model, MeshRenderer[] renderers)`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L111) | private static |
-| WorldBuildingRenderCache | [`void Clear()`](../Assets/Scripts/Features/World/Buildings/Presentation/WorldBuildingRenderCache.cs#L191) | internal |
-
-## Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs
-
-// 职责：先暂存建筑缺件，再按原蓝图恢复模块身份/姿态/耐久；存活模块保留原对象和货物。 // 入口：Apply()；调用者负责整备权限、空间净空和扣费，本类不替换建筑根或核心。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| BuildingRefit | [`bool Apply( BuildingRuntime building, List<Block> blocks, WorldBuildingManager manager, BlockDataList design, out string reason)`](../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9) | internal static |
-
-## Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs
-
-// 职责：拥有 WorldLab 建筑实例、初始布局、地形支撑通知和有界残骸。 // 入口：Place() / Capture() / Restore() / ResetBuildings()；初始布局仅按名称查找共用建筑文件仓。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingManager | [`void OnEnable()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L41) | private |
-| WorldBuildingManager | [`void Start()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L58) | private |
-| WorldBuildingManager | [`void OnDisable()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L66) | private |
-| WorldBuildingManager | [`bool CanPlace(BlockDataList blueprint, Vector3 position, Quaternion rotation, out string reason)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L77) | public |
-| WorldBuildingManager | [`BuildingRuntime Place(BlockDataList blueprint, string name, Vector3 position, Quaternion rotation, UnitFaction faction)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L89) | public |
-| WorldBuildingManager | [`BuildingRuntime RestoreBuilding(WorldBuildingState state)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L119) | public |
-| WorldBuildingManager | [`IEnumerator RestoreBuildingRoutine(WorldBuildingState state, Action<BuildingRuntime> restored)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140) | internal |
-| WorldBuildingManager | [`void OptimizeVisuals(Block block)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L189) | internal |
-| WorldBuildingManager | [`bool HasCapacity(int additionalBlocks)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L204) | public |
-| WorldBuildingManager | [`bool CanAddBlocks(int additionalBlocks)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L209) | public |
-| WorldBuildingManager | [`void RemoveBuilding(BuildingRuntime building)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L216) | public |
-| WorldBuildingManager | [`void PrepareForUnload()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L229) | public |
-| WorldBuildingManager | [`void ClearSession()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240) | public |
-| WorldBuildingManager | [`void OnDestroy()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L247) | private |
-| WorldBuildingManager | [`BuildingRuntime Stage(WorldBuildingState state, Transform parent)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L252) | private |
-| WorldBuildingManager | [`WorldLabSnapshot Capture()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L270) | public |
-| WorldBuildingManager | [`void Restore(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L290) | public |
-| WorldBuildingManager | [`void ResetBuildings()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L345) | public |
-| WorldBuildingManager | [`void ClearBuildings()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L389) | private |
-| WorldBuildingManager | [`void TerrainChanged(Bounds changed)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L405) | private |
-| WorldBuildingManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L416) | private |
-| WorldBuildingManager | [`void DamageSphere(Vector3 center, float radius, float damageAmount)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L434) | public |
-| WorldBuildingManager | [`void TrackFragment(ControlUnit fragment, int blockCount)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L457) | internal |
-| WorldBuildingManager | [`IEnumerator RetireFragment(ControlUnit fragment, float delay)`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L477) | private |
-| WorldBuildingManager | [`void ClearDebris()`](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L489) | private |
 
 ## Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs
 
@@ -7427,19 +7512,6 @@ HY-Sandbox/
 | VoxelWorldEdits | [`VoxelWorldEdits Capture(VoxelWorldData current, int worldSeed)`](../Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs#L22) | public static |
 | VoxelWorldEdits | [`VoxelWorldData Restore(int expectedSeed, Vector3Int expectedSize)`](../Assets/Scripts/Features/World/Persistence/VoxelWorldEdits.cs#L52) | public |
 
-## Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs
-
-// 职责：独立WorldLab差量JSON的原子保存、上一份备份与有大小限制的读取。 // 入口：Save() / Load()；仅写调用者传入路径，不接触玩家载具蓝图和货仓。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabPersistence | [`void Save(string path, VoxelWorldEdits edits)`](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L10) | public static |
-| WorldLabPersistence | [`void SaveSnapshot(string path, WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L15) | public static |
-| WorldLabPersistence | [`void WriteJson(string path, string json)`](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L20) | private static |
-| WorldLabPersistence | [`VoxelWorldEdits Load(string path)`](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L57) | public static |
-| WorldLabPersistence | [`WorldLabSnapshot LoadSnapshot(string path, float legacyCellSize)`](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L68) | public static |
-| WorldLabPersistence | [`string ReadJson(string path)`](../Assets/Scripts/Features/World/Persistence/WorldLabPersistence.cs#L90) | private static |
-
 ## Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs
 
 // 职责：按列缓存无碰撞体素过渡环，再衔接低密度远景与距离雾。 // 入口：Refresh()分帧重建远景，Enter()/Dispose()成对应用和恢复相机/环境设置。
@@ -7479,18 +7551,6 @@ HY-Sandbox/
 | WorldTerrainTransitionMesh | [`Mesh Build(ProceduralVoxelWorld world, WorldGenerationSettings settings, Vector2Int coordinate)`](../Assets/Scripts/Features/World/Presentation/WorldTerrainTransitionMesh.cs#L9) | internal static |
 | WorldTerrainTransitionMesh | [`void AddRingWall( List<Vector3> points, List<int> faces, List<int> soilFaces, float cell, Vector3 first, Vector3 last, float bottom)`](../Assets/Scripts/Features/World/Presentation/WorldTerrainTransitionMesh.cs#L104) | private static |
 | WorldTerrainTransitionMesh | [`void AddRingFace( List<Vector3> points, List<int> faces, Vector3 a, Vector3 b, Vector3 c, Vector3 d)`](../Assets/Scripts/Features/World/Presentation/WorldTerrainTransitionMesh.cs#L138) | private static |
-
-## Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs
-
-// 职责：按世界区块生成建筑，将远处建筑休眠为快照，并保留本次探索中的损坏和货仓。 // 入口：LoadColumn() / UnloadDistantRoutine()；实例归WorldBuildingManager，缓存随会话退出丢弃。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingStreaming | [`void LoadColumn(Vector2Int coordinate)`](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L34) | internal |
-| WorldBuildingStreaming | [`IEnumerator RestoreAvailable()`](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L61) | internal |
-| WorldBuildingStreaming | [`IEnumerator UnloadDistantRoutine(Vector2Int center)`](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L105) | internal |
-| WorldBuildingStreaming | [`int Distance(Vector2Int a, Vector2Int b)`](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L146) | internal static |
-| WorldBuildingStreaming | [`bool HasLoadedGround(Vector3 position, Quaternion rotation, BuildingFoundationData footprint)`](../Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs#L151) | private |
 
 ## Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs
 
@@ -7703,7 +7763,7 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| OutpostSalvagePlayerChecks | [`IEnumerator Run( BuildingRuntime building, ControlUnit player, Action<bool, string> check, bool recoverAllParts = false)`](../Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs#L12) | internal static |
+| OutpostSalvagePlayerChecks | [`IEnumerator Run( BlueprintStructureRuntime building, ControlUnit player, Action<bool, string> check, bool recoverAllParts = false)`](../Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs#L12) | internal static |
 | OutpostSalvagePlayerChecks | [`GameObject Spawn(string resource, ControlUnit owner, Vector3 local, List<GameObject> fixtures)`](../Assets/Scripts/Features/World/Validation/OutpostSalvagePlayerChecks.cs#L170) | private static |
 
 ## Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs
@@ -7715,26 +7775,6 @@ HY-Sandbox/
 | WorldCombatPlayerChecks | [`IEnumerator Run(ControlUnit player, EnemySpawner spawner, Action<bool, string> check)`](../Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs#L14) | internal static |
 | WorldCombatPlayerChecks | [`GameObject Spawn(string resource, ControlUnit owner, Vector3 local, List<GameObject> fixtures)`](../Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs#L135) | private static |
 | WorldCombatPlayerChecks | [`BlockDataList EnemyCargoFixture()`](../Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs#L144) | private static |
-
-## Assets/Scripts/Features/World/Validation/WorldLab/WorldLabDebrisProbe.cs
-
-// 职责：记录真实帧物理碎片下落，并在完成后重生成清理测试碎片。 // 入口：Begin()；2秒后比较真实位置，非手动Physics.Simulate。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabDebrisProbe | [`void Begin(VoxelStructureCollapse owner, ProceduralVoxelWorld source)`](../Assets/Scripts/Features/World/Validation/WorldLab/WorldLabDebrisProbe.cs#L13) | public |
-| WorldLabDebrisProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Validation/WorldLab/WorldLabDebrisProbe.cs#L21) | private |
-
-## Assets/Scripts/Features/World/Validation/WorldLab/WorldLabPhysicsProbe.cs
-
-// 职责：实验场真实帧落体与体素地面接触探针，输出接触证据而不驱动Physics.Simulate。 // 入口：Begin()由WorldLabChecks调用；10秒超时失败，结束移除探针对象。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabPhysicsProbe | [`void Begin(string path)`](../Assets/Scripts/Features/World/Validation/WorldLab/WorldLabPhysicsProbe.cs#L11) | public |
-| WorldLabPhysicsProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/World/Validation/WorldLab/WorldLabPhysicsProbe.cs#L17) | private |
-| WorldLabPhysicsProbe | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/World/Validation/WorldLab/WorldLabPhysicsProbe.cs#L26) | private |
-| WorldLabPhysicsProbe | [`void Save(bool contact)`](../Assets/Scripts/Features/World/Validation/WorldLab/WorldLabPhysicsProbe.cs#L34) | private |
 
 ## Assets/Scripts/Features/World/Validation/WorldPlayerSmokeChecks.cs
 
@@ -7776,21 +7816,6 @@ HY-Sandbox/
 // 职责：保存大世界种子、区块预算、建筑平台及安全出生区的可编辑生成参数。 // 入口：WorldSessionManager.BeginPreparation()读取；不会写入玩家或WorldLab存档。
 
 数据/配置/接口定义，无方法体。
-
-## Assets/Scripts/Features/World/WorldLab/WorldLabController.cs
-
-// 职责：独立世界实验场的自由镜头、采掘/爆破/填补输入及性能读数。 // 入口：Update()读取Input System；不接管Main场景的玩家、蓝图与存档。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabController | [`void Awake()`](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L32) | private |
-| WorldLabController | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L41) | private |
-| WorldLabController | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L49) | private |
-| WorldLabController | [`void Update()`](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L57) | private |
-| WorldLabController | [`void MoveView(Keyboard keyboard, Mouse mouse)`](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L150) | private |
-| WorldLabController | [`void ResetView()`](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L171) | private |
-| WorldLabController | [`void TransferEdits(bool save)`](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L182) | private |
-| WorldLabController | [`void OnGUI()`](../Assets/Scripts/Features/World/WorldLab/WorldLabController.cs#L222) | private |
 
 ## Assets/Scripts/Features/World/WorldSessionManager.cs
 

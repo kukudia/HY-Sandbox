@@ -114,14 +114,14 @@ public static class FragmentRetentionChecks
         scene = SceneManager.CreateScene(
             "Fragment retention " + Guid.NewGuid().ToString("N"),
             new CreateSceneParameters(LocalPhysicsMode.Physics3D));
-        WorldBuildingManager host = null;
+        BlueprintStructureRegistry host = null;
         try
         {
             settings.minimumFragmentLifetime = 0.7f;
             settings.cleanupDelay = 0.35f;
-            host = NewObject("Fragment check host").AddComponent<WorldBuildingManager>();
+            host = NewObject("Fragment check host").AddComponent<BlueprintStructureRegistry>();
             host.enabled = false;
-            Set(host, "initializeOnStart", false);
+            Set(host, "useIndividualRenderers", false);
             Set(host, "debrisLifetime", 0.1f);
             Set(host, "maximumDebrisPieces", 12);
             Set(host, "maximumBlocksPerDebris", 32);
@@ -238,7 +238,7 @@ public static class FragmentRetentionChecks
         }
     }
 
-    private static GameObject CreateDebris(WorldBuildingManager host, int count, float height)
+    private static GameObject CreateDebris(BlueprintStructureRegistry host, int count, float height)
     {
         GameObject source = NewObject("Detached group");
         source.transform.position = new Vector3(10000f, height, 10000f);

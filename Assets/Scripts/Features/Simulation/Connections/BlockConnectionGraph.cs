@@ -32,7 +32,8 @@ internal sealed class BlockConnectionGraph
 
         if (rebuild)
         {
-            PrepareBlocks(blocks, true);
+            // Freshly assembled units already have a valid batch. Only a previously indexed root needs forced reprobing.
+            PrepareBlocks(blocks, boundsRoot != null);
             members.Clear();
             Matrix4x4 worldToRoot = root.worldToLocalMatrix;
             foreach (Block block in current)

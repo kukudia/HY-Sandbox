@@ -1,4 +1,8 @@
 # HY-Sandbox 开发入口
+本轮验收补充：隔离 Siege 伤害门控后重跑炮塔检查 32 项全部通过；直接在 Siege 部署阶段运行时，3 项伤害断言会被战斗阶段门控拒绝，不能作为 Fire 回归证据。
+炮塔追踪复用上次命中的碰撞体，冷却结束且炮口对准后才确认遮挡，实际发射成功才开始冷却。建筑、基地与飞船共用 BlueprintAssemblyBuilder、BatchConnectionBuilder 和 RuntimeGroupBuilder，建筑单独负责地基、逐块耐久和流式生命周期。
+
+Siege、SiegeLargeStress、SiegeMixedStress 和 WorldLab 归入 Assets/Scenes/Research，默认构建不包含这些场景。实验场布局、保存和探针归入 Features/Research。SiegeGameplay 与 Exploration 仍从正式入口加载。
 
 建筑失撑直接将已准备的 BFS 分组交给飞船断裂使用的刚体重组器。敌舰索敌、避障、重规划、预测及推进输入按 HY.Enemy 子标记采样。
 
@@ -262,7 +266,7 @@ Assets/Editor/Siege/Hangars/      资产制作、接线和隔离验证
 
 ## Main 玩法合并入口
 
-Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需 Additive 加载 `Assets/Scenes/Exploration.unity`，新阵地战加载 `Assets/Scenes/SiegeGameplay.unity`。玩法期间Main为活动场景，持有建造编辑器、共享管理器和摄像机；菜单启动时输入由菜单EventSystem统一管理，直接Main入口仍使用自身EventSystem。探索地形/建筑与运行舰船归探索副场景。未选择探索时不生成世界。原 `Assets/Scenes/Siege.unity` 保留独立预研入口、逻辑/UI及压力场，不由新模式自动启动。
+Main 的 **Simulate**（或 P）继续提供工坊内模式选择：探索按需 Additive 加载 `Assets/Scenes/Exploration.unity`，新阵地战加载 `Assets/Scenes/SiegeGameplay.unity`。玩法期间Main为活动场景，持有建造编辑器、共享管理器和摄像机；菜单启动时输入由菜单EventSystem统一管理，直接Main入口仍使用自身EventSystem。探索地形/建筑与运行舰船归探索副场景。未选择探索时不生成世界。原 `Assets/Scenes/Research/Siege.unity` 保留独立预研入口、逻辑/UI及压力场，不由新模式自动启动。
 
 模式状态由 `GameModeController` 管理，探索通过 `BindHost` 显式绑定 Main 的环境、加载 UI 与 HUD。场景异步加载支持取消，失败完整清理后重试；退出卸载玩法场景。Main 建造原稿停用保留，探索使用副本，返回恢复同一个原稿与镜头；正常返回保存货仓后迁移回原稿，死亡返回清空货仓。不会把战斗损毁覆盖到未保存的作品。SiegeGameplay 已接入基地蓝图部署、真实守波、整备修复与结算，见下节。
 
@@ -386,7 +390,7 @@ PC管线启用GPU Resident Drawer，并保留BRG着色器变体。`IndustrialPar
 | 游玩与载具 | `Simulation/PlayManager` / `Units/ControlUnit` | `RuntimeGroupBuilder` / `RuntimeGroupCleanup` |
 | 连接和分裂 | `Simulation/Connections/BlockConnectionGraph` | 双侧连接、几何快照、增量删除；`BlockGroupManager` 统一 BFS |
 | 刚体与几何 | `Simulation/Physics/RigidbodyMotion` / `Geometry/BlockBounds` | 质心运动捕获/继承、统一八角包围盒 |
-| 世界和建筑 | `World/WorldSessionManager` / `Buildings/BuildingRuntime` | 流式加载、支撑、脱锚、残骸预算和快照 |
+| 世界和建筑 | `World/WorldSessionManager` / `Building/Structures/BlueprintStructureRuntime` | 流式加载、支撑、脱锚、残骸预算和快照 |
 | 据点驻军 | `World/Outposts/OutpostEncounterDirector` | 部署、有限驻军、休眠与会话内击败状态 |
 | 阵地战 | `Siege/SiegeSession` | Fleet / Battle / Workshop / Interface，各自拥有状态与退出边界 |
 | 供电 | `Power/Devices/PowerTransmissionDevice.Update` | `PowerNetwork` 拓扑缓存与需求分配 |

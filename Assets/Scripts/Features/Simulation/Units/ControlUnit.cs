@@ -35,7 +35,7 @@ public class ControlUnit : MonoBehaviour
         }
     }
 
-    private void RefreshCombatMembership()
+    internal void RefreshCombatMembership()
     {
         if (isActiveAndEnabled && (HasValidCockpit || Building != null))
         {
@@ -125,6 +125,11 @@ public class ControlUnit : MonoBehaviour
 
     internal void ApplySurfaceDamage(Collider hit, ControlUnit attacker, UnitFaction targetFaction, float damage)
     {
+        if (Building != null && Building.NeedsActivation)
+        {
+            return;
+        }
+
         if (faction != targetFaction || (!IsOperational && !IsDebris))
         {
             return;
@@ -187,7 +192,7 @@ public class ControlUnit : MonoBehaviour
         BlockDestroyed?.Invoke(block);
     }
 
-    public BuildingRuntime Building
+    public BlueprintStructureRuntime Building
     {
         get; private set;
     }
@@ -221,7 +226,7 @@ public class ControlUnit : MonoBehaviour
     public bool IsOperational => HasValidCockpit || (Building != null && Building.IsOperational);
     public bool IsSimulationActive => Building != null ? Building.IsSimulationActive : PlayManager.instance != null && PlayManager.instance.playMode;
 
-    public void BindBuilding(BuildingRuntime building)
+    public void BindBuilding(BlueprintStructureRuntime building)
     {
         Building = building;
         RefreshCombatMembership();

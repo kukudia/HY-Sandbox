@@ -116,8 +116,8 @@ public static class WorldSessionPlayChecks
         try
         {
             BlockDataList blueprint = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(path));
-            WorldBuildingValidation.ValidateBlueprint(blueprint);
-            WorldBuildingValidation.ValidateWorldTemplate(blueprint);
+            BlueprintStructureValidation.ValidateBlueprint(blueprint);
+            BlueprintStructureValidation.ValidateWorldTemplate(blueprint);
             return blueprint.blocks.Count > 0;
         }
         catch (Exception error) when (error is ArgumentException || error is InvalidOperationException || error is IOException || error is UnauthorizedAccessException)
@@ -148,7 +148,7 @@ public static class WorldSessionPlayChecks
         }
 
         ProceduralVoxelWorld world = session.World;
-        WorldBuildingManager buildings = session.Buildings;
+        BlueprintStructureRegistry buildings = session.Buildings;
         GameObject worldRoot = world.transform.parent.gameObject;
         SerializedProperty environmentData = new SerializedObject(session).FindProperty("buildEnvironment");
         var grounds = new List<GameObject>();
@@ -311,7 +311,7 @@ public static class WorldSessionPlayChecks
         Check(world.SetCell(spawnCell, 0), "terrain at the prepared spawn can be modified");
         world.FlushDirty();
         Vector2Int spawnColumn = world.ColumnAt(world.SpawnPosition);
-        BuildingRuntime first = buildings.Buildings.First(building => building.GetComponentsInChildren<CargoHold>(true).Length > 0);
+        BlueprintStructureRuntime first = buildings.Buildings.First(building => building.GetComponentsInChildren<CargoHold>(true).Length > 0);
         string buildingId = first.InstanceId;
         Vector2Int buildingColumn = world.ColumnAt(first.transform.position);
         CargoHold hold = first.GetComponentInChildren<CargoHold>(true);

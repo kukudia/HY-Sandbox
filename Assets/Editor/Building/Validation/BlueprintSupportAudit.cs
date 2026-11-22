@@ -91,11 +91,11 @@ public static class BlueprintSupportAudit
     {
         root = new GameObject("Owned blueprint support audit");
         root.SetActive(false);
-        WorldBuildingManager manager = root.AddComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = root.AddComponent<BlueprintStructureRegistry>();
         var settings = new SerializedObject(manager);
-        settings.FindProperty("initializeOnStart").boolValue = false;
+        settings.FindProperty("useIndividualRenderers").boolValue = false;
         settings.ApplyModifiedPropertiesWithoutUndo();
-        typeof(WorldBuildingManager).GetProperty("SimulationEnabled").SetValue(manager, false);
+        typeof(BlueprintStructureRegistry).GetProperty("SimulationEnabled").SetValue(manager, false);
         IEnumerable<BlueprintIntegrityAudit.Entry> entries = BlueprintIntegrityAudit.InspectAll().entries.Where(entry => entry.category == "BaseBlueprints" || entry.path.Replace('\\', '/').Contains("/Assets/Siege/Construction/"));
         foreach (BlueprintIntegrityAudit.Entry entry in entries)
         {
@@ -114,8 +114,8 @@ public static class BlueprintSupportAudit
 
             BlockDataList design = JsonUtility.FromJson<BlockDataList>(File.ReadAllText(entry.path));
             design.foundation = BuildingFootprint.Calculate(design.blocks, 1);
-            BuildingRuntime restored = null;
-            var state = new WorldBuildingState
+            BlueprintStructureRuntime restored = null;
+            var state = new BlueprintStructureState
             {
                 instanceId = "support-" + Guid.NewGuid().ToString("N"),
                 blueprintName = Path.GetFileNameWithoutExtension(entry.path),
@@ -126,7 +126,9 @@ public static class BlueprintSupportAudit
                 durability = Enumerable.Repeat(float.MaxValue, design.blocks.Count).ToArray(),
                 anchored = true
             };
-            IEnumerator loading = (IEnumerator)typeof(WorldBuildingManager).GetMethod("RestoreBuildingRoutine", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(manager, new object[] { state, new Action<BuildingRuntime>(building => restored = building) });
+            IEnumerator loading = (IEnumerator)typeof(BlueprintStructureRegistry).GetMethod("RestoreBuildingRoutine", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(
+                manager,
+                new object[] { state, new Action<BlueprintStructureRuntime>(building => restored = building) });
             try
             {
                 while (loading.MoveNext())
@@ -140,7 +142,7 @@ public static class BlueprintSupportAudit
             }
 
             root.SetActive(true);
-            IEnumerator activation = (IEnumerator)typeof(BuildingRuntime).GetMethod("ActivateRoutine", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(restored, null);
+            IEnumerator activation = (IEnumerator)typeof(BlueprintStructureRuntime).GetMethod("ActivateRoutine", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(restored, null);
             try
             {
                 while (activation.MoveNext())
@@ -157,7 +159,7 @@ public static class BlueprintSupportAudit
             bool supported = restored.HasFullFoundationSupport();
             if (!supported)
             {
-                var ground = typeof(BuildingRuntime).GetMethod("HasGroundConnector", BindingFlags.Instance | BindingFlags.NonPublic);
+                var ground = typeof(BlueprintStructureRuntime).GetMethod("HasGroundConnector", BindingFlags.Instance | BindingFlags.NonPublic);
                 var prepared = typeof(BlockGroupManager).GetMethod("GroupPreparedBlocks", BindingFlags.Static | BindingFlags.NonPublic);
                 var components = (List<List<Block>>)prepared.Invoke(null, new object[] { new List<Block>(restored.Blocks) });
                 foreach (List<Block> component in components)

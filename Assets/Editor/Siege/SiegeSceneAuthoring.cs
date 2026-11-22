@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 
 public static class SiegeSceneAuthoring
 {
-    public const string ScenePath = "Assets/Scenes/Siege.unity";
+    public const string ScenePath = "Assets/Scenes/Research/Siege.unity";
     private const string AssetFolder = "Assets/Siege";
     [MenuItem("HY-Sandbox/Siege/Create Editable Scene")]
     public static void Create()
@@ -54,7 +54,7 @@ public static class SiegeSceneAuthoring
             var serialized = new SerializedObject(session);
             var buildingOwner = new GameObject("Base Building Manager");
             buildingOwner.transform.SetParent(sessionObject.transform, false);
-            WorldBuildingManager buildings = buildingOwner.AddComponent<WorldBuildingManager>();
+            BlueprintStructureRegistry buildings = buildingOwner.AddComponent<BlueprintStructureRegistry>();
             SiegeBaseBlueprintAuthoring.ConfigureManager(buildings);
             serialized.FindProperty("buildings").objectReferenceValue = buildings;
             serialized.FindProperty("settings").objectReferenceValue = settings;
@@ -66,12 +66,6 @@ public static class SiegeSceneAuthoring
             SiegeIslandAuthoring.Configure(scene);
             SiegeCleanupAuthoring.Configure(scene);
             EditorSceneManager.SaveScene(scene, ScenePath);
-            EditorBuildSettingsScene[] buildScenes = EditorBuildSettings.scenes;
-            if (!buildScenes.Any(item => item.path == ScenePath))
-            {
-                EditorBuildSettings.scenes = buildScenes.Concat(new[] { new EditorBuildSettingsScene(ScenePath, true) }).ToArray();
-            }
-
             AssetDatabase.SaveAssets();
             Debug.Log("Created editable Siege scene, settings, base blueprint, materials and HUD.");
         }

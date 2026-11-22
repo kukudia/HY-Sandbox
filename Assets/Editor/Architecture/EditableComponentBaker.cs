@@ -166,8 +166,8 @@ public static class EditableComponentBaker
             root.SetActive(false);
             compose(root);
             // Most templates start active; initialization still happens before the next update.
-            // Buildings stay inactive until assembly is committed by BuildingRuntime.
-            if (typeof(T) != typeof(BuildingRuntime))
+            // Buildings stay inactive until assembly is committed by BlueprintStructureRuntime.
+            if (typeof(T) != typeof(BlueprintStructureRuntime))
             {
                 root.SetActive(true);
             }
@@ -205,7 +205,10 @@ public static class EditableComponentBaker
             AssetDatabase.CreateAsset(library, path);
         }
 
-        SetReference(library, "building", Template<BuildingRuntime>("Building", root => Ensure<BuildingRuntime>(root)));
+        SetReference(
+            library,
+            "building",
+            Template<BlueprintStructureRuntime>("Building", root => Ensure<BlueprintStructureRuntime>(root)));
         SetReference(
             library,
             "buildingDebris",

@@ -17,7 +17,7 @@ public static class WorldTerrainIntegrationChecks
         try
         {
             var templates = Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings").Select(asset => JsonUtility.FromJson<BlockDataList>(asset.text)).ToList();
-            var footprints = new WorldBuildingFootprints(templates);
+            var footprints = new BlueprintStructureFootprints(templates);
             var terrain = new StreamingWorldTerrain(settings, 14723, templates);
             var natural = new StreamingWorldTerrain(settings, 14723);
             var repeated = new StreamingWorldTerrain(settings, 14723, templates);
@@ -35,7 +35,7 @@ public static class WorldTerrainIntegrationChecks
                     }
 
                     sites++;
-                    int index = WorldBuildingFootprints.SelectTemplate(14723, column, templates.Count);
+                    int index = BlueprintStructureFootprints.SelectTemplate(14723, column, templates.Count);
                     covered.Add(index);
                     turns.Add(Mathf.RoundToInt(rotation.eulerAngles.y / 90f));
                     BlockDataList data = templates[index];
@@ -43,7 +43,7 @@ public static class WorldTerrainIntegrationChecks
                     {
                         for (int ix = 0; ix < data.foundation.width; ix++)
                         {
-                            Vector3 point = position + rotation * WorldBuildingPlacement.LocalAnchor(ix, iz);
+                            Vector3 point = position + rotation * BlueprintStructurePlacement.LocalAnchor(ix, iz);
                             float ground = terrain.SurfaceHeight(Mathf.FloorToInt(point.x / settings.CellSize), Mathf.FloorToInt(point.z / settings.CellSize));
                             Require(Mathf.Abs(ground - position.y) < .01f, "Every foundation cell is supported at its authored height");
                         }

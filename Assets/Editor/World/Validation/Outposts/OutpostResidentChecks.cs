@@ -18,9 +18,9 @@ public static class OutpostResidentChecks
         OutpostEncounterDirector director = null;
         ProceduralVoxelWorld world = root.AddComponent<ProceduralVoxelWorld>();
         JsonUtility.FromJsonOverwrite("{\"streaming\":true}", world);
-        WorldBuildingManager manager = root.AddComponent<WorldBuildingManager>();
-        typeof(WorldBuildingManager).GetField("world", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(manager, world);
-        JsonUtility.FromJsonOverwrite("{\"initializeOnStart\":false}", manager);
+        BlueprintStructureRegistry manager = root.AddComponent<BlueprintStructureRegistry>();
+        typeof(BlueprintStructureRegistry).GetField("world", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(manager, world);
+        JsonUtility.FromJsonOverwrite("{\"useIndividualRenderers\":false}", manager);
         manager.enabled = false;
         try
         {
@@ -40,7 +40,7 @@ public static class OutpostResidentChecks
 
             BlockDataList data = JsonUtility.FromJson<BlockDataList>(Resources.Load<TextAsset>("WorldBlueprints/Buildings/CODEX_E01_Finch Outpost").text);
             Vector3 origin = root.transform.position + new Vector3(4f, world.SurfaceHeight(2, 2), 4f);
-            BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = "resident-lifecycle", blueprintName = "Finch base", blueprint = data, position = origin, rotation = Quaternion.identity, faction = UnitFaction.Enemy, durability = Enumerable.Repeat(float.MaxValue, data.blocks.Count).ToArray() });
+            BlueprintStructureRuntime building = manager.RestoreBuilding(new BlueprintStructureState { instanceId = "resident-lifecycle", blueprintName = "Finch base", blueprint = data, position = origin, rotation = Quaternion.identity, faction = UnitFaction.Enemy, durability = Enumerable.Repeat(float.MaxValue, data.blocks.Count).ToArray() });
             building.Activate();
             director = new OutpostEncounterDirector(manager);
             director.Tick(origin + Vector3.up * 500f);

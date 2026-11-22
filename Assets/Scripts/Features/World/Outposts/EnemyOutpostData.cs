@@ -12,7 +12,7 @@ public sealed class EnemyOutpostData
     public float activationDistance = 120f;
     public void Validate()
     {
-        if (garrison == null || garrison.Count < 1 || garrison.Count > 8 || !WorldBuildingValidation.Finite(activationDistance) || activationDistance < 20f || activationDistance > 200f)
+        if (garrison == null || garrison.Count < 1 || garrison.Count > 8 || !BlueprintStructureValidation.Finite(activationDistance) || activationDistance < 20f || activationDistance > 200f)
         {
             throw new InvalidOperationException("Outpost requires 1-8 defenders and activation range 20-200m.");
         }
@@ -20,7 +20,7 @@ public sealed class EnemyOutpostData
         var ids = new HashSet<string>();
         foreach (OutpostGarrisonData guard in garrison)
         {
-            if (guard == null || string.IsNullOrWhiteSpace(guard.id) || !ids.Add(guard.id) || !WorldBuildingValidation.Finite(guard.position) || guard.position.sqrMagnitude > 128f * 128f || guard.position.y < 1f || !WorldBuildingValidation.Finite(guard.yaw))
+            if (guard == null || string.IsNullOrWhiteSpace(guard.id) || !ids.Add(guard.id) || !BlueprintStructureValidation.Finite(guard.position) || guard.position.sqrMagnitude > 128f * 128f || guard.position.y < 1f || !BlueprintStructureValidation.Finite(guard.yaw))
             {
                 throw new InvalidOperationException("Invalid outpost defender identity or deployment point.");
             }
@@ -35,12 +35,12 @@ public sealed class EnemyOutpostData
             foreach (BlockData block in guard.blueprint.blocks)
             {
                 GameObject prefab = block != null ? Resources.Load<GameObject>(BuildManager.ConvertToResourcesPath(block.resourcePath)) : null;
-                if (prefab == null || prefab.GetComponent<Block>() == null || block.x < 1 || block.y < 1 || block.z < 1 || block.x > 64 || block.y > 64 || block.z > 64 || !WorldBuildingValidation.Finite(new Vector3(block.posX, block.posY, block.posZ)))
+                if (prefab == null || prefab.GetComponent<Block>() == null || block.x < 1 || block.y < 1 || block.z < 1 || block.x > 64 || block.y > 64 || block.z > 64 || !BlueprintStructureValidation.Finite(new Vector3(block.posX, block.posY, block.posZ)))
                 {
                     throw new InvalidOperationException("Defender contains invalid or missing modules.");
                 }
 
-                if (string.IsNullOrWhiteSpace(block.id) || !moduleIds.Add(block.id) || !WorldBuildingValidation.ValidRotation(new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW)))
+                if (string.IsNullOrWhiteSpace(block.id) || !moduleIds.Add(block.id) || !BlueprintStructureValidation.ValidRotation(new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW)))
                 {
                     throw new InvalidOperationException("Defender has invalid identity or rotation.");
                 }

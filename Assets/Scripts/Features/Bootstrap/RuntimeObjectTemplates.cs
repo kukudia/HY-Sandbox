@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public sealed class RuntimeObjectTemplates : ScriptableObject
 {
     [SerializeField]
-    private BuildingRuntime building;
+    private BlueprintStructureRuntime building;
     [SerializeField]
     private Rigidbody buildingDebris;
     [SerializeField]
@@ -34,7 +34,7 @@ public sealed class RuntimeObjectTemplates : ScriptableObject
     private LineRenderer powerConnection;
     private static RuntimeObjectTemplates instance;
     public static RuntimeObjectTemplates Instance => instance != null ? instance : (instance = Resources.Load<RuntimeObjectTemplates>("Runtime/Objects") ?? throw new MissingReferenceException("Missing Runtime/Objects. Run Tools/HY Sandbox/Architecture/Bake Editable Components."));
-    public BuildingRuntime Building => building;
+    public BlueprintStructureRuntime Building => building;
     public Rigidbody BuildingDebris => buildingDebris;
     public VoxelWorldChunk TerrainChunk => terrainChunk;
     public VoxelDebrisPiece VoxelDebris => voxelDebris;

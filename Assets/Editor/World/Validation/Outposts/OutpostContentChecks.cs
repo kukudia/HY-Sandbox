@@ -27,14 +27,14 @@ public static class OutpostContentChecks
         {
             var host = new GameObject("Isolated content manager");
             SceneManager.MoveGameObjectToScene(host, scene);
-            WorldBuildingManager manager = host.AddComponent<WorldBuildingManager>();
-            typeof(WorldBuildingManager).GetField("initializeOnStart", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(manager, false);
+            BlueprintStructureRegistry manager = host.AddComponent<BlueprintStructureRegistry>();
+            typeof(BlueprintStructureRegistry).GetField("useIndividualRenderers", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(manager, false);
             manager.enabled = false;
             foreach (TextAsset asset in Resources.LoadAll<TextAsset>("WorldBlueprints/Buildings"))
             {
                 BlockDataList data = JsonUtility.FromJson<BlockDataList>(asset.text);
-                WorldBuildingValidation.ValidateBlueprint(data);
-                var state = new WorldBuildingState
+                BlueprintStructureValidation.ValidateBlueprint(data);
+                var state = new BlueprintStructureState
                 {
                     instanceId = Guid.NewGuid().ToString("N"),
                     blueprintName = asset.name,
@@ -43,7 +43,7 @@ public static class OutpostContentChecks
                     blueprint = data,
                     durability = Enumerable.Repeat(float.MaxValue, data.blocks.Count).ToArray()
                 };
-                BuildingRuntime building = manager.RestoreBuilding(state);
+                BlueprintStructureRuntime building = manager.RestoreBuilding(state);
                 building.Activate();
                 Physics.SyncTransforms();
                 Check(checks, asset.name + " restores every authored block", building.Blocks.Count == data.blocks.Count);
@@ -63,7 +63,7 @@ public static class OutpostContentChecks
                     }
                 }
 
-                MethodInfo grounded = typeof(BuildingRuntime).GetMethod("HasGroundConnector", BindingFlags.Instance | BindingFlags.NonPublic);
+                MethodInfo grounded = typeof(BlueprintStructureRuntime).GetMethod("HasGroundConnector", BindingFlags.Instance | BindingFlags.NonPublic);
                 var connected = new HashSet<Block>(building.Blocks.Where(block => (bool)grounded.Invoke(building, new object[] { block })));
                 var queue = new Queue<Block>(connected);
                 while (queue.Count > 0)
@@ -164,7 +164,7 @@ public static class OutpostContentChecks
         checks.Add("PASS: " + name);
     }
 
-    private static void Render(BuildingRuntime building, string path)
+    private static void Render(BlueprintStructureRuntime building, string path)
     {
         Bounds bounds = new Bounds(building.transform.position, Vector3.zero);
         foreach (Renderer renderer in building.GetComponentsInChildren<Renderer>())

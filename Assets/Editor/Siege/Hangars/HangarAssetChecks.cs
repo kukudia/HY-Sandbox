@@ -229,8 +229,8 @@ public static class HangarAssetChecks
         var owner = new GameObject("Hangar isolated restoration probe");
         owner.SetActive(false);
         owned.Add(owner);
-        WorldBuildingManager manager = owner.AddComponent<WorldBuildingManager>();
-        var state = new WorldBuildingState
+        BlueprintStructureRegistry manager = owner.AddComponent<BlueprintStructureRegistry>();
+        var state = new BlueprintStructureState
         {
             instanceId = "isolated-hangar-probe",
             blueprintName = "Hangar JSON round trip",
@@ -244,7 +244,7 @@ public static class HangarAssetChecks
             },
             anchored = true
         };
-        BuildingRuntime restored = manager.RestoreBuilding(state);
+        BlueprintStructureRuntime restored = manager.RestoreBuilding(state);
         HangarModule copy = restored.GetComponentInChildren<HangarModule>(true);
         Check(
             result,

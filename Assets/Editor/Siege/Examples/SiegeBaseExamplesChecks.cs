@@ -89,12 +89,12 @@ public static class SiegeBaseExamplesChecks
             {
                 owner = new GameObject("Isolated official example " + index);
                 owner.SetActive(false);
-                WorldBuildingManager manager = owner.AddComponent<WorldBuildingManager>();
+                BlueprintStructureRegistry manager = owner.AddComponent<BlueprintStructureRegistry>();
                 var config = new SerializedObject(manager);
-                config.FindProperty("initializeOnStart").boolValue = false;
+                config.FindProperty("useIndividualRenderers").boolValue = false;
                 config.ApplyModifiedPropertiesWithoutUndo();
                 BlockDataList design = JsonUtility.FromJson<BlockDataList>(AssetDatabase.LoadAssetAtPath<TextAsset>(SiegeBaseExamplesAuthoring.Paths[index]).text);
-                BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = "example-validation-" + index, blueprintName = SiegeBaseExamplesAuthoring.Names[index], faction = UnitFaction.Player, position = new Vector3(18000, 3000, 18000), rotation = Quaternion.identity, blueprint = design, durability = Enumerable.Repeat(float.MaxValue, design.blocks.Count).ToArray(), anchored = true });
+                BlueprintStructureRuntime building = manager.RestoreBuilding(new BlueprintStructureState { instanceId = "example-validation-" + index, blueprintName = SiegeBaseExamplesAuthoring.Names[index], faction = UnitFaction.Player, position = new Vector3(18000, 3000, 18000), rotation = Quaternion.identity, blueprint = design, durability = Enumerable.Repeat(float.MaxValue, design.blocks.Count).ToArray(), anchored = true });
                 owner.SetActive(true);
                 building.Activate();
                 Physics.SyncTransforms();

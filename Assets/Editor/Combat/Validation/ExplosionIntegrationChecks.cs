@@ -33,14 +33,14 @@ public static class ExplosionIntegrationChecks
         {
             PlayManager.instance.playMode = true;
             PhysicsSandboxProbe.PrepareSceneEffects(scene);
-            WorldBuildingManager manager = Manager(scene);
+            BlueprintStructureRegistry manager = Manager(scene);
             Vector3 center = new Vector3(7000f, 1000f, 7000f);
             Block attacker = Ship(scene, center + Vector3.right * 50f);
             ControlUnit attackerUnit = attacker.GetComponentInParent<ControlUnit>();
             attackerUnit.faction = UnitFaction.Player;
             Block source = Ship(scene, center);
             Block shipTarget = Ship(scene, center + Vector3.right * 2f);
-            BuildingRuntime building = Building(manager, center + Vector3.forward * 2f);
+            BlueprintStructureRuntime building = Building(manager, center + Vector3.forward * 2f);
             Block isolated = Ship(other, center + Vector3.right * 2f);
             Durability health = shipTarget.GetComponent<Durability>();
             health.ProtectFromExplosionCollisions(3f);
@@ -225,10 +225,10 @@ public static class ExplosionIntegrationChecks
             foreign.Neighbors().Contains(foreignTail) && foreign.GetComponentInParent<Rigidbody>() == foreignTail.GetComponentInParent<Rigidbody>());
     }
 
-    private static void FoundationConnections(WorldBuildingManager manager, Vector3 origin, float probability, Report report)
+    private static void FoundationConnections(BlueprintStructureRegistry manager, Vector3 origin, float probability, Report report)
     {
         Vector3 foot = Vector3.one * .5f;
-        BuildingRuntime building = Building(
+        BlueprintStructureRuntime building = Building(
             manager,
             origin,
             foot,
@@ -266,20 +266,20 @@ public static class ExplosionIntegrationChecks
             losses == 1 && building.Blocks.Contains(floor) && building.Blocks.Contains(secondWall) && building.Blocks.Contains(middle) == (probability == 0f) && !building.Blocks.Contains(source) && building.Capture().blueprint.blocks.Count == (probability == 0f ? 3 : 2));
     }
 
-    private static WorldBuildingManager Manager(Scene scene)
+    private static BlueprintStructureRegistry Manager(Scene scene)
     {
         var root = new GameObject("Explosion building owner");
         root.SetActive(false);
         SceneManager.MoveGameObjectToScene(root, scene);
-        WorldBuildingManager manager = root.AddComponent<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = root.AddComponent<BlueprintStructureRegistry>();
         var data = new SerializedObject(manager);
-        data.FindProperty("initializeOnStart").boolValue = false;
+        data.FindProperty("useIndividualRenderers").boolValue = false;
         data.ApplyModifiedPropertiesWithoutUndo();
         root.SetActive(true);
         return manager;
     }
 
-    private static BuildingRuntime Building(WorldBuildingManager manager, Vector3 center, params Vector3[] parts)
+    private static BlueprintStructureRuntime Building(BlueprintStructureRegistry manager, Vector3 center, params Vector3[] parts)
     {
         if (parts.Length == 0)
         {
@@ -298,7 +298,7 @@ public static class ExplosionIntegrationChecks
             },
             blocks = parts.Select(position => new BlockData(Resources.Load<GameObject>("Blocks/1x1x1").GetComponent<Block>()) { id = Guid.NewGuid().ToString("N"), resourcePath = "Blocks/1x1x1", x = 1, y = 1, z = 1, posX = position.x, posY = position.y, posZ = position.z, rotW = 1f }).ToList()
         };
-        BuildingRuntime building = manager.RestoreBuilding(new WorldBuildingState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Explosion fixture", blueprint = blueprint, faction = UnitFaction.Enemy, anchored = true, position = center - Vector3.one * .5f, rotation = Quaternion.identity, durability = Enumerable.Repeat(100f, parts.Length).ToArray() });
+        BlueprintStructureRuntime building = manager.RestoreBuilding(new BlueprintStructureState { instanceId = Guid.NewGuid().ToString("N"), blueprintName = "Explosion fixture", blueprint = blueprint, faction = UnitFaction.Enemy, anchored = true, position = center - Vector3.one * .5f, rotation = Quaternion.identity, durability = Enumerable.Repeat(100f, parts.Length).ToArray() });
         foreach (Block block in building.Blocks)
         {
             block.canExplode = false;

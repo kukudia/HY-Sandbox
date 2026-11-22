@@ -20,8 +20,8 @@ public static class SiegeBuildingChecks
 
         var checks = new List<string>();
         SiegeBase baseEntry = session.Fleet.Base;
-        BuildingRuntime building = baseEntry.Building;
-        WorldBuildingValidation.ValidateBlueprint(baseEntry.Blueprint);
+        BlueprintStructureRuntime building = baseEntry.Building;
+        BlueprintStructureValidation.ValidateBlueprint(baseEntry.Blueprint);
         Check(
             checks,
             "base uses valid 32x32 building blueprint with hundreds of modules",

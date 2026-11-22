@@ -157,7 +157,7 @@ public static class BlueprintIntegrityAudit
             if (building && data.blocks.Count > 0)
             {
                 data.foundation = BuildingFootprint.Calculate(data.blocks, 1);
-                WorldBuildingValidation.ValidateBlueprint(HangarShellBlueprint.Expand(data));
+                BlueprintStructureValidation.ValidateBlueprint(HangarShellBlueprint.Expand(data));
                 if (!HangarRules.Validate(data, out string reason))
                 {
                     throw new InvalidDataException(reason);
@@ -189,7 +189,7 @@ public static class BlueprintIntegrityAudit
         var identities = new HashSet<string>();
         foreach (BlockData block in data.blocks)
         {
-            if (block == null || string.IsNullOrWhiteSpace(block.id) || !identities.Add(block.id) || block.x < 1 || block.y < 1 || block.z < 1 || block.x > 64 || block.y > 64 || block.z > 64 || !WorldBuildingValidation.Finite(new Vector3(block.posX, block.posY, block.posZ)) || !WorldBuildingValidation.ValidRotation(new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW)))
+            if (block == null || string.IsNullOrWhiteSpace(block.id) || !identities.Add(block.id) || block.x < 1 || block.y < 1 || block.z < 1 || block.x > 64 || block.y > 64 || block.z > 64 || !BlueprintStructureValidation.Finite(new Vector3(block.posX, block.posY, block.posZ)) || !BlueprintStructureValidation.ValidRotation(new Quaternion(block.rotX, block.rotY, block.rotZ, block.rotW)))
             {
                 throw new InvalidDataException("Invalid or duplicate module identity, dimensions or pose.");
             }

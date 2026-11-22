@@ -35,26 +35,29 @@ public static class WorldBuildingPlayProbe
 
     private sealed class ProbeFixture : IDisposable
     {
-        private readonly WorldBuildingManager manager;
-        private readonly WorldBuildingPalette palette;
+        private readonly BlueprintStructureRegistry manager;
+        private readonly BlueprintStructurePalette palette;
         private readonly WorldLabController controller;
-        private readonly WorldBuildingCatalog originalCatalog;
+        private readonly BlueprintStructureCatalog originalCatalog;
         private readonly SaveManager originalSaves;
         private readonly WorldLabSnapshot originalWorld;
         private readonly bool controllerEnabled;
         private readonly Vector3 cameraPosition;
         private readonly Quaternion cameraRotation;
         private GameObject storeObject;
-        private WorldBuildingCatalog catalog;
+        private BlueprintStructureCatalog catalog;
         private TextAsset catalogReference;
-        public ProbeFixture(WorldBuildingManager manager, WorldBuildingPalette palette, WorldLabController controller)
+        public ProbeFixture(
+            BlueprintStructureRegistry manager,
+            BlueprintStructurePalette palette,
+            WorldLabController controller)
         {
             this.manager = manager;
             this.palette = palette;
             this.controller = controller;
-            originalCatalog = manager.Catalog;
+            originalCatalog = controller.Catalog;
             originalSaves = SaveManager.instance;
-            originalWorld = manager.Capture();
+            originalWorld = controller.CaptureWorld();
             controllerEnabled = controller.enabled;
             cameraPosition = palette.transform.position;
             cameraRotation = palette.transform.rotation;
@@ -79,18 +82,18 @@ public static class WorldBuildingPlayProbe
             {
                 name = blueprintName
             };
-            catalog = ScriptableObject.CreateInstance<WorldBuildingCatalog>();
+            catalog = ScriptableObject.CreateInstance<BlueprintStructureCatalog>();
             catalog.initialBuildings = new[]
             {
-                new WorldBuildingCatalog.InitialBuilding
+                new BlueprintStructureCatalog.InitialBuilding
                 {
                     blueprint = catalogReference,
                     worldLocalPosition = initial,
                     faction = UnitFaction.Enemy
                 }
             };
-            typeof(WorldBuildingManager).GetField("catalog", Private).SetValue(manager, catalog);
-            manager.ResetBuildings();
+            typeof(WorldLabController).GetField("catalog", Private).SetValue(controller, catalog);
+            controller.ResetBuildings();
             palette.RefreshCatalog();
             controller.enabled = false;
         }
@@ -102,8 +105,8 @@ public static class WorldBuildingPlayProbe
             {
                 if (manager != null)
                 {
-                    typeof(WorldBuildingManager).GetField("catalog", Private).SetValue(manager, originalCatalog);
-                    manager.Restore(originalWorld);
+                    typeof(WorldLabController).GetField("catalog", Private).SetValue(controller, originalCatalog);
+                    controller.RestoreWorld(originalWorld);
                 }
             }
             finally
@@ -216,9 +219,9 @@ public static class WorldBuildingPlayProbe
     private static IEnumerator Scenario()
     {
         yield return null;
-        WorldBuildingManager manager = SceneObjectQuery.FindInActiveScene<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = SceneObjectQuery.FindInActiveScene<BlueprintStructureRegistry>();
         ProceduralVoxelWorld world = manager.World;
-        WorldBuildingPalette palette = SceneObjectQuery.FindInActiveScene<WorldBuildingPalette>();
+        BlueprintStructurePalette palette = SceneObjectQuery.FindInActiveScene<BlueprintStructurePalette>();
         WorldLabController controller = SceneObjectQuery.FindInActiveScene<WorldLabController>();
         fixture = new ProbeFixture(manager, palette, controller);
         fixture.Install();
@@ -257,11 +260,11 @@ public static class WorldBuildingPlayProbe
         enlarged.x = 2;
         enlarged.posX = 0f;
         resized.blocks.Add(enlarged);
-        BuildingRuntime custom = manager.Place(resized, "Resized", new Vector3(40, 38, 44), Quaternion.identity, UnitFaction.Player);
+        BlueprintStructureRuntime custom = manager.Place(resized, "Resized", new Vector3(40, 38, 44), Quaternion.identity, UnitFaction.Player);
         Check(
             custom.Blocks[0].x == 2 && Mathf.Approximately(custom.Blocks[0].GetComponent<BoxCollider>().size.x, 1.9f),
             "CSV Awake preserves restored instance dimensions");
-        manager.Restore(new WorldLabSnapshot { cellSize = world.CellSize, terrain = world.CaptureEdits(), buildings = new[] { manager.Buildings[0].Capture() } });
+        controller.RestoreWorld(new WorldLabSnapshot { cellSize = world.CellSize, terrain = world.CaptureEdits(), buildings = new[] { manager.Buildings[0].Capture() } });
         yield return null;
         // Input System 注入真实设备状态，调用生产输入入口，确认放置不触发地形采掘。
         testKeyboard = InputSystem.AddDevice<Keyboard>();
@@ -283,7 +286,7 @@ public static class WorldBuildingPlayProbe
         InputSystem.Update();
         InvokeUpdate(palette);
         Check(
-            (int)typeof(WorldBuildingPalette).GetField("quarterTurns", Private).GetValue(palette) == 1,
+            (int)typeof(BlueprintStructurePalette).GetField("quarterTurns", Private).GetValue(palette) == 1,
             "T key rotates placement by one quarter turn");
         uint unmined = world.Data.Fingerprint();
         InputSystem.QueueStateEvent(
@@ -304,14 +307,14 @@ public static class WorldBuildingPlayProbe
         testKeyboard = null;
         testMouse = null;
         camera.transform.SetPositionAndRotation(cameraPosition, cameraRotation);
-        manager.Restore(new WorldLabSnapshot { cellSize = world.CellSize, terrain = world.CaptureEdits(), buildings = new[] { manager.Buildings[0].Capture() } });
+        controller.RestoreWorld(new WorldLabSnapshot { cellSize = world.CellSize, terrain = world.CaptureEdits(), buildings = new[] { manager.Buildings[0].Capture() } });
         yield return null;
         Vector3 a = new Vector3(40f, 38f, 40f);
         Vector3 b = new Vector3(50f, 38f, 40f);
         Vector3 c = new Vector3(60f, 38f, 40f);
-        BuildingRuntime first = manager.Place(sample, "A", a, Quaternion.identity, UnitFaction.Player);
-        BuildingRuntime second = manager.Place(sample, "B", b, Quaternion.Euler(0, 90, 0), UnitFaction.Player);
-        BuildingRuntime third = manager.Place(sample, "C", c, Quaternion.Euler(0, 180, 0), UnitFaction.Player);
+        BlueprintStructureRuntime first = manager.Place(sample, "A", a, Quaternion.identity, UnitFaction.Player);
+        BlueprintStructureRuntime second = manager.Place(sample, "B", b, Quaternion.Euler(0, 90, 0), UnitFaction.Player);
+        BlueprintStructureRuntime third = manager.Place(sample, "C", c, Quaternion.Euler(0, 180, 0), UnitFaction.Player);
         Check(
             first.Blocks.Count == 5 && second.Blocks.Count == 5 && third.Blocks.Count == 5,
             "one blueprint creates three full instances");
@@ -336,7 +339,7 @@ public static class WorldBuildingPlayProbe
         float damaged = first.Blocks[0].GetComponent<Durability>().currentDurability;
         CargoHold cargo = first.Blocks[1].GetComponent<CargoHold>();
         cargo.RestoreContents(new List<CargoItem> { new CargoItem { kind = cargo.Kind, resourcePath = "Blocks/1x1x1", amount = 2 } });
-        WorldLabSnapshot snapshot = manager.Capture();
+        WorldLabSnapshot snapshot = controller.CaptureWorld();
         Directory.CreateDirectory("Temp/WorldBuildings");
         string path = "Temp/WorldBuildings/integration.json";
         WorldLabPersistence.SaveSnapshot(path, snapshot);
@@ -346,7 +349,7 @@ public static class WorldBuildingPlayProbe
         bool invalidJson = false;
         try
         {
-            manager.Restore(WorldLabPersistence.LoadSnapshot("Temp/WorldBuildings/corrupt.json", world.CellSize));
+            controller.RestoreWorld(WorldLabPersistence.LoadSnapshot("Temp/WorldBuildings/corrupt.json", world.CellSize));
         }
         catch (Exception error) when (error is ArgumentException || error is InvalidOperationException)
         {
@@ -356,7 +359,7 @@ public static class WorldBuildingPlayProbe
         Check(
             invalidJson && manager.Buildings.Count == 4,
             "corrupt JSON rejected without replacing live buildings");
-        manager.Restore(WorldLabPersistence.LoadSnapshot(path, world.CellSize));
+        controller.RestoreWorld(WorldLabPersistence.LoadSnapshot(path, world.CellSize));
         yield return null;
         first = manager.Buildings.First(building => building.InstanceId == snapshot.buildings[1].instanceId);
         Check(
@@ -372,21 +375,21 @@ public static class WorldBuildingPlayProbe
         string identityBefore = manager.Buildings[0].InstanceId;
         var broken = JsonUtility.FromJson<WorldLabSnapshot>(JsonUtility.ToJson(snapshot));
         broken.buildings[1].blueprint.blocks[0].resourcePath = "Blocks/MissingBuildingPart";
-        ExpectRejected(manager, broken, "missing resource rejected before mutation");
+        ExpectRejected(controller, broken, "missing resource rejected before mutation");
         broken = JsonUtility.FromJson<WorldLabSnapshot>(JsonUtility.ToJson(snapshot));
         broken.buildings[1].instanceId = broken.buildings[0].instanceId;
-        ExpectRejected(manager, broken, "duplicate building identity rejected");
+        ExpectRejected(controller, broken, "duplicate building identity rejected");
         broken = JsonUtility.FromJson<WorldLabSnapshot>(JsonUtility.ToJson(snapshot));
         broken.buildings[1].durability[0] = -1;
-        ExpectRejected(manager, broken, "invalid durability rejected");
+        ExpectRejected(controller, broken, "invalid durability rejected");
         broken = JsonUtility.FromJson<WorldLabSnapshot>(JsonUtility.ToJson(snapshot));
         broken.cellSize = 3f;
-        ExpectRejected(manager, broken, "world cell size mismatch rejected");
+        ExpectRejected(controller, broken, "world cell size mismatch rejected");
         Check(
             world.Data.Fingerprint() == terrainBefore && manager.Buildings[0].InstanceId == identityBefore,
             "rejected restores preserve live terrain and building objects");
         // 真实生产炮塔循环：等待 Update 电网分配及 FixedUpdate 索敌、发射。
-        foreach (BuildingRuntime building in manager.Buildings)
+        foreach (BlueprintStructureRuntime building in manager.Buildings)
         {
             foreach (Turret turret in building.GetComponentsInChildren<Turret>())
             {
@@ -448,7 +451,7 @@ public static class WorldBuildingPlayProbe
         weapon.SetStarted(true);
         relay.gameObject.SetActive(false);
         // 邻栋中继也可能覆盖本栋，移除测试区域其他网络后确认残留供电清理。
-        foreach (BuildingRuntime building in manager.Buildings.Where(building => building != first))
+        foreach (BlueprintStructureRuntime building in manager.Buildings.Where(building => building != first))
         {
             foreach (PowerTransmissionDevice other in building.GetComponentsInChildren<PowerTransmissionDevice>())
             {
@@ -470,8 +473,8 @@ public static class WorldBuildingPlayProbe
         Check(
             manager.GetComponentsInChildren<ControlUnit>().Any(unit => unit.Building == null && !unit.GetComponent<Rigidbody>().isKinematic && unit.GetComponentsInChildren<RuntimeUnitMember>().Any(member => member.ownerUnitId == originalOwner)),
             "disconnected group becomes bounded physical debris");
-        WorldLabSnapshot damagedSnapshot = manager.Capture();
-        manager.Restore(damagedSnapshot);
+        WorldLabSnapshot damagedSnapshot = controller.CaptureWorld();
+        controller.RestoreWorld(damagedSnapshot);
         yield return null;
         first = manager.Buildings.First(building => building.InstanceId == snapshot.buildings[1].instanceId);
         Check(
@@ -485,7 +488,7 @@ public static class WorldBuildingPlayProbe
         {
             for (int z = 0; z < third.FootprintSize.y; z++)
             {
-                Vector3 samplePoint = third.transform.TransformPoint(WorldBuildingPlacement.LocalAnchor(x, z) - Vector3.up * 0.05f);
+                Vector3 samplePoint = third.transform.TransformPoint(BlueprintStructurePlacement.LocalAnchor(x, z) - Vector3.up * 0.05f);
                 world.SetCell(world.WorldToCell(samplePoint), 0);
             }
         }
@@ -502,15 +505,15 @@ public static class WorldBuildingPlayProbe
             Time.frameCount > initialFrame + 3 && third.transform.position.y < initialY - 0.2f,
             "detached building falls during real simulation frames");
         Vector3 fallenPosition = third.transform.position;
-        WorldLabSnapshot fallen = manager.Capture();
-        manager.Restore(fallen);
+        WorldLabSnapshot fallen = controller.CaptureWorld();
+        controller.RestoreWorld(fallen);
         third = manager.Buildings.First(building => building.InstanceId == snapshot.buildings[3].instanceId);
         Check(
             !third.Anchored && Vector3.Distance(third.transform.position, fallenPosition) < 0.001f,
             "dynamic building pose reloads without editor grid snapping");
         yield return null;
         WorldLabPersistence.Save("Temp/WorldBuildings/legacy.json", world.CaptureEdits());
-        manager.Restore(WorldLabPersistence.LoadSnapshot("Temp/WorldBuildings/legacy.json", world.CellSize));
+        controller.RestoreWorld(WorldLabPersistence.LoadSnapshot("Temp/WorldBuildings/legacy.json", world.CellSize));
         Check(manager.Buildings.Count == 0, "legacy voxel save migrates to empty building list");
         world.Generate();
         Check(
@@ -524,12 +527,12 @@ public static class WorldBuildingPlayProbe
         behaviour.GetType().GetMethod("Update", Private).Invoke(behaviour, null);
     }
 
-    private static void ExpectRejected(WorldBuildingManager manager, WorldLabSnapshot snapshot, string name)
+    private static void ExpectRejected(WorldLabController controller, WorldLabSnapshot snapshot, string name)
     {
         bool rejected = false;
         try
         {
-            manager.Restore(snapshot);
+            controller.RestoreWorld(snapshot);
         }
         catch (InvalidOperationException)
         {

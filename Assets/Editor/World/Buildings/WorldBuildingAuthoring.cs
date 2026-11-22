@@ -35,10 +35,10 @@ public static class WorldBuildingAuthoring
         ProceduralVoxelWorld world = SceneObjectQuery.FindInActiveScene<ProceduralVoxelWorld>();
         Camera camera = SceneObjectQuery.FindInActiveScene<WorldLabController>().GetComponent<Camera>();
         string catalogPath = Root + "/Catalog.asset";
-        var catalog = AssetDatabase.LoadAssetAtPath<WorldBuildingCatalog>(catalogPath);
+        var catalog = AssetDatabase.LoadAssetAtPath<BlueprintStructureCatalog>(catalogPath);
         if (catalog == null)
         {
-            catalog = ScriptableObject.CreateInstance<WorldBuildingCatalog>();
+            catalog = ScriptableObject.CreateInstance<BlueprintStructureCatalog>();
             TextAsset sample = AssetDatabase.LoadAssetAtPath<TextAsset>(samplePath);
             catalog.blueprints = new[]
             {
@@ -48,7 +48,7 @@ public static class WorldBuildingAuthoring
             Vector3 initial = FindFlatPosition(world, blueprint);
             catalog.initialBuildings = new[]
             {
-                new WorldBuildingCatalog.InitialBuilding
+                new BlueprintStructureCatalog.InitialBuilding
                 {
                     blueprint = sample,
                     worldLocalPosition = initial,
@@ -58,24 +58,20 @@ public static class WorldBuildingAuthoring
             AssetDatabase.CreateAsset(catalog, catalogPath);
         }
 
-        WorldBuildingManager manager = SceneObjectQuery.FindInActiveScene<WorldBuildingManager>();
+        BlueprintStructureRegistry manager = SceneObjectQuery.FindInActiveScene<BlueprintStructureRegistry>();
         if (manager == null)
         {
-            manager = new GameObject("WorldLab Buildings").AddComponent<WorldBuildingManager>();
+            manager = new GameObject("WorldLab Buildings").AddComponent<BlueprintStructureRegistry>();
         }
 
         var settings = new SerializedObject(manager);
         settings.FindProperty("world").objectReferenceValue = world;
-        if (settings.FindProperty("catalog").objectReferenceValue == null)
-        {
-            settings.FindProperty("catalog").objectReferenceValue = catalog;
-        }
-
+        settings.FindProperty("useIndividualRenderers").boolValue = true;
         settings.ApplyModifiedPropertiesWithoutUndo();
-        WorldBuildingPalette palette = camera.GetComponent<WorldBuildingPalette>();
+        BlueprintStructurePalette palette = camera.GetComponent<BlueprintStructurePalette>();
         if (palette == null)
         {
-            palette = camera.gameObject.AddComponent<WorldBuildingPalette>();
+            palette = camera.gameObject.AddComponent<BlueprintStructurePalette>();
         }
 
         var paletteSettings = new SerializedObject(palette);
@@ -83,6 +79,11 @@ public static class WorldBuildingAuthoring
         paletteSettings.ApplyModifiedPropertiesWithoutUndo();
         var controller = new SerializedObject(camera.GetComponent<WorldLabController>());
         controller.FindProperty("buildings").objectReferenceValue = manager;
+        if (controller.FindProperty("catalog").objectReferenceValue == null)
+        {
+            controller.FindProperty("catalog").objectReferenceValue = catalog;
+        }
+
         controller.ApplyModifiedPropertiesWithoutUndo();
         EditorSceneManager.MarkSceneDirty(world.gameObject.scene);
         EditorSceneManager.SaveScene(world.gameObject.scene);
@@ -119,7 +120,7 @@ public static class WorldBuildingAuthoring
                 for (int y = world.Data.Size.y - 2; y > 0; y--)
                 {
                     Vector3 local = new Vector3(x, y, z) * world.CellSize;
-                    if (WorldBuildingPlacement.Check(world, blueprint, world.transform.TransformPoint(local), world.transform.rotation, out _))
+                    if (BlueprintStructurePlacement.Check(world, blueprint, world.transform.TransformPoint(local), world.transform.rotation, out _))
                     {
                         return local;
                     }

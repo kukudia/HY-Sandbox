@@ -15,22 +15,22 @@ public static class WorldBuildingFootprintChecks
         var checks = new List<string>();
         BlockDataList original = Sample(0, 0);
         BlockDataList shifted = Sample(-40, 27);
-        WorldBuildingValidation.ValidateBlueprint(shifted);
-        WorldBuildingValidation.ValidateWorldTemplate(shifted);
+        BlueprintStructureValidation.ValidateBlueprint(shifted);
+        BlueprintStructureValidation.ValidateWorldTemplate(shifted);
         Check(
             checks,
             "old zero-offset ground anchor remains unchanged",
-            WorldBuildingPlacement.LocalAnchor(original.foundation, 0, 0) == WorldBuildingPlacement.LocalAnchor(0, 0));
+            BlueprintStructurePlacement.LocalAnchor(original.foundation, 0, 0) == BlueprintStructurePlacement.LocalAnchor(0, 0));
         Check(
             checks,
             "cropped negative/positive origin adjusts local ground anchors",
-            WorldBuildingPlacement.LocalAnchor(shifted.foundation, 0, 0) == new Vector3(-41.5f, 0f, 25.5f));
+            BlueprintStructurePlacement.LocalAnchor(shifted.foundation, 0, 0) == new Vector3(-41.5f, 0f, 25.5f));
         BlockDataList restored = JsonUtility.FromJson<BlockDataList>(JsonUtility.ToJson(shifted));
         Check(
             checks,
             "JSON roundtrip preserves offset without moving modules",
             restored.foundation.offsetX == -40 && restored.foundation.offsetZ == 27 && restored.blocks[0].posX == shifted.blocks[0].posX);
-        var footprints = new WorldBuildingFootprints(new[] { shifted });
+        var footprints = new BlueprintStructureFootprints(new[] { shifted });
         Vector3 footprintCenter = footprints.Get(14723, Vector2Int.zero).center;
         Check(
             checks,
@@ -66,7 +66,7 @@ public static class WorldBuildingFootprintChecks
                     {
                         for (int ix = 0; ix < shifted.foundation.width; ix++)
                         {
-                            Vector3 point = b + rotation * WorldBuildingPlacement.LocalAnchor(shifted.foundation, ix, iz);
+                            Vector3 point = b + rotation * BlueprintStructurePlacement.LocalAnchor(shifted.foundation, ix, iz);
                             float ground = after.SurfaceHeight(Mathf.FloorToInt(point.x / settings.CellSize), Mathf.FloorToInt(point.z / settings.CellSize));
                             CheckCondition(Mathf.Abs(ground - b.y) < .01f, "shifted footprint remains fully supported on generated terrain");
                         }
@@ -101,10 +101,10 @@ public static class WorldBuildingFootprintChecks
         var root = new GameObject("Automatic footprint isolated runtime checks");
         try
         {
-            WorldBuildingManager manager = root.AddComponent<WorldBuildingManager>();
+            BlueprintStructureRegistry manager = root.AddComponent<BlueprintStructureRegistry>();
             manager.enabled = false;
             BlockDataList design = Sample(-40, 27);
-            var state = new WorldBuildingState
+            var state = new BlueprintStructureState
             {
                 instanceId = "auto-footprint-check",
                 blueprintName = "isolated offset footprint",
@@ -118,7 +118,7 @@ public static class WorldBuildingFootprintChecks
                     100f
                 }
             };
-            BuildingRuntime building = manager.RestoreBuilding(state);
+            BlueprintStructureRuntime building = manager.RestoreBuilding(state);
             building.Activate();
             Check(
                 checks,
@@ -128,13 +128,13 @@ public static class WorldBuildingFootprintChecks
                 checks,
                 "disconnected groups each anchor directly to offset ground",
                 building.HasFullFoundationSupport());
-            Bounds actual = WorldBuildingPlacement.Footprint(building);
+            Bounds actual = BlueprintStructurePlacement.Footprint(building);
             Vector3 expected = building.transform.TransformPoint(design.foundation.Center);
             Check(
                 checks,
                 "terrain-damage footprint follows rotated cropped origin",
                 (actual.center - expected).sqrMagnitude < .0001f);
-            WorldBuildingState captured = building.Capture();
+            BlueprintStructureState captured = building.Capture();
             Check(
                 checks,
                 "live capture retains offset and original relative poses",
@@ -146,14 +146,14 @@ public static class WorldBuildingFootprintChecks
                 changed,
                 null
             };
-            bool repaired = (bool)typeof(BuildingRuntime).GetMethod("TryRefit", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(building, arguments);
+            bool repaired = (bool)typeof(BlueprintStructureRuntime).GetMethod("TryRefit", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(building, arguments);
             Check(checks, "repair rejects moving an existing footprint origin", !repaired);
             arguments = new object[]
             {
                 design,
                 null
             };
-            repaired = (bool)typeof(BuildingRuntime).GetMethod("TryRefit", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(building, arguments);
+            repaired = (bool)typeof(BlueprintStructureRuntime).GetMethod("TryRefit", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(building, arguments);
             Check(
                 checks,
                 "repair accepts the unchanged cropped design",

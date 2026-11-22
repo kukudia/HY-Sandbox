@@ -48,7 +48,7 @@ public sealed class SiegeConstructionSettings : ScriptableObject
     {
         try
         {
-            WorldBuildingValidation.ValidateBlueprint(HangarShellBlueprint.Expand(data));
+            BlueprintStructureValidation.ValidateBlueprint(HangarShellBlueprint.Expand(data));
             if (!HangarRules.Validate(data, out reason))
             {
                 return false;

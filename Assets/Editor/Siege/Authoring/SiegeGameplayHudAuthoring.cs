@@ -26,7 +26,7 @@ public static class SiegeGameplayHudAuthoring
         string[] paths =
         {
             MainMenuController.MainPath,
-            "Assets/Scenes/Siege.unity",
+            "Assets/Scenes/Research/Siege.unity",
             "Assets/Scenes/Random5v5Arena.unity",
             "Assets/Scenes/SiegeGameplay.unity"
         };

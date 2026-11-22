@@ -11,7 +11,7 @@ public sealed class StreamingWorldTerrain
     private readonly int worldHeight;
     private readonly int worldRadiusInChunks;
     private readonly float buildingChance;
-    private readonly WorldBuildingFootprints footprints;
+    private readonly BlueprintStructureFootprints footprints;
     private readonly float blendWidth;
     private readonly int siteSpacing;
     private readonly int spawnClearRadius;
@@ -35,7 +35,7 @@ public sealed class StreamingWorldTerrain
         worldHeight = configuration.WorldHeight;
         worldRadiusInChunks = configuration.WorldRadiusInChunks;
         buildingChance = configuration.BuildingChance;
-        footprints = new WorldBuildingFootprints(buildingTemplates);
+        footprints = new BlueprintStructureFootprints(buildingTemplates);
         blendWidth = configuration.BuildingBlendWidth;
         siteSpacing = Mathf.Max(
             1,

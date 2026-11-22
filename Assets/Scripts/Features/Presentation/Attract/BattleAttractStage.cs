@@ -10,7 +10,7 @@ public sealed class BattleAttractStage : MonoBehaviour
     [SerializeField]
     private SiegeSettings baseSettings;
     [SerializeField]
-    private WorldBuildingManager buildings;
+    private BlueprintStructureRegistry buildings;
     [SerializeField]
     private Transform baseAnchor;
     [SerializeField]

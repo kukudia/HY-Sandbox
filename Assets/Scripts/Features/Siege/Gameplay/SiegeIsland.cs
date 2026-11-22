@@ -81,7 +81,7 @@ public sealed class SiegeIsland : MonoBehaviour
 
     public void GenerateFor(Bounds foundation)
     {
-        if (world == null || settings == null || !WorldBuildingValidation.Finite(foundation.center) || !WorldBuildingValidation.Finite(foundation.size))
+        if (world == null || settings == null || !BlueprintStructureValidation.Finite(foundation.center) || !BlueprintStructureValidation.Finite(foundation.size))
         {
             throw new InvalidOperationException("Siege island requires authored world/settings and a finite foundation.");
         }

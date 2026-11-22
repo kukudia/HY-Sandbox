@@ -45,7 +45,7 @@ public static class SiegeMixedStressChecks
                 "population loaded without errors",
                 population != null && population.IsReady && string.IsNullOrEmpty(population.Error));
             SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
-            BuildingRuntime[] buildings = session.Buildings.Buildings.ToArray();
+            BlueprintStructureRuntime[] buildings = session.Buildings.Buildings.ToArray();
             Check(
                 report,
                 "four authored2048 buildings restore8192 modules",
@@ -68,7 +68,7 @@ public static class SiegeMixedStressChecks
                 population.Buildings.All(building => building.GetComponent<ControlUnit>().faction == UnitFaction.Player));
             Check(report, "former8192 total does not cap additional modules", session.Buildings.HasCapacity(1));
             Check(report, "HUD restored after loading", SceneObjectQuery.FindInActiveScene<SiegeHud>().enabled);
-            foreach (BuildingRuntime building in buildings)
+            foreach (BlueprintStructureRuntime building in buildings)
             {
                 PlayManager.instance.RefreshGroup(building.GetComponent<ControlUnit>());
             }
@@ -78,7 +78,7 @@ public static class SiegeMixedStressChecks
                 "real support refresh preserves all intact buildings",
                 buildings.All(building => building.Blocks.Count == 2048 && building.Anchored));
             Check(report, "wave starts after population is ready", session.BeginNextWave());
-            BuildingRuntime satellite = population.Buildings[0];
+            BlueprintStructureRuntime satellite = population.Buildings[0];
             Block cap = satellite.Blocks.Single(block => block.uniqueId.EndsWith(":stress-supported-cap", StringComparison.Ordinal));
             cap.canExplode = false;
             cap.GetComponent<Durability>().ApplyDamage(1000000f, null);

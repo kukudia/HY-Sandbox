@@ -1,6 +1,6 @@
 # Main 大世界会话
 
-建筑用户数据统一通过 `SaveManager.GetBuildingBlueprintFiles()` 获取，与建筑编辑器使用同一文件仓；World与WorldLab共用 `WorldBuildingLibrary` 的解析、覆盖和错误隔离。Main中的注入文件仓会直接生效；独立WorldLab没有SaveManager时使用相同目录规则。世界仍合并Resources内置建筑并执行专属预热/平台校验，WorldLab保留Catalog中的内置模板。
+建筑用户数据统一通过 `SaveManager.GetBuildingBlueprintFiles()` 获取，与建筑编辑器使用同一文件仓。生产建筑和基地恢复使用 `BlueprintAssemblyBuilder` 的蓝图装配、连接重建和初始化主链；WorldLab 仍是隔离的研究场景，使用 `BlueprintStructure*` 研究类型和自己的 Catalog/快照入口，不被 Main 世界加载。
 
 Main 在建造模式下分帧准备出生区域的地形和真实 Buildings；世界根保持隐藏，建筑不进行物理、供电或战斗模拟。首次启动显示载具恢复与世界准备的组合进度，两者完成后自动开放建造；载具前95%按模块数量报告，连接重建完成才达到100%，不更改已配置的加载间隔。后续点击 Play，准备未完成时显示进度和 Cancel，完成后才显示世界、启用模拟并安全放置玩家。Cancel 关闭本次遮罩和进入请求，后台准备继续。
 
@@ -13,7 +13,7 @@ Main 在建造模式下分帧准备出生区域的地形和真实 Buildings；�
 - `Assets/World/WorldGeneration.asset`：种子、随机种子开关、体素大小、区块大小、世界边界、加载/卸载半径、建筑概率、平台、安全出生区、Spawn Clearance和View Distance。
 - Loading Frame Budget Milliseconds：建筑创建和启用的每批CPU时间预算，默认2ms；单个Unity Instantiate/启用操作不可中断，因此它不是严格的整帧上限。
 - `Assets/World/WorldSession.prefab`：WorldSessionManager 装配，WorldRoot 下分别持有 Streaming Terrain 和 Streaming Buildings。Main 实例绑定原有九片建造地面、PlayManager 和原生 UI 加载面板。
-- Main读取 `Application.persistentDataPath/BuildingBlueprints` 下所有有效 `.json`。本机路径是 `C:/Users/12046/AppData/LocalLow/DefaultCompany/HY-Sandbox/BuildingBlueprints`，每次准备新会话重新读取；模板池包含全部有效文件，落点按种子选择模板与朝向。当前为base1、base2、default_building。坏文件单独警告并跳过，空目录仍可生成纯地形，不以内置Outpost替代；文件不被生成器修改。WorldLab仍使用独立Catalog和手工放置目录。
+- Main读取 `Application.persistentDataPath/BuildingBlueprints` 下所有有效 `.json`。本机路径是 `C:/Users/12046/AppData/LocalLow/DefaultCompany/HY-Sandbox/BuildingBlueprints`，每次准备新会话重新读取；模板池包含全部有效文件，落点按种子选择模板与朝向。坏文件单独警告并跳过，空目录仍可生成纯地形，不以内置Outpost替代；文件不被生成器修改。WorldLab 的 Catalog、放置、快照和探针都保留在 `Assets/Scripts/Features/Research/WorldLab`，仅供隔离预研场景使用。
 - 菜单 `Tools > HY-Sandbox > World > Install Main world session`：在已保存的 Main 中安装缺少的资产与绑定；已有配置、Prefab 和面板布局保留。安装后可在 Inspector 修改并保存。
 
 ## 生成与运行边界
@@ -26,7 +26,7 @@ Main 在建造模式下分帧准备出生区域的地形和真实 Buildings；�
 
 出生周围默认3×3列不生成敌方建筑，保留自然高度和坡度，不再挖低成方形平台。进入前按玩家方块整体尺寸检查净空，并采样载具整个水平覆盖范围，底部放在最高地面上方Spawn Clearance（默认6m）。过大的载具拒绝进入，并提示扩大安全出生区。原有地面只在游玩期间隐藏。
 
-建筑落点与平台由同一世界种子确定，加载完整地形列后生成真实模板，维持1m方块和2m体素的既有尺度。平台按全部蓝图的底座和模块角点自动扩大；较大平台增加候选位置间距并跨列采样，避免相互重叠。低于底座或半径超过128m的异常蓝图单独报告。平台只整平地形，不生成实体建筑地基。建筑数和方块数沿用WorldBuildingManager预算，超过活动预算的快照延期实例化。
+建筑落点与平台由同一世界种子确定，加载完整地形列后通过生产蓝图装配主链生成真实模板，维持1m方块和2m体素的既有尺度。平台按全部蓝图的底座和模块角点自动扩大；较大平台增加候选位置间距并跨列采样，避免相互重叠。低于底座或半径超过128m的异常蓝图单独报告。平台只整平地形，不生成实体建筑地基；创建和启用继续受世界会话的分帧预算约束。
 
 默认View Distance为600m，距离雾从270m开始至600m完全遮盖；远景网格再多生成若干列，确保边界位于雾后。低密度高度网格分帧重建，分辨率有界，避开实际加载列并以垂直裙边衔接，避免重新填上近处已挖开的洞；远处建筑仍随实体区块加载。远景不参与射线/物理，玩家前方就绪保护仍只认真实区块碰撞。游玩时相机背景临时设为Distance Fog Color，退出恢复原雾颜色、参数、背景与远裁剪面；灯光不变。
 

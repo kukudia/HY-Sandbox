@@ -7,7 +7,7 @@ using UnityEngine;
 public sealed class OutpostEncounterDirector
 {
     private readonly Dictionary<string, Encounter> encounters = new Dictionary<string, Encounter>();
-    private readonly WorldBuildingManager buildings;
+    private readonly BlueprintStructureRegistry buildings;
     private readonly ProceduralVoxelWorld world;
     private int activeCount;
     public OutpostEncounterStatus? Nearest
@@ -20,7 +20,7 @@ public sealed class OutpostEncounterDirector
     }
     public int ActiveCount => activeCount;
 
-    public OutpostEncounterDirector(WorldBuildingManager owner)
+    public OutpostEncounterDirector(BlueprintStructureRegistry owner)
     {
         buildings = owner;
         world = owner.World;
@@ -50,7 +50,7 @@ public sealed class OutpostEncounterDirector
 
     public void Tick(Vector3 player)
     {
-        foreach (BuildingRuntime building in buildings.Buildings)
+        foreach (BlueprintStructureRuntime building in buildings.Buildings)
         {
             if (building == null || building.Outpost == null || !building.IsOperational)
             {
@@ -367,7 +367,7 @@ public sealed class OutpostEncounterDirector
         internal Vector3 Position;
         internal Quaternion Rotation;
         internal EnemyOutpostData Data;
-        internal BuildingRuntime Building;
+        internal BlueprintStructureRuntime Building;
         internal int Emplacements;
         internal readonly List<Guard> Guards = new List<Guard>();
     }

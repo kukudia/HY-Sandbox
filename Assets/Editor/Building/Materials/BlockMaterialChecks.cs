@@ -151,10 +151,10 @@ public static class BlockMaterialChecks
             var managerObject = new GameObject("Material building manager owned");
             managerObject.SetActive(false);
             managerObject.transform.SetParent(root.transform, false);
-            WorldBuildingManager manager = managerObject.AddComponent<WorldBuildingManager>();
+            BlueprintStructureRegistry manager = managerObject.AddComponent<BlueprintStructureRegistry>();
             using (var settings = new UnityEditor.SerializedObject(manager))
             {
-                settings.FindProperty("initializeOnStart").boolValue = false;
+                settings.FindProperty("useIndividualRenderers").boolValue = false;
                 settings.ApplyModifiedPropertiesWithoutUndo();
             }
 
@@ -165,7 +165,7 @@ public static class BlockMaterialChecks
                 siegeCoreId = "wood-module"
             };
             design.blocks.Add(new BlockData(template) { id = "wood-module", resourcePath = "Blocks/2x2x1", x = 2, y = 2, z = 1, posX = 0, posY = 1, posZ = 0, rotX = 0, rotY = 0, rotZ = 0, rotW = 1, materialId = "wood" });
-            var state = new WorldBuildingState
+            var state = new BlueprintStructureState
             {
                 instanceId = Guid.NewGuid().ToString("N"),
                 blueprintName = "Material owned",
@@ -179,12 +179,12 @@ public static class BlockMaterialChecks
                 rotation = Quaternion.identity,
                 anchored = true
             };
-            BuildingRuntime building = manager.RestoreBuilding(state);
+            BlueprintStructureRuntime building = manager.RestoreBuilding(state);
             Check(
                 report,
                 building.Blocks.Count == 1 && building.Blocks[0].GetComponent<Durability>().currentDurability == 17f && building.Blocks[0].GetComponent<BlockMaterial>().MaterialId == "wood",
                 "Real building restore preserves damaged health and authored material");
-            WorldBuildingState capture = building.Capture();
+            BlueprintStructureState capture = building.Capture();
             Check(
                 report,
                 capture.blueprint.blocks[0].materialId == "wood" && capture.durability[0] == 17f,
