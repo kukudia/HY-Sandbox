@@ -167,6 +167,53 @@ public class CargoHold : MonoBehaviour
         return result;
     }
 
+    internal int UnloadTo(CargoHold destination, CargoKind kind)
+    {
+        if (destination == null || destination == this || _released || !destination.isActiveAndEnabled || destination._released || destination._kind != kind)
+        {
+            return 0;
+        }
+
+        int moved = 0;
+        for (int index = _contents.Count - 1; index >= 0; index--)
+        {
+            CargoItem item = _contents[index];
+            if (item == null || item.kind != kind || !item.IsValid || destination.Free <= 0)
+            {
+                continue;
+            }
+
+            int amount = Mathf.Min(item.amount, destination.Free);
+            destination.StoreUnloaded(item, amount);
+            item.amount -= amount;
+            moved += amount;
+            if (item.amount <= 0)
+            {
+                _contents.RemoveAt(index);
+            }
+        }
+
+        if (moved > 0)
+        {
+            Revision++;
+            destination.Revision++;
+        }
+
+        return moved;
+    }
+
+    private void StoreUnloaded(CargoItem item, int amount)
+    {
+        if (_contents.Count > 0)
+        {
+            _contents[0].amount += amount;
+        }
+        else
+        {
+            _contents.Add(item.Copy(amount));
+        }
+    }
+
     public void RestoreContents(List<CargoItem> items)
     {
         _contents.Clear();

@@ -3,6 +3,7 @@
 // 以及 ScheduleUnitCleanup() / ScheduleDistantGroupCleanup() / EndSalvageSession()。
 // 生命周期：各玩法场景各自挂载本组件，Awake() 覆盖静态 instance，因此静态引用只代表当前场景；清理协程由本对象承载。
 // 副作用：禁用耐久、断开连接、脱离父级、移除对象、发放残骸掉落，并把胜负/击杀转交 Skirmish、Siege 与 MainUIPanels。
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DestroyManager : MonoBehaviour
@@ -141,7 +142,14 @@ public class DestroyManager : MonoBehaviour
             {
                 block.ExplosionQueued = true;
                 VisualEffectsManager.TryPlayBlockExplosion(block);
-                ExplosionPropagation.DisconnectBlocksInExplosionRange(unit, block, center);
+                HashSet<ControlUnit> affectedOwners = ExplosionPropagation.DisconnectBlocksInExplosionRange(unit, block, center);
+                if (affectedOwners != null)
+                {
+                    foreach (ControlUnit affectedOwner in affectedOwners)
+                    {
+                        session.RefreshUnit(affectedOwner);
+                    }
+                }
             }
 
             // 延迟 Destroy 前立刻移出连接图；存档和胜负监听者接收同一次失效事件。

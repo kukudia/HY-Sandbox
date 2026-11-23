@@ -4532,7 +4532,8 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | ExplosionPropagation | [`void DisconnectBlocksInExplosionRange(ControlUnit unit, Block source, Vector3 center)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L13) | internal static |
-| ExplosionPropagation | [`void ApplyExplosionForce( Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition, float upwardsModifier, float impulseScale, float maximumSpeedChange, float collisionProtection)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L37) | internal static |
+| ExplosionPropagation | [`void AddOwnedBlocks(ControlUnit owner, HashSet<Block> candidates)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L63) | private static |
+| ExplosionPropagation | [`void ApplyExplosionForce( Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition, float upwardsModifier, float impulseScale, float maximumSpeedChange, float collisionProtection)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L74) | internal static |
 
 ## Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs
 
@@ -6181,26 +6182,26 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| StatusIcon | [`void Awake()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L39) | private |
-| StatusIcon | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L47) | private |
-| StatusIcon | [`void LateUpdate()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L56) | private |
-| StatusIcon | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L74) | private |
-| StatusIcon | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L80) | private |
-| StatusIcon | [`void CheckConnectionStatus()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L88) | public |
-| StatusIcon | [`void CheckDurabilityStatus()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L111) | public |
-| StatusIcon | [`void CheckPowerStatus()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L138) | public |
-| StatusIcon | [`void SetConnectionStatus(ConnectionStatus nextStatus)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L165) | private |
-| StatusIcon | [`void RefreshStatusIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L176) | public |
-| StatusIcon | [`void RefreshAllStatusIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L186) | public static |
-| StatusIcon | [`void RefreshIcons(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L197) | private |
-| StatusIcon | [`void EnsureIconVisuals(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L224) | private |
-| StatusIcon | [`Image CreateIcon(string iconName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L255) | private |
-| StatusIcon | [`bool SetIcon(Image image, string statusName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L270) | private |
-| StatusIcon | [`Sprite FindStatusIcon(string statusName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L278) | private |
-| StatusIcon | [`void PositionVisibleIcons(int visibleCount)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L297) | private |
-| StatusIcon | [`void PositionIcon(Image image, ref float x)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L307) | private static |
-| StatusIcon | [`void UpdateIconScreenPosition(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L318) | private |
-| StatusIcon | [`void HideIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L367) | private |
+| StatusIcon | [`void Awake()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L40) | private |
+| StatusIcon | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L48) | private |
+| StatusIcon | [`void LateUpdate()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L57) | private |
+| StatusIcon | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L81) | private |
+| StatusIcon | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L87) | private |
+| StatusIcon | [`void CheckConnectionStatus()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L95) | public |
+| StatusIcon | [`void CheckDurabilityStatus()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L118) | public |
+| StatusIcon | [`void CheckPowerStatus()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L145) | public |
+| StatusIcon | [`void SetConnectionStatus(ConnectionStatus nextStatus)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L172) | private |
+| StatusIcon | [`void RefreshStatusIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L183) | public |
+| StatusIcon | [`void RefreshAllStatusIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L193) | public static |
+| StatusIcon | [`void RefreshIcons(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L204) | private |
+| StatusIcon | [`void EnsureIconVisuals(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L238) | private |
+| StatusIcon | [`Image CreateIcon(string iconName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L269) | private |
+| StatusIcon | [`bool SetIcon(Image image, string statusName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L284) | private |
+| StatusIcon | [`Sprite FindStatusIcon(string statusName)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L292) | private |
+| StatusIcon | [`void PositionVisibleIcons(int visibleCount)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L311) | private |
+| StatusIcon | [`void PositionIcon(Image image, ref float x)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L321) | private static |
+| StatusIcon | [`void UpdateIconScreenPosition(DebugManager manager)`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L332) | private |
+| StatusIcon | [`void HideIcons()`](../Assets/Scripts/Features/Presentation/Interface/StatusIcon.cs#L381) | private |
 
 ## Assets/Scripts/Features/Presentation/Interface/UIInteractionFeedback.cs
 
@@ -6284,12 +6285,12 @@ HY-Sandbox/
 | SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L114) | private |
 | SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L132) | private |
 | SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L140) | private |
-| SiegePlayerChecks | [`bool SupportsDriving(SiegeShipOption option)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L474) | private static |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L481) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L488) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L498) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L506) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L525) | private |
+| SiegePlayerChecks | [`bool SupportsDriving(SiegeShipOption option)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L475) | private static |
+| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L482) | private |
+| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L489) | private |
+| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L499) | private |
+| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L507) | private |
+| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L526) | private |
 
 ## Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs
 
@@ -6407,9 +6408,10 @@ HY-Sandbox/
 | CargoHold | [`void ReleaseReservation(LootDrop drop)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L122) | public |
 | CargoHold | [`int Store(CargoItem item, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L128) | public |
 | CargoHold | [`List<CargoItem> CaptureContents()`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L156) | public |
-| CargoHold | [`void RestoreContents(List<CargoItem> items)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L170) | public |
-| CargoHold | [`void ReleaseContents(UnitFaction faction)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L206) | public |
-| CargoHold | [`CargoHold FindReceiver(CargoItem item, Vector3 position, ControlUnit owner = null, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L232) | public static |
+| CargoHold | [`bool TryUnloadCoins(System.Func<int, bool> accept)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L170) | internal |
+| CargoHold | [`void RestoreContents(List<CargoItem> items)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L196) | public |
+| CargoHold | [`void ReleaseContents(UnitFaction faction)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L232) | public |
+| CargoHold | [`CargoHold FindReceiver(CargoItem item, Vector3 position, ControlUnit owner = null, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L258) | public static |
 
 ## Assets/Scripts/Features/Salvage/Cargo/CargoItem.cs
 
@@ -6583,16 +6585,17 @@ HY-Sandbox/
 | SiegeFleet | [`bool ReplaceAt(int optionIndex, int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L286) | public |
 | SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L345) | public |
 | SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L378) | public |
-| SiegeFleet | [`void ReleaseControl()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L403) | public |
-| SiegeFleet | [`void RepairBetweenWaves( out int repairedCount, out int attemptedCount, out long spent, out string firstFailure, bool forceAutomatic = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L423) | public |
-| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L474) | public |
-| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L500) | public |
-| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L526) | private |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L562) | public static |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L567) | public static |
-| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L581) | public |
-| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L593) | private |
-| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L603) | private |
+| SiegeFleet | [`void UnloadDockedCoins(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L403) | internal |
+| SiegeFleet | [`void ReleaseControl()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L420) | public |
+| SiegeFleet | [`void RepairBetweenWaves( out int repairedCount, out int attemptedCount, out long spent, out string firstFailure, bool forceAutomatic = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L440) | public |
+| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L491) | public |
+| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L517) | public |
+| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L543) | private |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L579) | public static |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L584) | public static |
+| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L598) | public |
+| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L610) | private |
+| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L620) | private |
 
 ## Assets/Scripts/Features/Siege/Fleet/SiegeFleetEntry.cs
 
@@ -6655,8 +6658,8 @@ HY-Sandbox/
 | SiegeReturnFlight | [`void ApplyGuidance(Flight flight, Vector3 target, float driveAcceleration, float liftAcceleration, float dt)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L501) | private |
 | SiegeReturnFlight | [`void PublishPropulsion(Flight flight, Vector3 horizontal, float vertical, float driveAcceleration, float liftAcceleration)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L539) | private |
 | SiegeReturnFlight | [`void Finish(Flight flight, bool success, string reason = null)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L559) | private |
-| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight, bool launchingIntoFlight = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L596) | private |
-| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L632) | public |
+| SiegeReturnFlight | [`void ReleasePropulsion(Flight flight, bool launchingIntoFlight = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L597) | private |
+| SiegeReturnFlight | [`void Stop()`](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L633) | public |
 
 ## Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs
 
@@ -7282,13 +7285,13 @@ HY-Sandbox/
 | GameModeController | [`void Retry()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L236) | public |
 | GameModeController | [`void Restart()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L241) | public |
 | GameModeController | [`void OnGUI()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L250) | private |
-| GameModeController | [`IEnumerator RestartRoutine()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L267) | private |
-| GameModeController | [`IEnumerator GuardTransition(IEnumerator work)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L305) | private |
-| GameModeController | [`void BeginReturn(bool failed = false)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L352) | private |
-| GameModeController | [`IEnumerator ReturnRoutine(bool failed)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L359) | private |
-| GameModeController | [`void CaptureInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L403) | private |
-| GameModeController | [`void RestoreInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L419) | private |
-| GameModeController | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L430) | private |
+| GameModeController | [`IEnumerator RestartRoutine()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L268) | private |
+| GameModeController | [`IEnumerator GuardTransition(IEnumerator work)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L306) | private |
+| GameModeController | [`void BeginReturn(bool failed = false)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L353) | private |
+| GameModeController | [`IEnumerator ReturnRoutine(bool failed)`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L360) | private |
+| GameModeController | [`void CaptureInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L404) | private |
+| GameModeController | [`void RestoreInput()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L420) | private |
+| GameModeController | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L431) | private |
 
 ## Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs
 

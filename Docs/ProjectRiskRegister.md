@@ -31,6 +31,7 @@ Siege 地形变化按建筑去重，每物理步每个受影响建筑最多调�
 | RepairBot.FixedUpdate / SiegeReturnFlight.Tick | RepairBot 只有完成一次空目标扫描后才会在 Home 停靠时禁用 FixedUpdate；同 Home 的 Durability.Damaged 事件唤醒后会强制重新扫描。Home 组件按层级版本缓存。返航在 BindUnit 缓存有效推进器、类型和 Power，读取/发布各遍历一次。 | 事件唤醒依赖损伤事件归属正确；返航仍需覆盖重组、推进器启停、供电变化和失能结算。需比较全量机器人与仅活跃机器人调用次数及 Siege 子 marker。 |
 | TurretProjectile.Launch / ClearIgnoredCollisions | 每枚实体弹遍历发射单位碰撞体建立忽略对，回收时解除。 | 现有实体物理依赖逐对忽略，不能只过滤伤害；大型母舰连射仍需度量。 |
 | ExplosionPropagation、RuntimeGroupBuilder、ControlUnit.RefreshChildren | 爆炸、断裂、加载和重组时访问相关块、刚体或子组件。 | 保留逐块伤害、拓扑与所有权正确性；大型结构连续断裂需测峰值。 |
+| ExplosionPropagation.DisconnectBlocksInExplosionRange | 每次爆炸先查询同一 PhysicsScene 半径内的碰撞体，将源单位及相交建筑/基地的候选块按概率去连接，再按受影响单位刷新拓扑。 | 需要建筑密集场景的 Play 性能和跨刚体连接回归，避免把无关舰船纳入断链。 |
 | ControlUnit.HasCombatCapability、BlockConnectionSnapshot、建造连接提示及推进器输出 | 能力查询扫描武器、连接验证读取碰撞体或连接面、推进控制逐执行器施力。 | 不把必要的单件操作计作可省略；建议按调用者、结构规模和调用频次采样。 |
 
 审查覆盖自有运行时脚本的层级查询检索及上述调用链抽查，不等于逐行审查所有 LINQ、循环或 Editor 验证脚本。当前没有同场景 Player P99 对照。

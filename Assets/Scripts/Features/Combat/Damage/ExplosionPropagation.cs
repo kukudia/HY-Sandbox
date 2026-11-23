@@ -1,4 +1,4 @@
-// 职责：重组前按爆炸源概率断开本结构的方块；重组后按 PhysicsScene 施加有限冲量。
+// 职责：重组前按爆炸源概率断开源单位及附近建筑的方块；重组后按 PhysicsScene 施加有限冲量。
 // 入口：DisconnectBlocksInExplosionRange() / ApplyExplosionForce()。
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,18 +10,59 @@ internal static class ExplosionPropagation
     internal const float DefaultImpulseScale = 0.15f;
     internal const float DefaultMaximumSpeedChange = 3f;
     internal const float DefaultCollisionProtection = 3f;
-    internal static void DisconnectBlocksInExplosionRange(ControlUnit unit, Block source, Vector3 center)
+    private static int FindOverlaps(Block source, Vector3 center, float radius, out Collider[] colliders)
     {
-        if (unit == null || source == null || !(source.explosionDisconnectProbability > 0f) || !(source.explosionRadius > 0f))
+        PhysicsScene physics = source.gameObject.scene.GetPhysicsScene();
+        colliders = new Collider[128];
+        int count;
+        while ((count = physics.OverlapSphere(center, radius, colliders, Physics.AllLayers, QueryTriggerInteraction.Ignore)) == colliders.Length)
         {
-            return;
+            System.Array.Resize(ref colliders, checked(colliders.Length * 2));
+        }
+
+        return count;
+    }
+
+    internal static HashSet<ControlUnit> DisconnectBlocksInExplosionRange(ControlUnit unit, Block source, Vector3 center)
+    {
+        if (source == null || !(source.explosionDisconnectProbability > 0f) || !(source.explosionRadius > 0f) || !float.IsFinite(source.explosionRadius))
+        {
+            return null;
         }
 
         float probability = Mathf.Clamp01(source.explosionDisconnectProbability);
         float radiusSquared = source.explosionRadius * source.explosionRadius;
-        foreach (Block candidate in unit.GetComponentsInChildren<Block>())
+        var candidates = new HashSet<Block>();
+        HashSet<ControlUnit> affectedOwners = null;
+        if (unit != null)
         {
-            if (candidate == source || !candidate.isActiveAndEnabled || candidate.GetComponentInParent<ControlUnit>() != unit || (candidate.transform.position - center).sqrMagnitude > radiusSquared)
+            foreach (Block block in unit.Building != null ? unit.Building.Blocks : unit.GetComponentsInChildren<Block>())
+            {
+                if (block != null && block.GetComponentInParent<ControlUnit>() == unit)
+                {
+                    candidates.Add(block);
+                }
+            }
+        }
+
+        Physics.SyncTransforms();
+        int count = FindOverlaps(source, center, source.explosionRadius, out Collider[] colliders);
+        for (int index = 0; index < count; index++)
+        {
+            Collider hit = colliders[index];
+            if (hit != null && hit.gameObject.scene == source.gameObject.scene && hit.attachedRigidbody != null && hit.attachedRigidbody.TryGetComponent(out ControlUnit owner) && owner != unit && owner.Building != null)
+            {
+                Block block = hit.GetComponentInParent<Block>();
+                if (block != null)
+                {
+                    candidates.Add(block);
+                }
+            }
+        }
+
+        foreach (Block candidate in candidates)
+        {
+            if (candidate == source || !candidate.isActiveAndEnabled || (candidate.transform.position - center).sqrMagnitude > radiusSquared)
             {
                 continue;
             }
@@ -30,8 +71,16 @@ internal static class ExplosionPropagation
             {
                 // Disconnect clears both ends. The ensuing structure refresh rebuilds the surviving graph once.
                 candidate.DisConnectAllConnectors(false);
+                ControlUnit owner = candidate.GetComponentInParent<ControlUnit>();
+                if (owner != null && owner != unit)
+                {
+                    affectedOwners ??= new HashSet<ControlUnit>();
+                    affectedOwners.Add(owner);
+                }
             }
         }
+
+        return affectedOwners;
     }
 
     internal static void ApplyExplosionForce(
@@ -51,14 +100,7 @@ internal static class ExplosionPropagation
 
         float radius = block.explosionRadius;
         HashSet<Rigidbody> bodies = new HashSet<Rigidbody>();
-        PhysicsScene physics = block.gameObject.scene.GetPhysicsScene();
-        Collider[] colliders = new Collider[128];
-        int count;
-        while ((count = physics.OverlapSphere(explosionPosition, radius, colliders, Physics.AllLayers, QueryTriggerInteraction.Ignore)) == colliders.Length)
-        {
-            System.Array.Resize(ref colliders, checked(colliders.Length * 2));
-        }
-
+        int count = FindOverlaps(block, explosionPosition, radius, out Collider[] colliders);
         for (int index = 0; index < count; index++)
         {
             Collider collider = colliders[index];

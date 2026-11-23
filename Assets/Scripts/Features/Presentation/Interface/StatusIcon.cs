@@ -35,6 +35,7 @@ public class StatusIcon : MonoBehaviour
     private bool _isOutsideViewport;
     private bool _hasVisibleIcons;
     private float _visibility;
+    private bool _hiddenForDebris;
     private readonly RaycastHit[] _occlusionHits = new RaycastHit[64];
     private void Awake()
     {
@@ -56,14 +57,20 @@ public class StatusIcon : MonoBehaviour
     private void LateUpdate()
     {
         DebugManager manager = DebugManager.instance;
-        if (manager == null)
+        if (manager == null || gameObject.layer == ControlUnit.DebrisLayer)
         {
-            HideIcons();
+            if (_hasVisibleIcons || _visibility > 0f || (_iconRoot != null && _iconRoot.gameObject.activeSelf))
+            {
+                HideIcons();
+            }
+
+            _hiddenForDebris = gameObject.layer == ControlUnit.DebrisLayer;
             return;
         }
 
-        if (_lastDebugManager != manager)
+        if (_lastDebugManager != manager || _hiddenForDebris)
         {
+            _hiddenForDebris = false;
             _lastDebugManager = manager;
             RefreshIcons(manager);
         }
@@ -196,6 +203,13 @@ public class StatusIcon : MonoBehaviour
 
     private void RefreshIcons(DebugManager manager)
     {
+        if (gameObject.layer == ControlUnit.DebrisLayer)
+        {
+            HideIcons();
+            _hiddenForDebris = true;
+            return;
+        }
+
         bool included = manager.Includes(this);
         bool showConnection = included && manager.showConnectionStatus && connectionStatus != ConnectionStatus.Normal;
         bool showDurability = included && manager.showDurabilityStatus && durabilityStatus != DurabilityStatus.Normal;

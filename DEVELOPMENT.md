@@ -32,7 +32,7 @@ Siege：战斗双击接管，Tab 或按住 Alt 点击 FREE VIEW 返回观察；R
 
 ## 方块结构损毁与重组（2026-11-19）
 
-飞船、建筑、基地和独立 WorldLab 共用 `DestroyManager.DestroyTarget` → `ExplosionPropagation.DisconnectBlocksInExplosionRange` → `RuntimeGroupBuilder.RefreshUnit`。爆炸源的概率按同一 ControlUnit 内、半径内的候选块各判定一次；命中断开该块全部连接，不扣邻块耐久。重组完成后对附近刚体施加冲量，体素伤害仍由 explosionDamage 控制。
+飞船、建筑、基地和独立 WorldLab 共用 `DestroyManager.DestroyTarget` → `ExplosionPropagation.DisconnectBlocksInExplosionRange` → `RuntimeGroupBuilder.RefreshUnit`。爆炸源的概率按源单位及同场景建筑/基地、半径内的候选块各判定一次；命中断开该块全部连接，不扣邻块耐久。重组完成后对附近刚体施加冲量，体素伤害仍由 explosionDamage 控制。
 
 地基通过 `IBlockFoundation` 提供共享锚点：接地的多个分量保留在同一主体，其余分量取得独立刚体并继续参与损毁。建筑只消费销毁事件、更新存档成员和跟踪残骸寿命。新增无地基结构只需使用 Block 和 ControlUnit，不需要新增销毁或重组分支。验证记录见 [风险登记 R34](Docs/ProjectRiskRegister.md)。
 

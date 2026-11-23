@@ -240,7 +240,7 @@ public sealed class GameModeController : MonoBehaviour
 
     public void Restart()
     {
-        if (transition == null && (State == GameModeState.Exploring || State == GameModeState.Siege))
+        if (!restarting && transition == null && (State == GameModeState.Exploring || State == GameModeState.Siege))
         {
             StartCoroutine(RestartRoutine());
         }
@@ -249,7 +249,8 @@ public sealed class GameModeController : MonoBehaviour
     private bool restarting;
     private void OnGUI()
     {
-        if (restarting)
+        // Once the new world owns the loading panel, let its progress and Cancel button show.
+        if (restarting && (!explorationSelected || State != GameModeState.Loading || world == null))
         {
             GUI.depth = -10000;
             GUI.DrawTexture(

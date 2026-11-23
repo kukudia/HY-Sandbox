@@ -1,6 +1,7 @@
 // 职责：部署固定泊位舰队、保持唯一玩家驾驶权，并在波次边界切换舰队物理状态。
 // 入口：CreateBase() / DeployAt() / ReplaceAt() / CancelDeployment() / SetCombatActive()。
 using System;
+using System.Linq;
 using UnityEngine;
 using Unity.Profiling;
 
@@ -396,6 +397,28 @@ public sealed class SiegeFleet
             {
                 SiegeFleetPhysics.Park(unit);
                 GetHangar(Array.IndexOf(Ships, entry))?.SetDoorOpen(false);
+            }
+        }
+    }
+
+    internal void UnloadDockedCoins(ControlUnit unit)
+    {
+        if (session.Match.Phase != SiegePhase.Returning || Base?.Building == null)
+        {
+            return;
+        }
+
+        CargoHold destination = Base.Building.GetComponentsInChildren<CargoHold>(true).FirstOrDefault(hold => hold.Kind == CargoKind.Coins);
+        if (destination == null)
+        {
+            return;
+        }
+
+        foreach (CargoHold hold in unit.GetComponentsInChildren<CargoHold>(true))
+        {
+            if (hold.Kind == CargoKind.Coins)
+            {
+                hold.UnloadTo(destination, CargoKind.Coins);
             }
         }
     }

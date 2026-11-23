@@ -578,6 +578,7 @@ public sealed class SiegeReturnFlight
                 flight.body.rotation = flight.dockRotation;
                 flight.unit.transform.SetPositionAndRotation(position, flight.dockRotation);
                 SiegeFleetPhysics.Park(flight.unit);
+                fleet.UnloadDockedCoins(flight.unit);
             }
             else
             {
