@@ -144,8 +144,9 @@ public sealed class SiegePlayerChecks : MonoBehaviour
         // The normal development build starts at Main; this opt-in probe must test the real scene transition too.
         if (SceneManager.GetActiveScene().name != "Siege")
         {
+            AsyncOperation loading;
 #if UNITY_EDITOR
-            AsyncOperation loading = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Research/Siege.unity", new LoadSceneParameters(LoadSceneMode.Single));
+            loading = UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/Research/Siege.unity", new LoadSceneParameters(LoadSceneMode.Single));
 #else
             throw new System.InvalidOperationException("Open the Siege research scene in the Unity Editor.");
 #endif
