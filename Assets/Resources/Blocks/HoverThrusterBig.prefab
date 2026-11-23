@@ -373,7 +373,7 @@ MonoBehaviour:
   explosionForce: 800
   explosionDamage: 80
   explosionRadius: 8
-  explosionDisconnectProbability: 0.5
+  explosionDisconnectProbability: 0.375
   resourcePath: 
   info: 'Size: 2x2x2
 

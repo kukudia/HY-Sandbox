@@ -170,12 +170,10 @@ internal static class ExplosionPropagation
                 durability.ProtectFromExplosionCollisions(collisionProtection);
             }
 
-            rb.GetComponent<ControlUnit>()?.ProtectExplosionContacts(collisionProtection);
+            owner?.ProtectExplosionContacts(collisionProtection);
             rb.AddForceAtPosition(impulse, forcePoint, ForceMode.Impulse);
-            ControlUnit detachedGroup = rb.GetComponent<ControlUnit>();
-            if (detachedGroup != null && !detachedGroup.HasAnyCockpit)
+            if (owner != null && !owner.HasAnyCockpit)
             {
-                // Only disposable fragments receive smoke; intact cockpit groups keep a clean combat silhouette.
                 VisualEffectsManager.TryAttachDetachedPartSmoke(rb, forcePoint, falloff);
             }
         }

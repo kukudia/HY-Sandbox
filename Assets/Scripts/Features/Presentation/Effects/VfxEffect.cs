@@ -116,7 +116,7 @@ public sealed class VfxEffect : MonoBehaviour
         for (int i = 0; i < _graphs.Length; i++)
         {
             var graph = _graphs[i];
-            if (graph == null)
+            if (graph == null || !graph.gameObject.activeSelf)
             {
                 continue;
             }
@@ -143,6 +143,17 @@ public sealed class VfxEffect : MonoBehaviour
         }
 
         _emitting = active;
+    }
+
+    internal void DisableFlameEnvelope()
+    {
+        foreach (VisualEffect graph in _graphs)
+        {
+            if (graph != null && graph.HasFloat("FlameSize"))
+            {
+                graph.gameObject.SetActive(false);
+            }
+        }
     }
 
     public void SetColor(Color color)
@@ -236,6 +247,7 @@ public sealed class VfxEffect : MonoBehaviour
             graph.transform.localScale = _graphScales[i];
             // 归还模板的真实覆盖值，避免前一残骸的尺寸/颜色污染后一次使用。
             VisualEffect source = _poolPrefab._graphs[i];
+            graph.gameObject.SetActive(source.gameObject.activeSelf);
             _properties.Clear();
             graph.visualEffectAsset.GetExposedProperties(_properties);
             foreach (VFXExposedProperty property in _properties)

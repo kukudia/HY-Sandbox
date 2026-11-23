@@ -84,7 +84,7 @@ flowchart TD
     G["BattleAttractStage.Spawn()"]
     click G "../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L173" "打开源码"
     H["Turret.DelayTargetSearch()"]
-    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L51" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L60" "打开源码"
     I["BattleAttractCamera.LateUpdate()"]
     click I "../Assets/Scripts/Features/Presentation/Attract/BattleAttractCamera.cs#L28" "打开源码"
     J["BlockVfxLibrary.Play()"]
@@ -123,7 +123,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs|Update -->
 - [BattleAttractStage.Spawn](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L173)
 <!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs|Spawn -->
-- [Turret.DelayTargetSearch](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L51)
+- [Turret.DelayTargetSearch](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L60)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|DelayTargetSearch -->
 - [BattleAttractCamera.LateUpdate](../Assets/Scripts/Features/Presentation/Attract/BattleAttractCamera.cs#L28)
 <!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractCamera.cs|LateUpdate -->
@@ -2966,7 +2966,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["Turret.FixedUpdate()"]
-    click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85" "打开源码"
+    click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96" "打开源码"
     B["TurretTargetSelector.FindNearestTarget()"]
     click B "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L196" "打开源码"
     C["TurretHitscan.Fire()"]
@@ -3077,7 +3077,7 @@ flowchart TD
     M -.->|协程等待并复核| N
 ```
 
-- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85)
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
 - [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L196)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
@@ -4242,9 +4242,9 @@ flowchart TD
     D["DurabilityDebugLabels.OnGUI()"]
     click D "../Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs#L9" "打开源码"
     E["Turret.FixedUpdate()"]
-    click E "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85" "打开源码"
+    click E "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96" "打开源码"
     F["Turret.RefreshTarget()"]
-    click F "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L177" "打开源码"
+    click F "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L229" "打开源码"
     G["TurretTargetSelector.FindNearestTarget()"]
     click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L196" "打开源码"
     H["ControlUnit.GetDamageTargets()"]
@@ -4273,9 +4273,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|OnDisable -->
 - [DurabilityDebugLabels.OnGUI](../Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs#L9)
 <!-- source: Assets/Scripts/Features/Diagnostics/Interface/DurabilityDebugLabels.cs|OnGUI -->
-- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85)
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
-- [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L177)
+- [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L229)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|RefreshTarget -->
 - [TurretTargetSelector.FindNearestTarget](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L196)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|FindNearestTarget -->
@@ -5216,7 +5216,7 @@ flowchart TD
     G["EnemySpawner.SpawnBlockData()"]
     click G "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144" "打开源码"
     H["Turret.FixedUpdate()"]
-    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96" "打开源码"
     I["ProjectileTurret.Fire()"]
     click I "../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164" "打开源码"
     J["TurretHitResolver.Apply()"]
@@ -5264,7 +5264,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Validation/WorldCombatPlayerChecks.cs|EnemyCargoFixture -->
 - [EnemySpawner.SpawnBlockData](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L144)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|SpawnBlockData -->
-- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85)
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
 - [ProjectileTurret.Fire](../Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs#L164)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/ProjectileTurret.cs|Fire -->
@@ -6658,9 +6658,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["Turret.FixedUpdate()"]
-    click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85" "打开源码"
+    click A "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96" "打开源码"
     B["Turret.RefreshTarget()"]
-    click B "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L177" "打开源码"
+    click B "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L229" "打开源码"
     C["TurretTargetSelector.ConfigureVisibility()"]
     click C "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L90" "打开源码"
     D["TurretTargetSelector.HasLineOfSight()"]
@@ -6672,7 +6672,7 @@ flowchart TD
     G["TurretTargetSelector.Probe()"]
     click G "../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L112" "打开源码"
     H["Turret.AimAndFire()"]
-    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L215" "打开源码"
+    click H "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L267" "打开源码"
     I["LaserTurret.Fire()"]
     click I "../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L35" "打开源码"
     J["ProjectileTurret.Fire()"]
@@ -6702,9 +6702,9 @@ flowchart TD
     M --> N
 ```
 
-- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85)
+- [Turret.FixedUpdate](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|FixedUpdate -->
-- [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L177)
+- [Turret.RefreshTarget](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L229)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|RefreshTarget -->
 - [TurretTargetSelector.ConfigureVisibility](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L90)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|ConfigureVisibility -->
@@ -6716,7 +6716,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Units/ControlUnit.cs|TryGetTargetBounds -->
 - [TurretTargetSelector.Probe](../Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs#L112)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs|Probe -->
-- [Turret.AimAndFire](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L215)
+- [Turret.AimAndFire](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L267)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|AimAndFire -->
 - [LaserTurret.Fire](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L35)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs|Fire -->
@@ -7020,7 +7020,7 @@ flowchart TD
     V["PowerNetwork.SupplyConnectedComponent()"]
     click V "../Assets/Scripts/Features/Power/PowerNetwork.cs#L409" "打开源码"
     W["Turret.SetStarted()"]
-    click W "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L75" "打开源码"
+    click W "../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85" "打开源码"
     X["SkirmishMatch.ApplyTeamColor()"]
     click X "../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L286" "打开源码"
     Y["SkirmishMatch.OnDestroy()"]
@@ -7108,7 +7108,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|TeamCanFight -->
 - [PowerNetwork.SupplyConnectedComponent](../Assets/Scripts/Features/Power/PowerNetwork.cs#L409)
 <!-- source: Assets/Scripts/Features/Power/PowerNetwork.cs|SupplyConnectedComponent -->
-- [Turret.SetStarted](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L75)
+- [Turret.SetStarted](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85)
 <!-- source: Assets/Scripts/Features/Combat/Turrets/Turret.cs|SetStarted -->
 - [SkirmishMatch.ApplyTeamColor](../Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs#L286)
 <!-- source: Assets/Scripts/Features/Combat/Skirmish/SkirmishMatch.cs|ApplyTeamColor -->

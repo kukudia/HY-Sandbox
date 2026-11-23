@@ -4,6 +4,14 @@
 
 `IndustrialArtGenerator.RebuildPrefab` 曾删除基础结构的材质引用目标，并按整块尺寸重新生成已缩放的 CombatStructures 网格。已恢复 4 个材质绑定及 11 个网格比例，重建入口排除这两类资产。Unity Play 通过 `BlueprintBlockFactory.TryRestore` 验证 6 份 Siege 蓝图中的 18 种结构组合。整场 Siege 镜头观感待验证。
 
+### R38 · P2 · 镜头感知炮塔更新与工业 LOD（2026-11-23）
+
+| 入口 | 触发、范围与处理 | 保留原因与验证缺口 |
+| --- | --- | --- |
+| Turret.FixedUpdate / GetLogicUpdateInterval | 每座炮塔根据共享主摄像机视锥平面快照和距离将索敌、瞄准、开火调度为 0.04 秒、0.16 秒或 0.4 秒间隔；视锥及相机位置全局缓存并每 0.5 秒刷新。所有炮塔同时仍受每固定步 64 个轮转更新预算限制。 | 降低远景及视野外逻辑频率与重复视口转换；目标切换和首次响应会延迟，可能改变远处战况。需验证摄像机切换/销毁/缺失、玩家近景瞄准、远景炮塔持续命中和超预算轮转，并以相同 Player 场景比较调用数与 P95/P99。 |
+| IndustrialArtGenerator.RebuildAll | 重建 38 个 Blocks Prefab 的拥有视觉层；两级 LOD 仅覆盖体积至少 8 格或指定功能模块，普通单格块维持单层。LODGroup 远景切换到简化网格，再在极远距离剔除。 | 减少远景渲染几何；颜色/轮廓切换可能可见。已连接 Editor 执行生成器并检查 2x2x2 的 LODGroup/LOD0/LOD1 序列化；需目视检查不同镜头距离及大量同屏单位。 |
+| ExplosionPropagation.ApplyExplosionForce | 爆炸冲量后不再为脱离碎片创建附着烟火；不改独立炮弹或陨石烟雾尾迹。 | 降低碎片特效实例与持续粒子成本；需实战确认碎片尾迹取消且投射物尾迹保留。 |
+
 ### R37 · P2 · 物理碰撞、单位启动和炮塔采用帧预算（2026-11-23）
 
 | 入口 | 触发、范围与处理 | 保留原因与验证缺口 |
@@ -12,6 +20,8 @@
 | ControlUnit.ProcessStartupInitialization | 活动普通非建筑 ControlUnit 排队；每渲染帧全局最多初始化 4 个，包括运行归属、组件缓存刷新和 PlayManager 注册。蓝图装配器已完成初始化的单位跳过；禁用单位退出队列。 | 限制集中生成时的启动尖峰；队列较长时单位控制/注册可延后多帧。需覆盖同时载入大量船、快速禁用/重启、PlayManager 生命周期和首帧输入。 |
 | BlueprintStructureRuntime.HasFullFoundationSupport | 连接图版本变化才同步变换并重建支撑分组；地形支持每次仍重新采样，地形脏刷新仍清空旧支撑。 | 避免地形脏区对同拓扑建筑反复同步物理和分组；需覆盖新增/移除/移动模块、合并地基及失撑回归。 |
 | Turret.TryAcquireAimUpdate | 活动炮塔集合按轮转顺序为全场景每固定物理步最多 64 个炮塔安排目标刷新、瞄准和开火；既有索敌预算仍在已安排炮塔内生效。 | 限制集中目标更新和瞄准成本并避免固定执行顺序造成长期饥饿；新增/禁用炮塔会改变轮转位置。需测实际最大炮塔数、玩家炮塔响应、持续射击和目标切换。 |
+
+`Block.explosionDisconnectProbability` 现在由 `Resources/BlockData/Blocks.csv` 提供；本次从各 Prefab 当前值 0.5 统一乘 0.75 为 0.375。这里只降低爆炸导致的随机断链机会，不降低单发炮弹伤害、频率或命中物理；需要密集爆炸场景复核断链观感和拓扑刷新成本。
 
 2026-11-23 Unity Editor 脚本重编译成功、静态构建 0 错误；原 Profiler capture 是 Editor 数据，优化后相同场景 Player 对照、Play 行为回归和性能收益均未验证。
 

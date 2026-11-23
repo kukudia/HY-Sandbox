@@ -1,34 +1,16 @@
 {
-  "unity": "6000.3.11f1",
+  "unity": "6000.6.8f1",
   "passed": [
     "Bot starts docked, kinematic, collisions off",
     "Continuous jets and repair contact have no gaps at 5, 10 and 100 percent",
-    "Turret raycast applies damage",
     "Turret muzzle follows active barrel",
-    "Authored muzzle flash plays on firing",
-    "Loot uses GPU burst and trail",
-    "Meteor uses live native smoke and fire",
-    "Meteor trail follows position without inheriting spin",
-    "Block explosion plays only native UNI Aerial Explosion",
-    "Generator and repair bay lights illuminate",
-    "Main thrust moves rotated unit along world X",
-    "Universal head rotates while base stays fixed",
-    "All propulsion outlets emit",
-    "MainThrusterBig(Clone) nozzle axes oppose force",
-    "UniversalThruster(Clone) nozzle axes oppose force",
-    "HoverThruster(Clone) nozzle axes oppose force",
-    "Continuous effects stop emission and expire",
-    "Disabled thruster stops and clears plume",
-    "All seven event effects instantiate",
-    "Event particles finish before release timeout",
-    "Bot undocks with dynamic body",
-    "Bot repairs same-unit damaged block",
-    "Repair beam starts at model tool socket",
-    "Bot returns to authored home",
-    "Docked bot stops effects",
-    "Event effects release after playback",
-    "Detached smoke releases its controller",
-    "Meteor tail survives owner removal then releases"
+    "Loot uses GPU burst and trail"
   ],
-  "errors": []
+  "errors": [
+    "FAILED: Turret raycast applies damage",
+    "FAILED: Authored muzzle flash plays on firing",
+    "FAILED: Meteor uses live native smoke and fire",
+    "FAILED: Meteor trail follows position without inheriting spin",
+    "System.NullReferenceException: Object reference not set to an instance of an object\r\n  at BlockArtPlayProbe.Tick () [0x004db] in D:\\git_projects\\Unity\\HY-Sandbox\\Assets\\Editor\\Art\\Validation\\BlockArtPlayProbe.cs:299 "
+  ]
 }

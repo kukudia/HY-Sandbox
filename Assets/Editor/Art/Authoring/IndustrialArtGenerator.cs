@@ -22,7 +22,6 @@ public static class IndustrialArtGenerator
     private const string LegacyConnectorPrefabPath = "Assets/Connector.prefab";
     private const string ResourcesConnectorPrefabPath = BlockRoot + "/Connector.prefab";
     private const string GeneratedRootName = "IndustrialVisual";
-    private const bool EnableLod = false;
     private static readonly Color CyanEmission = new Color(0.03f, 1.65f, 2.7f, 1f);
     private static readonly Color AmberEmission = new Color(2.8f, 0.72f, 0.06f, 1f);
     private static readonly Color RedEmission = new Color(2.6f, 0.12f, 0.035f, 1f);
@@ -727,36 +726,21 @@ public static class IndustrialArtGenerator
         var visual = new GameObject(GeneratedRootName);
         visual.transform.SetParent(model, false);
         SetLayerRecursively(visual, model.gameObject.layer);
-        // LOD is intentionally disabled while the cartoon palette and silhouettes are being tuned.
-        // Keeping one active visual hierarchy also makes close-range material authoring deterministic.
-        bool useLod = ShouldUseLod(name, block);
-        Transform lod0 = CreateGroup(visual.transform, "LOD0");
+        // Preserve the authored hierarchy path used by turrets and Prefab overrides.
+        Transform geometry = CreateGroup(visual.transform, "LOD0");
         var spinTargets = new List<Transform>();
         var glowRenderers = new List<Renderer>();
-        List<Renderer> lod0Renderers = BuildDetailedModel(name, block, lod0, spinTargets, glowRenderers);
-        ApplyCategoryPalette(name, lod0);
+        BuildDetailedModel(name, block, geometry, spinTargets, glowRenderers);
+        ApplyCategoryPalette(name, geometry);
         if (name == "Turret")
         {
-            ConfigureTurretRig(model, lod0);
-        }
-
-        if (useLod)
-        {
-            Transform lod1 = CreateGroup(visual.transform, "LOD1");
-            List<Renderer> lod1Renderers = BuildSimpleModel(name, block, lod1);
-            var lodGroup = visual.AddComponent<LODGroup>();
-            lodGroup.fadeMode = LODFadeMode.CrossFade;
-            lodGroup.animateCrossFading = false;
-            lodGroup.SetLODs(new[] { // Screen-relative heights are intentionally conservative: keep the detailed silhouette
- // visible longer so the low-poly swap is not noticeable at normal build distances.
-            new LOD(0.10f, lod0Renderers.ToArray()) { fadeTransitionWidth = 0.08f }, new LOD(0.025f, lod1Renderers.ToArray()) { fadeTransitionWidth = 0.06f }, new LOD(0.006f, Array.Empty<Renderer>()) });
-            lodGroup.RecalculateBounds();
+            ConfigureTurretRig(model, geometry);
         }
 
         if (spinTargets.Count > 0)
         {
             var motion = visual.AddComponent<IndustrialPartMotion>();
-            Transform bobTarget = name is "PowerGeneratingUnit" or "PowerTransmissionDevice" or "HoverFlightController" ? lod0 : null;
+            Transform bobTarget = name is "PowerGeneratingUnit" or "PowerTransmissionDevice" or "HoverFlightController" ? geometry : null;
             Color emission = name.Contains("Thruster", StringComparison.Ordinal) ? AmberEmission : CyanEmission;
             motion.Configure(
                 spinTargets.ToArray(),
@@ -769,11 +753,6 @@ public static class IndustrialArtGenerator
                 emission,
                 0.16f);
         }
-    }
-
-    private static bool ShouldUseLod(string name, Block block)
-    {
-        return EnableLod && (block.x * block.y * block.z >= 8 || name is "PowerGeneratingUnit" or "PowerTransmissionDevice" or "HoverFlightController" or "Turret" or "RepairBotContianer" || name.Contains("Thruster", StringComparison.Ordinal));
     }
 
     private static void ApplyCategoryPalette(string name, Transform visualRoot)
@@ -796,7 +775,7 @@ public static class IndustrialArtGenerator
         }
     }
 
-    private static List<Renderer> BuildDetailedModel(
+    private static void BuildDetailedModel(
         string name,
         Block block,
         Transform parent,
@@ -851,25 +830,6 @@ public static class IndustrialArtGenerator
 
                 break;
         }
-
-        return renderers;
-    }
-
-    private static List<Renderer> BuildSimpleModel(string name, Block block, Transform parent)
-    {
-        var renderers = new List<Renderer>();
-        Vector3 size = new Vector3(block.x, block.y, block.z) * 0.88f;
-        renderers.Add(AddPart(
-            parent,
-            "Silhouette",
-            _box,
-            Vector3.zero,
-            size,
-            Quaternion.identity,
-            _graphite));
-        // Structural blocks deliberately have one material and one uninterrupted box on all six faces.
-        // Functional parts keep their detailed LOD in BuildDetailedModel instead of adding a generic marker.
-        return renderers;
     }
 
     private static void BuildStructural(
@@ -1888,24 +1848,11 @@ public static class IndustrialArtGenerator
                 lineRenderer.enabled = false;
             }
 
-            foreach (LODGroup lodGroup in instance.GetComponentsInChildren<LODGroup>(true))
-            {
-                lodGroup.enabled = false;
-            }
-
             foreach (MonoBehaviour behaviour in instance.GetComponentsInChildren<MonoBehaviour>(true))
             {
                 if (behaviour is not IndustrialPartMotion)
                 {
                     behaviour.enabled = false;
-                }
-            }
-
-            foreach (Transform child in instance.GetComponentsInChildren<Transform>(true))
-            {
-                if (child.name == "LOD1")
-                {
-                    child.gameObject.SetActive(false);
                 }
             }
         }

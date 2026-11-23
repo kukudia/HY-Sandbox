@@ -32,10 +32,10 @@ Mesh:
     m_Data: 
   m_MeshCompression: 0
   m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
+  m_KeepVertices: 0
+  m_KeepIndices: 0
   m_IndexFormat: 0
-  m_IndexBuffer: 000001000300000003000200040006000700040007000500000004000500000005000100020003000700020007000600000002000600000006000400010005000700010007000300
+  m_IndexBuffer: 000001000300000003000200040006000700040007000500000004000500000005000100020003000700020007000600000002000600000006000400010005000700010007000300y
   m_VertexData:
     serializedVersion: 3
     m_VertexCount: 8
@@ -153,8 +153,9 @@ Mesh:
   m_LocalAABB:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0.5, y: 0.5, z: 0.5}
-  m_MeshUsageFlags: 0
   m_CookingOptions: 30
+  m_PreBakeConvexCollisionMesh: 0
+  m_PreBakeTriangleCollisionMesh: 0
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   'm_MeshMetrics[0]': 1

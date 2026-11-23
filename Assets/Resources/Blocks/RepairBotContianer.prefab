@@ -817,8 +817,6 @@ MonoBehaviour:
   _initialSmokeDuration: 1.5
   _initialSmokeIntensity: 0.4
   _minimumOpacity: 0.85
-  _flameEnvelopeScale: 1.25
-  _flameCoverage: 1.8
 --- !u!114 &5584065380902338469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1299,7 +1297,7 @@ MonoBehaviour:
   explosionForce: 500
   explosionDamage: 50
   explosionRadius: 5
-  explosionDisconnectProbability: 0.5
+  explosionDisconnectProbability: 0.375
   resourcePath: 
   info: 'Size: 1x1x1
 

@@ -762,7 +762,7 @@ MonoBehaviour:
   explosionForce: 500
   explosionDamage: 50
   explosionRadius: 5
-  explosionDisconnectProbability: 0.5
+  explosionDisconnectProbability: 0.375
   resourcePath: Blocks/CollectionBotContainer
   info: 'Size: 1x1x1
 
@@ -1177,8 +1177,6 @@ MonoBehaviour:
   _initialSmokeDuration: 1.5
   _initialSmokeIntensity: 0.4
   _minimumOpacity: 0.85
-  _flameEnvelopeScale: 1.25
-  _flameCoverage: 1.8
 --- !u!114 &2381306296374732748
 MonoBehaviour:
   m_ObjectHideFlags: 0

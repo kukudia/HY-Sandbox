@@ -44,6 +44,7 @@ public static class BlockCsvChecks
             Set(records, "MainThruster", "Durability.maxDurability", "321");
             Set(records, "MainThruster", "Thruster.maxThrust", "456");
             Set(records, "MainThruster", "Block.explosionDamage", "43");
+            Set(records, "MainThruster", "Block.explosionDisconnectProbability", "0.23");
             float inspectorDamage;
             using (var data = new SerializedObject(Load("MainThruster").GetComponent<Durability>()))
             {
@@ -63,6 +64,10 @@ public static class BlockCsvChecks
                 report,
                 Mathf.Approximately(thruster.GetComponent<Block>().explosionDamage, 43f),
                 "Independent blast damage persists through CSV baking");
+            Check(
+                report,
+                Mathf.Approximately(thruster.GetComponent<Block>().explosionDisconnectProbability, 0.23f),
+                "Explosion disconnect probability persists through CSV baking");
             Check(
                 report,
                 thruster.GetComponent<Block>().mass == 123.5f && thruster.GetComponent<Block>().UseCustomMass && thruster.GetComponent<Block>().cost == 789,

@@ -7,6 +7,15 @@ using UnityEngine.Serialization;
 public abstract class Turret : MonoBehaviour
 {
     private const int AimUpdatesPerFrame = 64;
+    private const float VisibleNearUpdateInterval = 0.04f;
+    private const float VisibleFarUpdateInterval = 0.16f;
+    private const float OffscreenUpdateInterval = 0.4f;
+    private const float FarDistance = 55f;
+    private static Camera _mainCamera;
+    private static float _nextCameraLookupTime;
+    private static readonly Plane[] CameraFrustumPlanes = new Plane[6];
+    private static bool _cameraFrustumValid;
+    private static Vector3 _cameraPosition;
     private static double aimBudgetFixedTime = double.NaN;
     private static int aimCursor;
     private static readonly System.Collections.Generic.List<Turret> ActiveTurrets = new System.Collections.Generic.List<Turret>();
@@ -38,6 +47,9 @@ public abstract class Turret : MonoBehaviour
     private TurretTargetSelector _targetSelector;
     private float _nextSearchTime;
     private float _nextFireTime;
+    private float _nextLogicUpdateTime;
+    private float _logicUpdateInterval = VisibleNearUpdateInterval;
+    private float _lastAimUpdateTime;
     protected Power Supply
     {
         get; private set;
@@ -59,6 +71,7 @@ public abstract class Turret : MonoBehaviour
         Supply.TrackAvailability(_isStarted);
         _targetSelector = new TurretTargetSelector(transform);
         ResolveAimingRig();
+        RefreshOwner();
     }
 
     protected virtual void OnValidate()
@@ -75,6 +88,7 @@ public abstract class Turret : MonoBehaviour
     public void SetStarted(bool started)
     {
         _isStarted = started;
+        _nextLogicUpdateTime = 0f;
         Supply?.TrackAvailability(started);
         if (!started)
         {
@@ -84,8 +98,14 @@ public abstract class Turret : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        if (Time.fixedTime < _nextLogicUpdateTime)
+        {
+            return;
+        }
+
+        _logicUpdateInterval = GetLogicUpdateInterval();
+        _nextLogicUpdateTime = Time.fixedTime + _logicUpdateInterval;
         Supply.TrackAvailability(_isStarted);
-        Owner = GetComponentInParent<ControlUnit>();
         if (!_isStarted || Owner == null || !Owner.IsSimulationActive || !Owner.IsOperational)
         {
             StopWorking();
@@ -106,8 +126,47 @@ public abstract class Turret : MonoBehaviour
             return;
         }
 
-        AimAndFire(_target);
+        float aimDeltaTime = _lastAimUpdateTime > 0f ? Time.fixedTime - _lastAimUpdateTime : Time.fixedDeltaTime;
+        _lastAimUpdateTime = Time.fixedTime;
+        AimAndFire(_target, aimDeltaTime);
         UpdateShotFeedback();
+    }
+
+    private void OnTransformParentChanged() => RefreshOwner();
+    private void RefreshOwner()
+    {
+        Owner = GetComponentInParent<ControlUnit>();
+        _nextLogicUpdateTime = 0f;
+    }
+
+    private float GetLogicUpdateInterval()
+    {
+        if (Time.time >= _nextCameraLookupTime)
+        {
+            _mainCamera = Camera.main;
+            _nextCameraLookupTime = Time.time + 0.5f;
+            _cameraFrustumValid = _mainCamera != null;
+            if (_cameraFrustumValid)
+            {
+                GeometryUtility.CalculateFrustumPlanes(_mainCamera, CameraFrustumPlanes);
+                _cameraPosition = _mainCamera.transform.position;
+            }
+        }
+
+        Camera camera = _mainCamera;
+        if (camera == null || !_cameraFrustumValid)
+        {
+            return VisibleNearUpdateInterval;
+        }
+
+        // Use one cached frustum for all turrets. A small bound avoids treating a muzzle
+        // just outside the edge as fully off-screen while keeping this check allocation-free.
+        if (!GeometryUtility.TestPlanesAABB(CameraFrustumPlanes, new Bounds(transform.position, Vector3.one * 2f)))
+        {
+            return OffscreenUpdateInterval;
+        }
+
+        return (transform.position - _cameraPosition).sqrMagnitude > FarDistance * FarDistance ? VisibleFarUpdateInterval : VisibleNearUpdateInterval;
     }
 
     private void OnEnable()
@@ -148,6 +207,8 @@ public abstract class Turret : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        _nextLogicUpdateTime = 0f;
+        _lastAimUpdateTime = 0f;
         int index = ActiveTurrets.IndexOf(this);
         if (index >= 0)
         {
@@ -212,7 +273,7 @@ public abstract class Turret : MonoBehaviour
         _nextSearchTime = Time.time + Mathf.Max(0.01f, targetRefreshInterval);
     }
 
-    private void AimAndFire(ControlUnit aimTarget)
+    private void AimAndFire(ControlUnit aimTarget, float deltaTime)
     {
         using var sample = AimMarker.Auto();
         Vector3 origin = GetMuzzlePosition();
@@ -223,7 +284,7 @@ public abstract class Turret : MonoBehaviour
         }
 
         Vector3 aimDirection = direction.normalized;
-        AimAt(aimDirection);
+        AimAt(aimDirection, deltaTime);
         if (Time.time < _nextFireTime)
         {
             return;
@@ -263,7 +324,7 @@ public abstract class Turret : MonoBehaviour
         _nextFireTime = Time.time + Mathf.Max(0.01f, fireInterval) / efficiency;
     }
 
-    private void AimAt(Vector3 worldDirection)
+    private void AimAt(Vector3 worldDirection, float deltaTime)
     {
         if (horizontalAxis == null)
         {
@@ -273,7 +334,7 @@ public abstract class Turret : MonoBehaviour
         if (verticalAxis == null || verticalAxis == horizontalAxis)
         {
             Quaternion targetRotation = Quaternion.LookRotation(worldDirection, Vector3.up);
-            horizontalAxis.rotation = Quaternion.RotateTowards(horizontalAxis.rotation, targetRotation, horizontalTurnSpeed * Time.fixedDeltaTime);
+            horizontalAxis.rotation = Quaternion.RotateTowards(horizontalAxis.rotation, targetRotation, horizontalTurnSpeed * deltaTime);
             return;
         }
 
@@ -282,14 +343,14 @@ public abstract class Turret : MonoBehaviour
         if (flatDirection.sqrMagnitude > 0.001f)
         {
             Quaternion yawRotation = Quaternion.LookRotation(flatDirection.normalized, horizontalUp);
-            horizontalAxis.rotation = Quaternion.RotateTowards(horizontalAxis.rotation, yawRotation, horizontalTurnSpeed * Time.fixedDeltaTime);
+            horizontalAxis.rotation = Quaternion.RotateTowards(horizontalAxis.rotation, yawRotation, horizontalTurnSpeed * deltaTime);
         }
 
         Vector3 localDirection = horizontalAxis.InverseTransformDirection(worldDirection);
         float planarMagnitude = new Vector2(localDirection.x, localDirection.z).magnitude;
         float elevation = Mathf.Clamp(Mathf.Atan2(localDirection.y, planarMagnitude) * Mathf.Rad2Deg, minElevation, maxElevation);
         float currentPitch = Mathf.DeltaAngle(0f, verticalAxis.localEulerAngles.x);
-        float nextPitch = Mathf.MoveTowardsAngle(currentPitch, -elevation, verticalTurnSpeed * Time.fixedDeltaTime);
+        float nextPitch = Mathf.MoveTowardsAngle(currentPitch, -elevation, verticalTurnSpeed * deltaTime);
         verticalAxis.localRotation = Quaternion.Euler(nextPitch, 0f, 0f);
     }
 
