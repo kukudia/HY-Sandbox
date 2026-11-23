@@ -4,6 +4,8 @@
 
 `IndustrialArtGenerator.RebuildPrefab` 曾删除基础结构的材质引用目标，并按整块尺寸重新生成已缩放的 CombatStructures 网格。已恢复 4 个材质绑定及 11 个网格比例，重建入口排除这两类资产。Unity Play 通过 `BlueprintBlockFactory.TryRestore` 验证 6 份 Siege 蓝图中的 18 种结构组合。整场 Siege 镜头观感待验证。
 
+同批重建覆盖了 CargoHold、CoinHold、TechnologyHold 的货仓模型。已恢复原玻璃、状态灯及货物显示引用，并在工业美术重建入口保护 CargoHoldView 所属 Prefab。
+
 地形失撑只在当前同步调用中移交 BFS 分组；合并地基会修改列表，调用前必须放弃缓存。两块建筑失撑的 Play 探针确认连接图准备一次、主体清空、碎块共享动态刚体。战斗长帧仍需同场景复录。
 
 ControlUnit.UpdatePower 只在成员、工作请求或功率配置变化后遍历本单位发电机与负载。请求者退出时须撤销请求；没有周期校正。RefreshChildren 在结构变化时重新绑定后代，按最近的 ControlUnit 隔离嵌套成员。原本依赖邻近建筑或其他舰船发电的蓝图需要本机电源；独立模块无电。

@@ -683,8 +683,11 @@ public static class IndustrialArtGenerator
             {
                 Block block = root.GetComponent<Block>();
                 Transform model = root.transform.Find("Model");
-                // Structural Prefabs own their renderer bindings or already scale Model to their authored dimensions.
-                if (block == null || model == null || root.GetComponent<BlockMaterial>() != null ||
+                // Dedicated models own material bindings, cargo displays or authored dimensions.
+                if (block == null ||
+                    model == null ||
+                    root.GetComponent<BlockMaterial>() != null ||
+                    root.GetComponent<CargoHoldView>() != null ||
                     prefabPath.StartsWith(BlockRoot + "/CombatStructures/", StringComparison.Ordinal))
                 {
                     return false;
