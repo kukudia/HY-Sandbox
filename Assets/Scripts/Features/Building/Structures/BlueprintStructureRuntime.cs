@@ -261,10 +261,12 @@ public sealed class BlueprintStructureRuntime : MonoBehaviour, IBlockFoundation
     /// <summary>Deployment checks the same connector graph and virtual ground anchors used after damage.</summary>
     public bool HasFullFoundationSupport()
     {
-        Physics.SyncTransforms();
-        Connections.Prepare(blocks, transform);
+        // Terrain edits do not move modules. Reuse prepared groups and only
+        // synchronize physics when the module topology itself changed.
         if (supportGroups == null || supportGroupsRevision != Connections.Revision)
         {
+            Physics.SyncTransforms();
+            Connections.Prepare(blocks, transform);
             supportGroups = BlockGroupManager.GroupPreparedBlocks(blocks);
             supportGroupsRevision = Connections.Revision;
         }

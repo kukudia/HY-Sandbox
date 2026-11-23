@@ -6,6 +6,11 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(Power))]
 public abstract class Turret : MonoBehaviour
 {
+    private const int AimUpdatesPerFrame = 64;
+    private static double aimBudgetFixedTime = double.NaN;
+    private static int aimCursor;
+    private static readonly System.Collections.Generic.List<Turret> ActiveTurrets = new System.Collections.Generic.List<Turret>();
+    private static readonly System.Collections.Generic.HashSet<Turret> ScheduledAimUpdates = new System.Collections.Generic.HashSet<Turret>();
     private static readonly Unity.Profiling.ProfilerMarker TargetMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.RefreshTarget");
     private static readonly Unity.Profiling.ProfilerMarker AimMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.AimAndFire");
     private static readonly Unity.Profiling.ProfilerMarker FireMarker = new Unity.Profiling.ProfilerMarker("HY.Turret.Fire");
@@ -87,6 +92,11 @@ public abstract class Turret : MonoBehaviour
             return;
         }
 
+        if (!TryAcquireAimUpdate(this))
+        {
+            return;
+        }
+
         RefreshTarget();
         bool hasTarget = _target != null;
         Supply.SetWorkRequested(this, hasTarget);
@@ -100,8 +110,57 @@ public abstract class Turret : MonoBehaviour
         UpdateShotFeedback();
     }
 
+    private void OnEnable()
+    {
+        if (!ActiveTurrets.Contains(this))
+        {
+            ActiveTurrets.Add(this);
+        }
+    }
+
+    private static bool TryAcquireAimUpdate(Turret turret)
+    {
+        double fixedTime = Time.fixedTimeAsDouble;
+        if (aimBudgetFixedTime != fixedTime)
+        {
+            aimBudgetFixedTime = fixedTime;
+            ScheduledAimUpdates.Clear();
+            for (int i = ActiveTurrets.Count - 1; i >= 0; i--)
+            {
+                if (ActiveTurrets[i] == null)
+                {
+                    ActiveTurrets.RemoveAt(i);
+                }
+            }
+
+            int count = ActiveTurrets.Count;
+            int scheduled = Mathf.Min(AimUpdatesPerFrame, count);
+            for (int i = 0; i < scheduled; i++)
+            {
+                ScheduledAimUpdates.Add(ActiveTurrets[(aimCursor + i) % count]);
+            }
+
+            aimCursor = count > 0 ? (aimCursor + scheduled) % count : 0;
+        }
+
+        return ScheduledAimUpdates.Remove(turret);
+    }
+
     protected virtual void OnDisable()
     {
+        int index = ActiveTurrets.IndexOf(this);
+        if (index >= 0)
+        {
+            ActiveTurrets.RemoveAt(index);
+            if (index < aimCursor)
+            {
+                aimCursor--;
+            }
+
+            aimCursor = ActiveTurrets.Count > 0 ? aimCursor % ActiveTurrets.Count : 0;
+        }
+
+        ScheduledAimUpdates.Remove(this);
         Supply?.TrackAvailability(false);
         StopWorking();
     }

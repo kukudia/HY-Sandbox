@@ -7,6 +7,28 @@ using UnityEngine;
 internal sealed class CollisionDamageResolver
 {
     private readonly Dictionary<Durability, int> _impactTargets = new Dictionary<Durability, int>();
+    private readonly Dictionary<Durability, PendingImpact> _pending = new Dictionary<Durability, PendingImpact>();
+    private struct PendingImpact
+    {
+        internal float reducedMass;
+        internal float normalSpeed;
+        internal float share;
+    }
+
+    internal void Flush()
+    {
+        foreach (KeyValuePair<Durability, PendingImpact> entry in _pending)
+        {
+            if (entry.Key != null)
+            {
+                PendingImpact impact = entry.Value;
+                entry.Key.ApplyCollisionEnergy(impact.reducedMass, impact.normalSpeed, impact.share);
+            }
+        }
+
+        _pending.Clear();
+    }
+
     internal void ApplyContactDamage(ControlUnit unit, Collision collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("IgnoreCollision"))
@@ -71,7 +93,24 @@ internal sealed class CollisionDamageResolver
         {
             if (target.Key != null)
             {
-                target.Key.ApplyCollisionEnergy(effectiveMass, normalSpeed, sideShare * target.Value / Mathf.Max(1, contacts));
+                float share = sideShare * target.Value / Mathf.Max(1, contacts);
+                if (_pending.TryGetValue(target.Key, out PendingImpact pending))
+                {
+                    if (normalSpeed > pending.normalSpeed || (Mathf.Approximately(normalSpeed, pending.normalSpeed) && share > pending.share))
+                    {
+                        pending.reducedMass = effectiveMass;
+                        pending.normalSpeed = normalSpeed;
+                        pending.share = share;
+                    }
+
+                    _pending[target.Key] = pending;
+                }
+                else
+                {
+                    _pending.Add(
+                        target.Key,
+                        new PendingImpact { reducedMass = effectiveMass, normalSpeed = normalSpeed, share = share });
+                }
             }
         }
     }

@@ -4392,11 +4392,11 @@ HY-Sandbox/
 | BlueprintStructureRuntime | [`bool Supports(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L242) |  |
 | BlueprintStructureRuntime | [`void OnFragmentDetached(List<Block> group, ControlUnit fragment)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L247) |  |
 | BlueprintStructureRuntime | [`bool HasFullFoundationSupport()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L262) | public |
-| BlueprintStructureRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L283) | private |
-| BlueprintStructureRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L307) | internal |
-| BlueprintStructureRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L332) | private |
-| BlueprintStructureRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L357) | public |
-| BlueprintStructureRuntime | [`float TotalMass()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L368) | private |
+| BlueprintStructureRuntime | [`bool HasPreparedGroundConnector(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L285) | private |
+| BlueprintStructureRuntime | [`void RefreshTerrainSupport()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L309) | internal |
+| BlueprintStructureRuntime | [`bool HasGroundConnector(Block block)`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L334) | private |
+| BlueprintStructureRuntime | [`void ReleaseAnchor()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L359) | public |
+| BlueprintStructureRuntime | [`float TotalMass()`](../Assets/Scripts/Features/Building/Structures/BlueprintStructureRuntime.cs#L370) | private |
 
 ## Assets/Scripts/Features/Building/Structures/Data/BlueprintStructureLibrary.cs
 
@@ -4491,7 +4491,8 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| CollisionDamageResolver | [`void ApplyContactDamage(ControlUnit unit, Collision collision)`](../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L10) | internal |
+| CollisionDamageResolver | [`void Flush()`](../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L18) | internal |
+| CollisionDamageResolver | [`void ApplyContactDamage(ControlUnit unit, Collision collision)`](../Assets/Scripts/Features/Combat/Damage/CollisionDamageResolver.cs#L32) | internal |
 
 ## Assets/Scripts/Features/Combat/Damage/Durability.cs
 
@@ -4527,13 +4528,13 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs
 
-// 职责：重组前按爆炸源概率断开本结构的方块；重组后按 PhysicsScene 施加有限冲量。 // 入口：DisconnectBlocksInExplosionRange() / ApplyExplosionForce()。
+// 职责：重组前按爆炸源概率断开源单位及附近建筑的方块；重组后按 PhysicsScene 施加有限冲量。 // 入口：DisconnectBlocksInExplosionRange() / ApplyExplosionForce()。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| ExplosionPropagation | [`void DisconnectBlocksInExplosionRange(ControlUnit unit, Block source, Vector3 center)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L13) | internal static |
-| ExplosionPropagation | [`void AddOwnedBlocks(ControlUnit owner, HashSet<Block> candidates)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L63) | private static |
-| ExplosionPropagation | [`void ApplyExplosionForce( Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition, float upwardsModifier, float impulseScale, float maximumSpeedChange, float collisionProtection)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L74) | internal static |
+| ExplosionPropagation | [`int FindOverlaps(Block source, Vector3 center, float radius, out Collider[] colliders)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L13) | private static |
+| ExplosionPropagation | [`HashSet<ControlUnit> DisconnectBlocksInExplosionRange(ControlUnit unit, Block source, Vector3 center)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L26) | internal static |
+| ExplosionPropagation | [`void ApplyExplosionForce( Block block, string ownerUnitId, UnitFaction ownerFaction, Vector3 explosionPosition, float upwardsModifier, float impulseScale, float maximumSpeedChange, float collisionProtection)`](../Assets/Scripts/Features/Combat/Damage/ExplosionPropagation.cs#L86) | internal static |
 
 ## Assets/Scripts/Features/Combat/Damage/SalvageCleanupSession.cs
 
@@ -4558,14 +4559,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L37) | private |
-| DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L46) | public |
-| DestroyManager | [`void DestroyTarget(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L51) | public static |
-| DestroyManager | [`void DestroyTarget(GameObject obj, bool forceExplosion)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L56) | private static |
-| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L216) | public |
-| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L225) | public |
-| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L231) | public |
-| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L238) | public |
+| DestroyManager | [`void Awake()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L38) | private |
+| DestroyManager | [`void DestroyGameObject(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L47) | public |
+| DestroyManager | [`void DestroyTarget(GameObject obj)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L52) | public static |
+| DestroyManager | [`void DestroyTarget(GameObject obj, bool forceExplosion)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L57) | private static |
+| DestroyManager | [`void ExplodeBlock(Block block)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L224) | public |
+| DestroyManager | [`void ScheduleUnitCleanup(ControlUnit unit)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L233) | public |
+| DestroyManager | [`void ScheduleDistantGroupCleanup(ControlUnit unit, Transform reference, float maxDistance)`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L239) | public |
+| DestroyManager | [`void EndSalvageSession()`](../Assets/Scripts/Features/Combat/DestroyManager.cs#L246) | public |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs
 
@@ -4894,27 +4895,29 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L46) | internal |
-| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L51) | protected virtual |
-| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L59) | protected virtual |
-| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L70) | public |
-| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L80) | protected virtual |
-| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L103) | protected virtual |
-| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L109) | private |
-| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L118) | private |
-| Turret | [`void SearchTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L144) | private |
-| Turret | [`void AimAndFire(ControlUnit aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L156) | private |
-| Turret | [`bool IsAligned(Vector3 forward, Vector3 direction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L196) | private |
-| Turret | [`void ScheduleNextFire()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L201) | private |
-| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L207) | private |
-| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L237) | private |
-| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L271) | protected |
-| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L282) | protected |
-| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L288) | protected |
-| Turret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L296) | protected virtual |
-| Turret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L301) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L302) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L306) | protected virtual |
+| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L51) | internal |
+| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L56) | protected virtual |
+| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L64) | protected virtual |
+| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L75) | public |
+| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85) | protected virtual |
+| Turret | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L113) | private |
+| Turret | [`bool TryAcquireAimUpdate(Turret turret)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L121) | private static |
+| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L149) | protected virtual |
+| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L168) | private |
+| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L177) | private |
+| Turret | [`void SearchTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L203) | private |
+| Turret | [`void AimAndFire(ControlUnit aimTarget)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L215) | private |
+| Turret | [`bool IsAligned(Vector3 forward, Vector3 direction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L255) | private |
+| Turret | [`void ScheduleNextFire()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L260) | private |
+| Turret | [`void AimAt(Vector3 worldDirection)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L266) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L296) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L330) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L341) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L347) | protected |
+| Turret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L355) | protected virtual |
+| Turret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L360) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L361) | protected virtual |
+| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L365) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -6408,10 +6411,11 @@ HY-Sandbox/
 | CargoHold | [`void ReleaseReservation(LootDrop drop)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L122) | public |
 | CargoHold | [`int Store(CargoItem item, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L128) | public |
 | CargoHold | [`List<CargoItem> CaptureContents()`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L156) | public |
-| CargoHold | [`bool TryUnloadCoins(System.Func<int, bool> accept)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L170) | internal |
-| CargoHold | [`void RestoreContents(List<CargoItem> items)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L196) | public |
-| CargoHold | [`void ReleaseContents(UnitFaction faction)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L232) | public |
-| CargoHold | [`CargoHold FindReceiver(CargoItem item, Vector3 position, ControlUnit owner = null, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L258) | public static |
+| CargoHold | [`int UnloadTo(CargoHold destination, CargoKind kind)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L170) | internal |
+| CargoHold | [`void StoreUnloaded(CargoItem item, int amount)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L205) | private |
+| CargoHold | [`void RestoreContents(List<CargoItem> items)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L217) | public |
+| CargoHold | [`void ReleaseContents(UnitFaction faction)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L253) | public |
+| CargoHold | [`CargoHold FindReceiver(CargoItem item, Vector3 position, ControlUnit owner = null, LootDrop reservation = null)`](../Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs#L279) | public static |
 
 ## Assets/Scripts/Features/Salvage/Cargo/CargoItem.cs
 
@@ -6570,32 +6574,32 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeFleet | [`Transform GetDeploymentPoint(int index)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L44) | public |
-| SiegeFleet | [`void RefreshHangars(HangarModule[] hangars)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L50) | public |
-| SiegeFleet | [`HangarModule GetHangar(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L69) | public |
-| SiegeFleet | [`bool FitsHangar(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L93) | public |
-| SiegeFleet | [`Pose GetDeploymentPose(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L104) | public |
-| SiegeFleet | [`void Scrap(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L116) | public |
-| SiegeFleet | [`SiegeFleetEntry Find(string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L143) | public |
-| SiegeFleet | [`bool CreateBase(Transform anchor)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L148) | public |
-| SiegeFleet | [`bool Deploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L162) | public |
-| SiegeFleet | [`bool DeployAt(int optionIndex, int requestedDock, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L167) | public |
-| SiegeFleet | [`long CancellationCredit(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L260) | public |
-| SiegeFleet | [`bool CancelDeployment(int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L266) | public |
-| SiegeFleet | [`bool ReplaceAt(int optionIndex, int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L286) | public |
-| SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L345) | public |
-| SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L378) | public |
-| SiegeFleet | [`void UnloadDockedCoins(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L403) | internal |
-| SiegeFleet | [`void ReleaseControl()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L420) | public |
-| SiegeFleet | [`void RepairBetweenWaves( out int repairedCount, out int attemptedCount, out long spent, out string firstFailure, bool forceAutomatic = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L440) | public |
-| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L491) | public |
-| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L517) | public |
-| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L543) | private |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L579) | public static |
-| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L584) | public static |
-| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L598) | public |
-| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L610) | private |
-| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L620) | private |
+| SiegeFleet | [`Transform GetDeploymentPoint(int index)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L45) | public |
+| SiegeFleet | [`void RefreshHangars(HangarModule[] hangars)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L51) | public |
+| SiegeFleet | [`HangarModule GetHangar(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L70) | public |
+| SiegeFleet | [`bool FitsHangar(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L94) | public |
+| SiegeFleet | [`Pose GetDeploymentPose(int slot, BlockDataList blueprint)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L105) | public |
+| SiegeFleet | [`void Scrap(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L117) | public |
+| SiegeFleet | [`SiegeFleetEntry Find(string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L144) | public |
+| SiegeFleet | [`bool CreateBase(Transform anchor)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L149) | public |
+| SiegeFleet | [`bool Deploy(int optionIndex, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L163) | public |
+| SiegeFleet | [`bool DeployAt(int optionIndex, int requestedDock, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L168) | public |
+| SiegeFleet | [`long CancellationCredit(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L261) | public |
+| SiegeFleet | [`bool CancelDeployment(int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L267) | public |
+| SiegeFleet | [`bool ReplaceAt(int optionIndex, int slot, out string reason)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L287) | public |
+| SiegeFleet | [`bool TakeControl(int slot)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L346) | public |
+| SiegeFleet | [`void SetCombatActive(bool active)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L379) | public |
+| SiegeFleet | [`void UnloadDockedCoins(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L404) | internal |
+| SiegeFleet | [`void ReleaseControl()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L426) | public |
+| SiegeFleet | [`void RepairBetweenWaves( out int repairedCount, out int attemptedCount, out long spent, out string firstFailure, bool forceAutomatic = false)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L446) | public |
+| SiegeFleet | [`void RefreshBindings()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L497) | public |
+| SiegeFleet | [`void NotifyLost(Cockpit cockpit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L523) | public |
+| SiegeFleet | [`SiegeFleetEntry Spawn( BlockDataList blueprint, string id, string displayName, int price, Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L549) | private |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(TextAsset asset, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L585) | public static |
+| SiegeFleet | [`BlockDataList PrepareBlueprint(string json, out string id)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L590) | public static |
+| SiegeFleet | [`void RestoreView()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L604) | public |
+| SiegeFleet | [`void SetCamera(ControlUnit unit)`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L616) | private |
+| SiegeFleet | [`void SetBaseCamera()`](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L626) | private |
 
 ## Assets/Scripts/Features/Siege/Fleet/SiegeFleetEntry.cs
 
@@ -7414,21 +7418,23 @@ HY-Sandbox/
 | ControlUnit | [`void BindBuilding(BlueprintStructureRuntime building)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L229) | public |
 | ControlUnit | [`void OnEnable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L235) | private |
 | ControlUnit | [`void OnDisable()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L245) | private |
-| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L281) | public |
-| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L293) | public |
-| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L318) | private |
-| ControlUnit | [`void UpdatePower()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L334) | private |
-| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L364) | private |
-| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L412) | public |
-| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L493) | public |
-| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L514) | public |
-| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L522) | public |
-| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L532) | public |
-| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L537) | public |
-| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L544) | public |
-| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L549) | private |
-| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L593) | private |
-| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L604) | private |
+| ControlUnit | [`void ProtectExplosionContacts(float duration)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L287) | public |
+| ControlUnit | [`bool TryGetTotalDurability(out float current, out float maximum)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L304) | public |
+| ControlUnit | [`void Start()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L329) | private |
+| ControlUnit | [`void ProcessStartupInitialization()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L343) | private static |
+| ControlUnit | [`void FixedUpdate()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L371) | private |
+| ControlUnit | [`void UpdatePower()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L380) | private |
+| ControlUnit | [`void Update()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L410) | private |
+| ControlUnit | [`void RefreshChildren()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L459) | public |
+| ControlUnit | [`void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L542) | public |
+| ControlUnit | [`void EnsureRuntimeUnitId()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L563) | public |
+| ControlUnit | [`void PlayEnd()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L571) | public |
+| ControlUnit | [`void SetMovementInput(Vector3 worldDirection)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L581) | public |
+| ControlUnit | [`void SetPropulsionInput(Vector3 worldDirection, float throttle)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L586) | public |
+| ControlUnit | [`void SetTarget(Transform newTarget)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L593) | public |
+| ControlUnit | [`Vector3 GetPlayerMovementInput()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L598) | private |
+| ControlUnit | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L642) | private |
+| ControlUnit | [`void OnDestroy()`](../Assets/Scripts/Features/Simulation/Units/ControlUnit.cs#L653) | private |
 
 ## Assets/Scripts/Features/Simulation/Units/ModularUnitFactory.cs
 

@@ -224,7 +224,7 @@ public class ControlUnit : MonoBehaviour
     }
 
     public bool IsOperational => HasValidCockpit || (Building != null && Building.IsOperational);
-    public bool IsSimulationActive => Building != null ? Building.IsSimulationActive : PlayManager.instance != null && PlayManager.instance.playMode;
+    public bool IsSimulationActive => !startupQueued && (Building != null ? Building.IsSimulationActive : PlayManager.instance != null && PlayManager.instance.playMode);
 
     public void BindBuilding(BlueprintStructureRuntime building)
     {
@@ -244,6 +244,12 @@ public class ControlUnit : MonoBehaviour
 
     private void OnDisable()
     {
+        if (startupQueued)
+        {
+            pendingStartup.Remove(this);
+            startupQueued = false;
+        }
+
         foreach (Power load in loads)
         {
             load.ResetPower();
@@ -284,6 +290,11 @@ public class ControlUnit : MonoBehaviour
     }
 
     private readonly CollisionDamageResolver _collisionDamage = new CollisionDamageResolver();
+    private static readonly List<ControlUnit> pendingStartup = new List<ControlUnit>();
+    private static int startupBudgetFrame = -1;
+    private static int startupBudget;
+    private bool startupQueued;
+    private bool runtimeChildrenInitialized;
     public bool HasValidCockpit => hasValidCockpit && cockpit != null;
     public bool HasAnyCockpit => cockpits != null && cockpits.Length > 0 ? System.Array.Exists(cockpits, candidate => candidate != null) : GetComponentInChildren<Cockpit>(true) != null;
     public bool IsPlayer => faction == UnitFaction.Player;
@@ -318,13 +329,48 @@ public class ControlUnit : MonoBehaviour
     private void Start()
     {
         EnsureRuntimeUnitId();
-        AssignRuntimeOwnershipToBlocks(false);
-        if (PlayManager.instance != null && Building == null)
+        if (Building == null && !runtimeChildrenInitialized)
+        {
+            startupQueued = true;
+            pendingStartup.Add(this);
+        }
+        else if (Building == null && PlayManager.instance != null)
         {
             PlayManager.instance.RegisterControlUnit(this);
         }
+    }
 
-        Invoke(nameof(RefreshChildren), 2f);
+    private static void ProcessStartupInitialization()
+    {
+        if (startupBudgetFrame != Time.frameCount)
+        {
+            startupBudgetFrame = Time.frameCount;
+            startupBudget = 4;
+        }
+
+        while (startupBudget > 0 && pendingStartup.Count > 0)
+        {
+            ControlUnit unit = pendingStartup[0];
+            pendingStartup.RemoveAt(0);
+            startupBudget--;
+            if (unit == null || !unit.isActiveAndEnabled)
+            {
+                continue;
+            }
+
+            unit.AssignRuntimeOwnershipToBlocks(false);
+            unit.RefreshChildren();
+            unit.startupQueued = false;
+            if (PlayManager.instance != null)
+            {
+                PlayManager.instance.RegisterControlUnit(unit);
+            }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        _collisionDamage.Flush();
     }
 
     internal readonly HashSet<Power> loads = new HashSet<Power>();
@@ -363,6 +409,7 @@ public class ControlUnit : MonoBehaviour
 
     private void Update()
     {
+        ProcessStartupInitialization();
         UpdatePower();
         if (!IsSimulationActive)
         {
@@ -488,6 +535,8 @@ public class ControlUnit : MonoBehaviour
                 aiEligibilityInitialized = true;
             }
         }
+
+        runtimeChildrenInitialized = true;
     }
 
     public void AssignRuntimeOwnershipToBlocks(bool overwriteExisting)
