@@ -1,4 +1,9 @@
 # HY-Sandbox 风险登记与行为契约
+
+### R39 · P2 · 工业美术重建覆盖基地结构外观（2026-11-23）
+
+`IndustrialArtGenerator.RebuildPrefab` 曾删除基础结构的材质引用目标，并按整块尺寸重新生成已缩放的 CombatStructures 网格。已恢复 4 个材质绑定及 11 个网格比例，重建入口排除这两类资产。Unity Play 通过 `BlueprintBlockFactory.TryRestore` 验证 6 份 Siege 蓝图中的 18 种结构组合。整场 Siege 镜头观感待验证。
+
 ### R37 · P2 · 物理碰撞、单位启动和炮塔采用帧预算（2026-11-23）
 
 | 入口 | 触发、范围与处理 | 保留原因与验证缺口 |
