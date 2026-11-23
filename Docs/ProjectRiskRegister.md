@@ -4,6 +4,8 @@
 
 `IndustrialArtGenerator.RebuildPrefab` 曾删除基础结构的材质引用目标，并按整块尺寸重新生成已缩放的 CombatStructures 网格。已恢复 4 个材质绑定及 11 个网格比例，重建入口排除这两类资产。Unity Play 通过 `BlueprintBlockFactory.TryRestore` 验证 6 份 Siege 蓝图中的 18 种结构组合。整场 Siege 镜头观感待验证。
 
+同批重建覆盖了 CargoHold、CoinHold、TechnologyHold 的货仓模型。已恢复原玻璃、状态灯及货物显示引用，并在工业美术重建入口保护 CargoHoldView 所属 Prefab。
+
 ### R38 · P2 · 镜头感知炮塔更新与工业 LOD（2026-11-23）
 
 | 入口 | 触发、范围与处理 | 保留原因与验证缺口 |

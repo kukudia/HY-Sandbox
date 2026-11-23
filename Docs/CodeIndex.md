@@ -896,30 +896,30 @@ HY-Sandbox/
 | IndustrialArtGenerator | [`void Set(VolumeParameter<T> parameter, T value)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L577) | private static |
 | IndustrialArtGenerator | [`void RebuildConnectorPrefab()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L583) | private static |
 | IndustrialArtGenerator | [`bool RebuildPrefab(string prefabPath)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L667) | private static |
-| IndustrialArtGenerator | [`void RemovePlaceholderRenderers(Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L704) | private static |
-| IndustrialArtGenerator | [`void BuildBlockVisual(string name, Block block, Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L723) | private static |
-| IndustrialArtGenerator | [`bool ShouldUseLod(string name, Block block)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L770) | private static |
-| IndustrialArtGenerator | [`void ApplyCategoryPalette(string name, Transform visualRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L775) | private static |
-| IndustrialArtGenerator | [`List<Renderer> BuildDetailedModel( string name, Block block, Transform parent, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L795) | private static |
-| IndustrialArtGenerator | [`List<Renderer> BuildSimpleModel(string name, Block block, Transform parent)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L854) | private static |
-| IndustrialArtGenerator | [`void BuildStructural( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L871) | private static |
-| IndustrialArtGenerator | [`void BuildDoor( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L890) | private static |
-| IndustrialArtGenerator | [`void BuildStairs(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L947) | private static |
-| IndustrialArtGenerator | [`void BuildRack(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L990) | private static |
-| IndustrialArtGenerator | [`void BuildCockpit( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1040) | private static |
-| IndustrialArtGenerator | [`void BuildGenerator( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1143) | private static |
-| IndustrialArtGenerator | [`void BuildRelay( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1249) | private static |
-| IndustrialArtGenerator | [`void BuildFlightController( Transform parent, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1312) | private static |
-| IndustrialArtGenerator | [`void BuildThruster( Transform parent, Block block, string name, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1360) | private static |
-| IndustrialArtGenerator | [`void BuildTurret(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1454) | private static |
-| IndustrialArtGenerator | [`void ConfigureTurretRig(Transform model, Transform detailedRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1594) | private static |
-| IndustrialArtGenerator | [`void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1612) | private static |
-| IndustrialArtGenerator | [`void RebuildBot(GameObject root)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1673) | private static |
-| IndustrialArtGenerator | [`Transform CreateGroup(Transform parent, string name)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1752) | private static |
-| IndustrialArtGenerator | [`MeshRenderer AddPart( Transform parent, string name, Mesh mesh, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material, bool castShadows = true)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1760) | private static |
-| IndustrialArtGenerator | [`void SetLayerRecursively(GameObject root, int layer)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1786) | private static |
-| IndustrialArtGenerator | [`void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1795) | private static |
-| IndustrialArtGenerator | [`void AddPartToScene( string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Material material)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1925) | private static |
+| IndustrialArtGenerator | [`void RemovePlaceholderRenderers(Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L707) | private static |
+| IndustrialArtGenerator | [`void BuildBlockVisual(string name, Block block, Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L726) | private static |
+| IndustrialArtGenerator | [`bool ShouldUseLod(string name, Block block)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L773) | private static |
+| IndustrialArtGenerator | [`void ApplyCategoryPalette(string name, Transform visualRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L778) | private static |
+| IndustrialArtGenerator | [`List<Renderer> BuildDetailedModel( string name, Block block, Transform parent, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L798) | private static |
+| IndustrialArtGenerator | [`List<Renderer> BuildSimpleModel(string name, Block block, Transform parent)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L857) | private static |
+| IndustrialArtGenerator | [`void BuildStructural( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L874) | private static |
+| IndustrialArtGenerator | [`void BuildDoor( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L893) | private static |
+| IndustrialArtGenerator | [`void BuildStairs(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L950) | private static |
+| IndustrialArtGenerator | [`void BuildRack(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L993) | private static |
+| IndustrialArtGenerator | [`void BuildCockpit( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1043) | private static |
+| IndustrialArtGenerator | [`void BuildGenerator( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1146) | private static |
+| IndustrialArtGenerator | [`void BuildRelay( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1252) | private static |
+| IndustrialArtGenerator | [`void BuildFlightController( Transform parent, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1315) | private static |
+| IndustrialArtGenerator | [`void BuildThruster( Transform parent, Block block, string name, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1363) | private static |
+| IndustrialArtGenerator | [`void BuildTurret(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1457) | private static |
+| IndustrialArtGenerator | [`void ConfigureTurretRig(Transform model, Transform detailedRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1597) | private static |
+| IndustrialArtGenerator | [`void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1615) | private static |
+| IndustrialArtGenerator | [`void RebuildBot(GameObject root)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1676) | private static |
+| IndustrialArtGenerator | [`Transform CreateGroup(Transform parent, string name)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1755) | private static |
+| IndustrialArtGenerator | [`MeshRenderer AddPart( Transform parent, string name, Mesh mesh, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material, bool castShadows = true)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1763) | private static |
+| IndustrialArtGenerator | [`void SetLayerRecursively(GameObject root, int layer)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1789) | private static |
+| IndustrialArtGenerator | [`void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1798) | private static |
+| IndustrialArtGenerator | [`void AddPartToScene( string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Material material)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1928) | private static |
 
 ## Assets/Editor/Art/Authoring/SpaceKitCurator.cs
 

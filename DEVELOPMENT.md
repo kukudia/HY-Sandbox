@@ -445,3 +445,5 @@ git diff --check
 外围工具说明见 [CodeReadability](Tools/CodeReadability/README.md) / [ToolIndex](Docs/ToolIndex.md)。旧快照隔离在 [Archive](Archive/README.md)，历史数据及过往验收不作为当前运行结果。
 
 2026-11-23：恢复工业美术批量重建误改的基地结构表现。11 个 CombatStructures Prefab 恢复原网格比例，4 个基础结构 Prefab 恢复材质渲染器引用。重建入口跳过这两类自带结构模型的 Prefab。Unity Play 使用蓝图方块工厂核对了 6 份 Siege 样板中的 18 种结构组合，玻璃、木头、石头、金属和外墙尺寸均通过。
+
+三种仓库 Prefab 的原玻璃、框架、状态灯和货物显示由 SalvageAssetBaker 制作。工业美术重建跳过挂有 CargoHoldView 的 Prefab，保留其模型和组件引用。
