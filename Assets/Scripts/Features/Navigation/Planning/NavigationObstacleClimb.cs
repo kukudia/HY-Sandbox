@@ -71,12 +71,18 @@ internal sealed class NavigationObstacleClimb
             direction,
             lookAhead,
             layers);
+        if (count == hits.Length)
+        {
+            active = false;
+            return false;
+        }
+
         Collider obstacle = null;
         float nearest = float.PositiveInfinity;
         for (int i = 0; i < count; i++)
         {
             RaycastHit hit = hits[i];
-            if (IsGeometry(hit.collider, unit) && hit.collider.bounds.max.y > baseHeight - bottomOffset + 0.25f && hit.distance < nearest)
+            if (hit.distance < nearest && IsGeometry(hit.collider, unit) && !IsMoving(hit.collider.attachedRigidbody) && hit.collider.bounds.max.y > baseHeight - bottomOffset + 0.25f)
             {
                 nearest = hit.distance;
                 obstacle = hit.collider;
@@ -104,7 +110,7 @@ internal sealed class NavigationObstacleClimb
             unit))
         {
             float topOffset = bounds.max.y - unit.transform.position.y;
-            candidate = obstacle != null ? obstacle.bounds.min.y - topOffset - clearance : height;
+            candidate = obstacle != null ? obstacle.bounds.min.y - topOffset - clearance : candidate;
             if (maxDrop <= 0f || candidate >= baseHeight - 0.1f || candidate < baseHeight - maxDrop || candidate < 2f || !CanPass(
                 physics,
                 bounds,
@@ -193,6 +199,11 @@ internal sealed class NavigationObstacleClimb
             direction,
             distance,
             layers);
+        if (count == hits.Length)
+        {
+            return 0f;
+        }
+
         float available = distance;
         for (int i = 0; i < count; i++)
         {
@@ -281,6 +292,11 @@ internal sealed class NavigationObstacleClimb
             direction,
             distance,
             layers);
+        if (count == hits.Length)
+        {
+            return true;
+        }
+
         for (int i = 0; i < count; i++)
         {
             if (IsGeometry(hits[i].collider, owner))
@@ -312,7 +328,7 @@ internal sealed class NavigationObstacleClimb
                 distance,
                 layers,
                 QueryTriggerInteraction.Ignore);
-            if (count < hits.Length || hits.Length >= 256)
+            if (count < hits.Length || hits.Length >= 1024)
             {
                 return count;
             }
@@ -326,5 +342,10 @@ internal sealed class NavigationObstacleClimb
     {
         ControlUnit unit = collider.GetComponentInParent<ControlUnit>();
         return unit != owner && (unit == null || unit.Building != null) && (collider.attachedRigidbody == null || collider.attachedRigidbody.isKinematic);
+    }
+
+    private static bool IsMoving(Rigidbody body)
+    {
+        return body != null && (body.linearVelocity.sqrMagnitude > 0.01f || body.angularVelocity.sqrMagnitude > 0.0001f);
     }
 }

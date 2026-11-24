@@ -3,5 +3,5 @@
 public static class RuntimePerformanceSwitches
 {
     // 关闭后敌舰跳过局部避障评估，仍保留目标更新和推进器物理控制。
-    public static readonly bool DisableEnemyAvoidance = true;
+    public static readonly bool DisableEnemyAvoidance = false;
 }
