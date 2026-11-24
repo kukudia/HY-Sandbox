@@ -874,52 +874,50 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| IndustrialArtGenerator | [`void RebuildAll()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L48) | public static |
-| IndustrialArtGenerator | [`void RebuildTurret()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L82) | public static |
-| IndustrialArtGenerator | [`string[] GetBlockPrefabPaths()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L102) | private static |
-| IndustrialArtGenerator | [`void EnsureFolders()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L107) | private static |
-| IndustrialArtGenerator | [`void EnsureFolder(string parent, string child)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L116) | private static |
-| IndustrialArtGenerator | [`void CreateSharedMeshes()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L125) | private static |
-| IndustrialArtGenerator | [`Mesh SaveOrUpdateMesh(string path, Mesh generated)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L136) | private static |
-| IndustrialArtGenerator | [`Mesh ClonePrimitiveMesh(PrimitiveType type)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L152) | private static |
-| IndustrialArtGenerator | [`Mesh CreateRoundedCube(int segments, float radius)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L160) | private static |
-| IndustrialArtGenerator | [`Vector3 FacePoint(int face, float u, float v)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L220) | private static |
-| IndustrialArtGenerator | [`void AddFacingQuad( IReadOnlyList<Vector3> vertices, IReadOnlyList<Vector3> normals, ICollection<int> triangles, int a, int b, int c, int d)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L233) | private static |
-| IndustrialArtGenerator | [`Mesh CreateTorus(int ringSegments, int tubeSegments, float radius, float tubeRadius)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L264) | private static |
-| IndustrialArtGenerator | [`Mesh CreateCone(int segments)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L318) | private static |
-| IndustrialArtGenerator | [`Mesh CreateWedge()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L353) | private static |
-| IndustrialArtGenerator | [`void CreateSharedMaterials()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L416) | private static |
-| IndustrialArtGenerator | [`Material CreateOrUpdateMaterial( string name, Color baseColor, float metallic, float smoothness, Color emission, bool transparent = false)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L456) | private static |
-| IndustrialArtGenerator | [`void ConfigureRenderStyle()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L525) | private static |
-| IndustrialArtGenerator | [`void ConfigureVolume(string path)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L537) | private static |
-| IndustrialArtGenerator | [`T GetOrAdd(VolumeProfile profile)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L571) | private static |
-| IndustrialArtGenerator | [`void Set(VolumeParameter<T> parameter, T value)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L577) | private static |
-| IndustrialArtGenerator | [`void RebuildConnectorPrefab()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L583) | private static |
-| IndustrialArtGenerator | [`bool RebuildPrefab(string prefabPath)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L667) | private static |
-| IndustrialArtGenerator | [`void RemovePlaceholderRenderers(Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L707) | private static |
-| IndustrialArtGenerator | [`void BuildBlockVisual(string name, Block block, Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L726) | private static |
-| IndustrialArtGenerator | [`bool ShouldUseLod(string name, Block block)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L773) | private static |
-| IndustrialArtGenerator | [`void ApplyCategoryPalette(string name, Transform visualRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L778) | private static |
-| IndustrialArtGenerator | [`List<Renderer> BuildDetailedModel( string name, Block block, Transform parent, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L798) | private static |
-| IndustrialArtGenerator | [`List<Renderer> BuildSimpleModel(string name, Block block, Transform parent)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L857) | private static |
-| IndustrialArtGenerator | [`void BuildStructural( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L874) | private static |
-| IndustrialArtGenerator | [`void BuildDoor( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L893) | private static |
-| IndustrialArtGenerator | [`void BuildStairs(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L950) | private static |
-| IndustrialArtGenerator | [`void BuildRack(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L993) | private static |
-| IndustrialArtGenerator | [`void BuildCockpit( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1043) | private static |
-| IndustrialArtGenerator | [`void BuildGenerator( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1146) | private static |
-| IndustrialArtGenerator | [`void BuildRelay( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1252) | private static |
-| IndustrialArtGenerator | [`void BuildFlightController( Transform parent, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1315) | private static |
-| IndustrialArtGenerator | [`void BuildThruster( Transform parent, Block block, string name, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1363) | private static |
-| IndustrialArtGenerator | [`void BuildTurret(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1457) | private static |
-| IndustrialArtGenerator | [`void ConfigureTurretRig(Transform model, Transform detailedRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1597) | private static |
-| IndustrialArtGenerator | [`void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1615) | private static |
-| IndustrialArtGenerator | [`void RebuildBot(GameObject root)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1676) | private static |
-| IndustrialArtGenerator | [`Transform CreateGroup(Transform parent, string name)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1755) | private static |
-| IndustrialArtGenerator | [`MeshRenderer AddPart( Transform parent, string name, Mesh mesh, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material, bool castShadows = true)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1763) | private static |
-| IndustrialArtGenerator | [`void SetLayerRecursively(GameObject root, int layer)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1789) | private static |
-| IndustrialArtGenerator | [`void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1798) | private static |
-| IndustrialArtGenerator | [`void AddPartToScene( string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Material material)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1928) | private static |
+| IndustrialArtGenerator | [`void RebuildAll()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L47) | public static |
+| IndustrialArtGenerator | [`void RebuildTurret()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L81) | public static |
+| IndustrialArtGenerator | [`string[] GetBlockPrefabPaths()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L101) | private static |
+| IndustrialArtGenerator | [`void EnsureFolders()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L106) | private static |
+| IndustrialArtGenerator | [`void EnsureFolder(string parent, string child)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L115) | private static |
+| IndustrialArtGenerator | [`void CreateSharedMeshes()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L124) | private static |
+| IndustrialArtGenerator | [`Mesh SaveOrUpdateMesh(string path, Mesh generated)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L135) | private static |
+| IndustrialArtGenerator | [`Mesh ClonePrimitiveMesh(PrimitiveType type)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L151) | private static |
+| IndustrialArtGenerator | [`Mesh CreateRoundedCube(int segments, float radius)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L159) | private static |
+| IndustrialArtGenerator | [`Vector3 FacePoint(int face, float u, float v)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L219) | private static |
+| IndustrialArtGenerator | [`void AddFacingQuad( IReadOnlyList<Vector3> vertices, IReadOnlyList<Vector3> normals, ICollection<int> triangles, int a, int b, int c, int d)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L232) | private static |
+| IndustrialArtGenerator | [`Mesh CreateTorus(int ringSegments, int tubeSegments, float radius, float tubeRadius)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L263) | private static |
+| IndustrialArtGenerator | [`Mesh CreateCone(int segments)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L317) | private static |
+| IndustrialArtGenerator | [`Mesh CreateWedge()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L352) | private static |
+| IndustrialArtGenerator | [`void CreateSharedMaterials()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L415) | private static |
+| IndustrialArtGenerator | [`Material CreateOrUpdateMaterial( string name, Color baseColor, float metallic, float smoothness, Color emission, bool transparent = false)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L455) | private static |
+| IndustrialArtGenerator | [`void ConfigureRenderStyle()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L524) | private static |
+| IndustrialArtGenerator | [`void ConfigureVolume(string path)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L536) | private static |
+| IndustrialArtGenerator | [`T GetOrAdd(VolumeProfile profile)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L570) | private static |
+| IndustrialArtGenerator | [`void Set(VolumeParameter<T> parameter, T value)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L576) | private static |
+| IndustrialArtGenerator | [`void RebuildConnectorPrefab()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L582) | private static |
+| IndustrialArtGenerator | [`bool RebuildPrefab(string prefabPath)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L666) | private static |
+| IndustrialArtGenerator | [`void RemovePlaceholderRenderers(Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L708) | private static |
+| IndustrialArtGenerator | [`void BuildBlockVisual(string name, Block block, Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L727) | private static |
+| IndustrialArtGenerator | [`void ApplyCategoryPalette(string name, Transform visualRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L761) | private static |
+| IndustrialArtGenerator | [`void BuildDetailedModel( string name, Block block, Transform parent, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L781) | private static |
+| IndustrialArtGenerator | [`void BuildStructural( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L838) | private static |
+| IndustrialArtGenerator | [`void BuildDoor( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L857) | private static |
+| IndustrialArtGenerator | [`void BuildStairs(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L914) | private static |
+| IndustrialArtGenerator | [`void BuildRack(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L957) | private static |
+| IndustrialArtGenerator | [`void BuildCockpit( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1007) | private static |
+| IndustrialArtGenerator | [`void BuildGenerator( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1110) | private static |
+| IndustrialArtGenerator | [`void BuildRelay( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1216) | private static |
+| IndustrialArtGenerator | [`void BuildFlightController( Transform parent, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1279) | private static |
+| IndustrialArtGenerator | [`void BuildThruster( Transform parent, Block block, string name, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1327) | private static |
+| IndustrialArtGenerator | [`void BuildTurret(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1421) | private static |
+| IndustrialArtGenerator | [`void ConfigureTurretRig(Transform model, Transform detailedRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1561) | private static |
+| IndustrialArtGenerator | [`void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1579) | private static |
+| IndustrialArtGenerator | [`void RebuildBot(GameObject root)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1640) | private static |
+| IndustrialArtGenerator | [`Transform CreateGroup(Transform parent, string name)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1719) | private static |
+| IndustrialArtGenerator | [`MeshRenderer AddPart( Transform parent, string name, Mesh mesh, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material, bool castShadows = true)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1727) | private static |
+| IndustrialArtGenerator | [`void SetLayerRecursively(GameObject root, int layer)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1753) | private static |
+| IndustrialArtGenerator | [`void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1762) | private static |
+| IndustrialArtGenerator | [`void AddPartToScene( string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Material material)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1879) | private static |
 
 ## Assets/Editor/Art/Authoring/SpaceKitCurator.cs
 
@@ -2083,14 +2081,18 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | CombatVfxBaker | [`void BakeMissing()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L15) | public static |
-| CombatVfxBaker | [`void Register(BlockVfxLibrary library, string id)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L54) | private static |
-| CombatVfxBaker | [`void CreatePrefab(string name, string graphName, float glow)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L80) | private static |
-| CombatVfxBaker | [`void BuildGraph(string name, bool smoke)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L114) | private static |
-| CombatVfxBaker | [`void BuildSmoke(object graph, object init, object output)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L163) | private static |
-| CombatVfxBaker | [`void BuildResidualFire(object graph, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L198) | private static |
-| CombatVfxBaker | [`void Curve(object output, string attribute, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L236) | private static |
-| CombatVfxBaker | [`void BuildBeam(object graph, object init, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L244) | private static |
-| CombatVfxBaker | [`Mesh CreateBeamMesh()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L275) | private static |
+| CombatVfxBaker | [`void BakeLaserEndpoints()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L56) | private static |
+| CombatVfxBaker | [`VisualEffect AddContactGraph(Transform parent, string name)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L143) | private static |
+| CombatVfxBaker | [`Texture2D SaveTexture(string name, int width, int height, Func<float, float, float> opacity)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L153) | private static |
+| CombatVfxBaker | [`void BuildContactGraph(string name, Texture2D texture, bool sparks)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L184) | private static |
+| CombatVfxBaker | [`void Register(BlockVfxLibrary library, string id)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L247) | private static |
+| CombatVfxBaker | [`void CreatePrefab(string name, string graphName, float glow)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L273) | private static |
+| CombatVfxBaker | [`void BuildGraph(string name, bool smoke)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L307) | private static |
+| CombatVfxBaker | [`void BuildSmoke(object graph, object init, object output)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L356) | private static |
+| CombatVfxBaker | [`void BuildResidualFire(object graph, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L391) | private static |
+| CombatVfxBaker | [`void Curve(object output, string attribute, AnimationCurve curve)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L429) | private static |
+| CombatVfxBaker | [`void BuildBeam(object graph, object init, object update)`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L437) | private static |
+| CombatVfxBaker | [`Mesh CreateBeamMesh()`](../Assets/Editor/Presentation/Effects/CombatVfxBaker.cs#L468) | private static |
 
 ## Assets/Editor/Presentation/Effects/DebrisFireBaker.cs
 
@@ -4816,14 +4818,17 @@ HY-Sandbox/
 
 ## Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs
 
-// 职责：瞬时激光命中与短时光束表现；不对目标施加冲量。 // 入口：Turret 固定步调用 Fire()；公用配置通过基类保持原序列化字段。
+// 职责：瞬时激光命中与短时光束表现；不对目标施加冲量。 // 入口：Turret 固定步调用 Fire()，LateUpdate() 只更新画面。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| LaserTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L20) | protected override |
-| LaserTurret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L35) | protected override |
-| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L53) | protected override |
-| LaserTurret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L59) | protected override |
+| LaserTurret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L30) | protected override |
+| LaserTurret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L45) | protected override |
+| LaserTurret | [`void PlayContact()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L78) | private |
+| LaserTurret | [`void UpdateContactPose()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L98) | private |
+| LaserTurret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L106) | protected override |
+| LaserTurret | [`void LateUpdate()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L119) | private |
+| LaserTurret | [`void OnDestroy()`](../Assets/Scripts/Features/Combat/Turrets/LaserTurret.cs#L165) | private |
 
 ## Assets/Scripts/Features/Combat/Turrets/ProjectileIntercept.cs
 
@@ -4895,32 +4900,31 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L60) | internal |
-| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L65) | protected virtual |
-| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L74) | protected virtual |
-| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L85) | public |
-| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L96) | protected virtual |
-| Turret | [`void OnTransformParentChanged()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L132) | private |
-| Turret | [`void RefreshOwner()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L133) | private |
-| Turret | [`float GetLogicUpdateInterval()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L139) | private |
-| Turret | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L163) | private |
-| Turret | [`bool TryAcquireAimUpdate(Turret turret)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L171) | private static |
-| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L199) | protected virtual |
-| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L220) | private |
-| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L229) | private |
-| Turret | [`void SearchTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L255) | private |
-| Turret | [`void AimAndFire(ControlUnit aimTarget, float deltaTime)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L267) | private |
-| Turret | [`bool IsAligned(Vector3 forward, Vector3 direction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L307) | private |
-| Turret | [`void ScheduleNextFire()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L312) | private |
-| Turret | [`void AimAt(Vector3 worldDirection, float deltaTime)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L318) | private |
-| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L348) | private |
-| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L382) | protected |
-| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L393) | protected |
-| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L399) | protected |
-| Turret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L407) | protected virtual |
-| Turret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L412) | protected abstract |
-| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L413) | protected virtual |
-| Turret | [`void UpdateShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L417) | protected virtual |
+| Turret | [`void DelayTargetSearch(float seconds)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L63) | internal |
+| Turret | [`void Awake()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L68) | protected virtual |
+| Turret | [`void OnValidate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L77) | protected virtual |
+| Turret | [`void SetStarted(bool started)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L88) | public |
+| Turret | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L99) | protected virtual |
+| Turret | [`void OnTransformParentChanged()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L134) | private |
+| Turret | [`void RefreshOwner()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L135) | private |
+| Turret | [`float GetLogicUpdateInterval()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L141) | private |
+| Turret | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L171) | private |
+| Turret | [`bool TryAcquireAimUpdate(Turret turret)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L179) | private static |
+| Turret | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L207) | protected virtual |
+| Turret | [`void StopWorking()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L228) | private |
+| Turret | [`void RefreshTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L237) | private |
+| Turret | [`void SearchTarget()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L263) | private |
+| Turret | [`void AimAndFire(ControlUnit aimTarget, float deltaTime)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L275) | private |
+| Turret | [`bool IsAligned(Vector3 forward, Vector3 direction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L315) | private |
+| Turret | [`void ScheduleNextFire()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L320) | private |
+| Turret | [`void AimAt(Vector3 worldDirection, float deltaTime)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L326) | private |
+| Turret | [`void ResolveAimingRig()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L356) | private |
+| Turret | [`Vector3 GetMuzzlePosition()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L390) | protected |
+| Turret | [`Vector3 GetAimForward()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L401) | protected |
+| Turret | [`UnitFaction GetEffectiveTargetFaction()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L407) | protected |
+| Turret | [`Vector3 GetAimPosition(ControlUnit target, Vector3 origin)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L415) | protected virtual |
+| Turret | [`bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction)`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L420) | protected abstract |
+| Turret | [`void HideShotFeedback()`](../Assets/Scripts/Features/Combat/Turrets/Turret.cs#L421) | protected virtual |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs
 
@@ -4928,16 +4932,17 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretHitResolver | [`void Apply( Collider collider, Vector3 point, Vector3 normal, Vector3 direction, ControlUnit owner, UnitFaction faction, float damage, float impulse)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L9) | internal static |
+| TurretHitResolver | [`void Apply( Collider collider, Vector3 point, Vector3 normal, Vector3 direction, ControlUnit owner, UnitFaction faction, float damage, float impulse, bool playImpact = true)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitResolver.cs#L9) | internal static |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs
 
-// 职责：激光沿射线瞬时命中最近的非自身障碍，结算伤害但不施加冲量。 // 入口：Fire()；由 LaserTurret 调用并返回光束终点。
+// 职责：激光沿射线瞬时命中最近的非自身障碍，结算伤害但不施加冲量。 // 入口：Fire()；由 LaserTurret 调用并返回显示所需的表面锚点。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| TurretHitscan | [`Vector3 Fire( Vector3 origin, Vector3 direction, ControlUnit owner, UnitFaction targetFaction, float range, LayerMask hitLayers, float damage)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10) | internal |
-| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L59) | public |
+| TurretHitscan | [`LaserShotEndpoint Fire( Vector3 origin, Vector3 direction, ControlUnit owner, UnitFaction targetFaction, float range, LayerMask hitLayers, float damage)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L10) | internal |
+| RaycastHitDistanceComparer | [`int Compare(RaycastHit a, RaycastHit b)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L60) | public |
+| LaserShotEndpoint | [`bool TryGetSurfacePose(out Vector3 point, out Vector3 normal)`](../Assets/Scripts/Features/Combat/Turrets/TurretHitscan.cs#L86) | internal |
 
 ## Assets/Scripts/Features/Combat/Turrets/TurretTargetSelector.cs
 
@@ -5972,15 +5977,13 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L37) | public static |
-| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L62) | private |
-| DetachedPartSmokeTrail | [`void ConfigureEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L90) | private |
-| DetachedPartSmokeTrail | [`void UpdateEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L120) | private |
-| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L136) | private |
-| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L148) | private |
-| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L185) | private |
-| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L209) | private |
-| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L214) | private |
+| DetachedPartSmokeTrail | [`void Attach(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L30) | public static |
+| DetachedPartSmokeTrail | [`void Initialize(Rigidbody body, Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L55) | private |
+| DetachedPartSmokeTrail | [`void Refresh(Vector3 worldAnchor, float effectIntensity)`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L82) | private |
+| DetachedPartSmokeTrail | [`void Update()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L94) | private |
+| DetachedPartSmokeTrail | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L130) | private |
+| DetachedPartSmokeTrail | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L153) | private |
+| DetachedPartSmokeTrail | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/DetachedPartSmokeTrail.cs#L158) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/LightFade.cs
 
@@ -6017,13 +6020,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| StylizedBeamEffect | [`void Configure(float width, string effectId = "EnergyBeam")`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L17) | public |
-| StylizedBeamEffect | [`void SetEndpoints(Vector3 start, Vector3 end)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L29) | public |
-| StylizedBeamEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L36) | public |
-| StylizedBeamEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L45) | public |
-| StylizedBeamEffect | [`void SetVisible(bool value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L54) | public |
-| StylizedBeamEffect | [`void UpdateBeam()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L89) | private |
-| StylizedBeamEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L111) | private |
+| StylizedBeamEffect | [`void Configure(float width, string effectId = "EnergyBeam")`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L20) | public |
+| StylizedBeamEffect | [`void SetEndpoints(Vector3 start, Vector3 end)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L34) | public |
+| StylizedBeamEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L41) | public |
+| StylizedBeamEffect | [`void SetTipFade(bool value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L50) | internal |
+| StylizedBeamEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L59) | public |
+| StylizedBeamEffect | [`void SetVisible(bool value)`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L68) | public |
+| StylizedBeamEffect | [`void UpdateBeam()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L113) | private |
+| StylizedBeamEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/StylizedBeamEffect.cs#L135) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/TransientEffectPool.cs
 
@@ -6061,17 +6065,18 @@ HY-Sandbox/
 | VfxEffect | [`void EnsureContent()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L47) | private |
 | VfxEffect | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L97) | private |
 | VfxEffect | [`void SetIntensity(float value)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L105) | public |
-| VfxEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L148) | public |
-| VfxEffect | [`void SetSpawnCount(float count)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L160) | public |
-| VfxEffect | [`void Clear()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L172) | public |
-| VfxEffect | [`void PlayOnce()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L187) | public |
-| VfxEffect | [`void ConfigurePool(VfxEffectPool pool, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L193) | internal |
-| VfxEffect | [`void ResetForRent(Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L214) | internal |
-| VfxEffect | [`void ReleaseAfterPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L257) | public |
-| VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L269) | public |
-| VfxEffect | [`void FinishPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L280) | private |
-| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L307) | private |
-| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L308) | private |
+| VfxEffect | [`void DisableFlameEnvelope()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L148) | internal |
+| VfxEffect | [`void SetColor(Color color)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L159) | public |
+| VfxEffect | [`void SetSpawnCount(float count)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L171) | public |
+| VfxEffect | [`void Clear()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L183) | public |
+| VfxEffect | [`void PlayOnce()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L198) | public |
+| VfxEffect | [`void ConfigurePool(VfxEffectPool pool, VfxEffect prefab)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L204) | internal |
+| VfxEffect | [`void ResetForRent(Vector3 position, Quaternion rotation)`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L225) | internal |
+| VfxEffect | [`void ReleaseAfterPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L269) | public |
+| VfxEffect | [`void StopAndRelease()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L281) | public |
+| VfxEffect | [`void FinishPlayback()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L292) | private |
+| VfxEffect | [`void OnDisable()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L319) | private |
+| VfxEffect | [`void OnDestroy()`](../Assets/Scripts/Features/Presentation/Effects/VfxEffect.cs#L320) | private |
 
 ## Assets/Scripts/Features/Presentation/Effects/VfxEffectPool.cs
 

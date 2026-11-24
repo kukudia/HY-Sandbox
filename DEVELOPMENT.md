@@ -327,7 +327,7 @@ GPU 特效已接入按场景、按模板复用的 VfxEffectPool：取消64个一
 
 残骸包裹范围、粒子密度与不透明度已降低，尾烟稍浅且更透明；火光颜色保持 10% 设定。残骸火光已减弱并收紧，新增头部灰黑烟遮叠与随机火焰朝向，尾烟加深加厚；见[烟火平衡验证](Docs/Validation/2026-11-06-fire-balance.md)。残骸新增按模型包围盒自适应的局部包裹火焰，跟随模型中心与旋转；[包裹火焰验证](Docs/Validation/2026-11-06-debris-envelope.md)。尾烟已提高不透明度并加入短促橙色余火：中低速烟迹保持对比，火光与烟雾共用粒子，仍由集中库 DebrisSmoke 配置。隔离 Play 近远景、销毁后消散通过；参数、截图与验证边界见 [尾烟可见性](Docs/Validation/2026-11-06-debris-visibility.md)。
 
-战斗表现增强：残骸烟迹使用 `DebrisSmoke` 世界空间图，挂载点按刚体点速度跟随，残骸销毁/禁用后独立淡出；激光使用 `LaserBeam` 分层亮芯，宽度 0.16m、持续 0.2s；炮弹使用 `ProjectileTracer` 记录真实位置历史，宽度 0.1m、历史 0.09s、最长 7m，复用时清空。特效仍在集中库替换，伤害、命中和弹速不变。制作入口 `CombatVfxBaker.BakeMissing`，规格见 [CombatVfx](ArtSource/VfxGraph/CombatVfx.md)，真实 Play 近/远景与回收验证见 [战斗特效报告](Docs/Validation/2026-11-06-combat-vfx.md)。
+战斗表现使用集中库。残骸烟迹使用 `DebrisSmoke`。炮弹用 `ProjectileTracer` 记录真实位置历史，复用时清空。激光使用 `LaserBeam` 分层亮芯，默认宽度 0.16m、持续 0.2s。命中时束尖和 `LaserContact` 跟随实际表面，部件销毁后快速淡出，打空时束尖自然渐隐。制作入口为 `CombatVfxBaker.BakeMissing`。激光末端的 Play 检查和待验证范围见 [R40](Docs/ProjectRiskRegister.md)，参数和资源见 [CombatVfx](ArtSource/VfxGraph/CombatVfx.md)。
 
 Unity 菜单 **Tools → HY Sandbox → 资源管理 → 特效与音频** 打开统一管理入口。`PresentationResourceWindow` 支持名称/路径搜索、类型筛选、定位、原生预览、直接引用查询和保存；Prefab 通过原生 Prefab Mode 编辑完整层级。扫描覆盖 Assets 下的 VFX Graph、包含 VfxEffect/VisualEffect/ParticleSystem/TrailRenderer/LineRenderer 的 Prefab 和 BlockVfxLibrary，可额外显示递归依赖。
 

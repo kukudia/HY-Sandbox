@@ -46,5 +46,7 @@ MonoBehaviour:
     prefab: {fileID: 3837505218483738918, guid: 2f56ccbabc8978545ba82c688e0af1a7, type: 3}
   - id: EnemySpawnPortal
     prefab: {fileID: 7724064072990583261, guid: 55c7a189dafa88745ba7afd44ba8a72e, type: 3}
+  - id: LaserContact
+    prefab: {fileID: 4668321316483629836, guid: 4eeab99dc7b7433498565e815af9b213, type: 3}
   _maxIdlePerTemplate: 32
   _maxIdleEffects: 128

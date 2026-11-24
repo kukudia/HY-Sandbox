@@ -14,7 +14,8 @@ internal static class TurretHitResolver
         ControlUnit owner,
         UnitFaction faction,
         float damage,
-        float impulse)
+        float impulse,
+        bool playImpact = true)
     {
         Rigidbody body = collider.attachedRigidbody;
         if (impulse > 0f && body != null && !body.isKinematic)
@@ -23,8 +24,9 @@ internal static class TurretHitResolver
         }
 
         Vector3 impactNormal = normal.sqrMagnitude > 0.001f ? normal : -direction;
-        using (ImpactMarker.Auto())
+        if (playImpact)
         {
+            using var impactSample = ImpactMarker.Auto();
             BlockVfxLibrary.Play(BlockVfxLibrary.Effect.Impact, point, Quaternion.LookRotation(impactNormal), 0.6f);
         }
 

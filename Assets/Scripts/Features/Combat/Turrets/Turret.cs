@@ -120,16 +120,15 @@ public abstract class Turret : MonoBehaviour
         RefreshTarget();
         bool hasTarget = _target != null;
         Supply.SetWorkRequested(this, hasTarget);
+        // An emitted shot owns its short display window even if its target or supply is lost.
         if (!hasTarget || !Supply.isWorking)
         {
-            HideShotFeedback();
             return;
         }
 
         float aimDeltaTime = _lastAimUpdateTime > 0f ? Time.fixedTime - _lastAimUpdateTime : Time.fixedDeltaTime;
         _lastAimUpdateTime = Time.fixedTime;
         AimAndFire(_target, aimDeltaTime);
-        UpdateShotFeedback();
     }
 
     private void OnTransformParentChanged() => RefreshOwner();
@@ -420,10 +419,6 @@ public abstract class Turret : MonoBehaviour
 
     protected abstract bool Fire(Vector3 origin, Vector3 direction, UnitFaction faction);
     protected virtual void HideShotFeedback()
-    {
-    }
-
-    protected virtual void UpdateShotFeedback()
     {
     }
 }

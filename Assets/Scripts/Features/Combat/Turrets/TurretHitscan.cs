@@ -1,5 +1,5 @@
 // 职责：激光沿射线瞬时命中最近的非自身障碍，结算伤害但不施加冲量。
-// 入口：Fire()；由 LaserTurret 调用并返回光束终点。
+// 入口：Fire()；由 LaserTurret 调用并返回显示所需的表面锚点。
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ internal sealed class TurretHitscan
 {
     private const int MaxRaycastHits = 16;
     private readonly RaycastHit[] _hits = new RaycastHit[MaxRaycastHits];
-    internal Vector3 Fire(
+    internal LaserShotEndpoint Fire(
         Vector3 origin,
         Vector3 direction,
         ControlUnit owner,
@@ -16,7 +16,6 @@ internal sealed class TurretHitscan
         LayerMask hitLayers,
         float damage)
     {
-        Vector3 end = origin + direction * range;
         int hitCount = Physics.RaycastNonAlloc(
             origin,
             direction,
@@ -37,7 +36,8 @@ internal sealed class TurretHitscan
                 continue;
             }
 
-            end = hit.point;
+            // 伤害可能立即拆组或禁用部件；先记录射线实际接触的表面坐标。
+            var endpoint = new LaserShotEndpoint(hit.collider, hit.point, hit.normal);
             TurretHitResolver.Apply(
                 hit.collider,
                 hit.point,
@@ -46,11 +46,12 @@ internal sealed class TurretHitscan
                 owner,
                 targetFaction,
                 damage,
-                0f);
-            break;
+                0f,
+                playImpact: false);
+            return endpoint;
         }
 
-        return end;
+        return new LaserShotEndpoint(null, origin + direction * range, Vector3.zero);
     }
 
     private sealed class RaycastHitDistanceComparer : IComparer<RaycastHit>
@@ -60,5 +61,40 @@ internal sealed class TurretHitscan
         {
             return a.distance.CompareTo(b.distance);
         }
+    }
+}
+
+internal readonly struct LaserShotEndpoint
+{
+    internal readonly Collider Surface;
+    internal readonly Vector3 Point;
+    internal readonly Vector3 Normal;
+    private readonly Vector3 _localPoint;
+    private readonly Vector3 _localNormal;
+    internal bool IsHit => !ReferenceEquals(Surface, null);
+
+    internal LaserShotEndpoint(Collider surface, Vector3 point, Vector3 normal)
+    {
+        Surface = surface;
+        Point = point;
+        Normal = normal;
+        Transform target = surface != null ? surface.transform : null;
+        _localPoint = target != null ? target.InverseTransformPoint(point) : default;
+        _localNormal = target != null ? target.localToWorldMatrix.transpose.MultiplyVector(normal) : default;
+    }
+
+    internal bool TryGetSurfacePose(out Vector3 point, out Vector3 normal)
+    {
+        point = Point;
+        normal = Normal;
+        if (Surface == null || !Surface.enabled || !Surface.gameObject.activeInHierarchy)
+        {
+            return false;
+        }
+
+        Transform target = Surface.transform;
+        point = target.TransformPoint(_localPoint);
+        normal = target.worldToLocalMatrix.transpose.MultiplyVector(_localNormal).normalized;
+        return true;
     }
 }

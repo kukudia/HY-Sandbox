@@ -1,5 +1,9 @@
 # HY-Sandbox 风险登记与行为契约
 
+### R40 · 激光光束末端与命中部件生命周期（2026-11-24）
+
+`TurretHitscan.Fire` 在伤害处理前保存实际命中碰撞体的局部点和法线。`LaserTurret.LateUpdate` 仅在单次显示窗口内读取该碰撞体。失效后从最后有效位置快速淡出，炮塔停用立即清理。打空按原射程绘制，专用图在最后 13% 衰减。隔离 Unity Play 对真实炮塔 Prefab 的发射入口执行 15 项检查，覆盖旋转、位移、销毁、打空、粒子发射、复用和禁用。自然交战与大量炮塔同时射击的 GPU 成本尚未采样。
+
 ### R39 · P2 · 工业美术重建覆盖基地结构外观（2026-11-23）
 
 `IndustrialArtGenerator.RebuildPrefab` 曾删除基础结构的材质引用目标，并按整块尺寸重新生成已缩放的 CombatStructures 网格。已恢复 4 个材质绑定及 11 个网格比例，重建入口排除这两类资产。Unity Play 通过 `BlueprintBlockFactory.TryRestore` 验证 6 份 Siege 蓝图中的 18 种结构组合。整场 Siege 镜头观感待验证。
