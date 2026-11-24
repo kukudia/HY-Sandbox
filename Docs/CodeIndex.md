@@ -2169,8 +2169,8 @@ HY-Sandbox/
 | VfxGraphAuthoring | [`object Parameter(object graph, string name, object value)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L112) | public static |
 | VfxGraphAuthoring | [`void Link(object parameter, object input)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L129) | public static |
 | VfxGraphAuthoring | [`object Attribute(object context, string name, object value, bool multiply = false)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L130) | public static |
-| VfxGraphAuthoring | [`void AddIntensity(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L144) | public static |
-| VfxGraphAuthoring | [`object Describe(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L162) | public static |
+| VfxGraphAuthoring | [`void AddIntensity(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L154) | public static |
+| VfxGraphAuthoring | [`object Describe(string path)`](../Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs#L172) | public static |
 
 ## Assets/Editor/Presentation/Interface/BlockStatusSetup.cs
 
