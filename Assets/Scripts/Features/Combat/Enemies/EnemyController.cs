@@ -2,6 +2,7 @@
 // 入口：FixedUpdate()；战术意图交给 VesselNavigation 选路，ControlUnit/推进器负责物理执行。
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 [DefaultExecutionOrder(-10), RequireComponent(typeof(ControlUnit))]
 public class EnemyController : MonoBehaviour
@@ -126,8 +127,8 @@ public class EnemyController : MonoBehaviour
     [Header("AI Debug")]
     [SerializeField, Tooltip("在 Scene / Game 的 Gizmos 中显示自主友舰和敌机的决策；玩家驾驶时隐藏。")]
     private bool drawDebug;
-    [SerializeField, Tooltip("显示接近/撤退距离与守卫锚点连线。")]
-    private bool showDebugRanges;
+    [SerializeField, FormerlySerializedAs("showDebugRanges"), Tooltip("显示守卫锚点连线。")]
+    private bool showGuardLink;
     [SerializeField, Min(0.1f), Tooltip("移动输入向量的显示长度（米）。")]
     private float debugVectorLength = 8f;
     private ControlUnit unit;
@@ -141,10 +142,10 @@ public class EnemyController : MonoBehaviour
     private float guardRadius;
     private ControlUnit priorityTarget;
     private int _entityHashCode;
-    internal void ConfigureDebugDisplay(bool enabled, bool ranges)
+    internal void ConfigureDebugDisplay(bool enabled, bool guardLink)
     {
         drawDebug = enabled;
-        showDebugRanges = ranges;
+        showGuardLink = guardLink;
     }
 
     public EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)
@@ -802,23 +803,12 @@ public class EnemyController : MonoBehaviour
 
         Color previousColor = Gizmos.color;
         Vector3 origin = transform.position;
-        if (usePredictiveDecisions && navigation.Prediction.LookAheadDistance > 0f)
-        {
-            // 青色圆表示远场预读范围；原BoxCast盒线只表示近处即时安全检测。
-            DrawDebugCircle(origin, navigation.Prediction.LookAheadDistance, new Color(0f, 0.75f, 1f, 0.7f));
-        }
-
         Gizmos.color = unit.faction == UnitFaction.Player ? Color.green : Color.red;
         Gizmos.DrawWireSphere(origin, 1f);
-        if (showDebugRanges)
+        if (showGuardLink && guardAnchor != null)
         {
-            DrawDebugCircle(origin, desiredDistance, Color.yellow);
-            DrawDebugCircle(origin, retreatDistance, new Color(1f, 0.4f, 0f));
-            if (guardAnchor != null)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(origin, guardAnchor.position);
-            }
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(origin, guardAnchor.position);
         }
 
         if (currentTarget != null && IsValidOpponent(currentTarget))
@@ -836,7 +826,6 @@ public class EnemyController : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(origin, hit.HitPoint);
-            Gizmos.DrawWireCube(hit.HitPoint, avoidanceBounds.size);
             Gizmos.color = Color.yellow;
             Gizmos.DrawRay(hit.HitPoint, hit.AvoidanceVector * 2f);
         }
@@ -851,19 +840,5 @@ public class EnemyController : MonoBehaviour
         }
 
         Gizmos.color = previousColor;
-    }
-
-    private static void DrawDebugCircle(Vector3 origin, float radius, Color color)
-    {
-        Gizmos.color = color;
-        const int segments = 48;
-        Vector3 previous = origin + Vector3.right * Mathf.Max(0f, radius);
-        for (int i = 1; i <= segments; i++)
-        {
-            float angle = i * (Mathf.PI * 2f / segments);
-            Vector3 next = origin + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * Mathf.Max(0f, radius);
-            Gizmos.DrawLine(previous, next);
-            previous = next;
-        }
     }
 }

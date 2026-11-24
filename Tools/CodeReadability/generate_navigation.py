@@ -935,7 +935,7 @@ def main():
     )
     graph(
         "共享导航核心与轻量/舰船策略",
-        "源码推导：BotFlightMotion 使用球形净空与26方向候选，VesselNavigation 使用整舰包围盒；静态且感知完整时先验证升降通道，垂直通道失败后才进入有界A*，动态障碍继续由预测快照和速度走廊约束。两者只维护一份局部绕行、脱困和速度约束。选路降频，实际速度走廊逐物理步验证；导航不写刚体。路线和绕行拥有方向承诺，避免再等待战斗方向冷却。效率以持续到达、耗时和航程衡量，接触次数仅记录，不作为失败条件。",
+        "源码推导：BotFlightMotion 使用球形净空与26方向候选，VesselNavigation 使用整舰包围盒；按期望航向先验证静态障碍的升降通道，垂直通道失败后才进入有界A*，动态障碍继续由预测快照和速度走廊约束。两者只维护一份局部绕行、脱困和速度约束。选路降频，实际速度走廊逐物理步验证；导航不写刚体。路线和绕行拥有方向承诺，避免再等待战斗方向冷却。效率以持续到达、耗时和航程衡量，接触次数仅记录，不作为失败条件。",
         {"A": "BotFlightMotion.SampleGuidance", "B": "NavigationAvoidance.Evaluate",
          "C": "NavigationAvoidance.ChooseClearDirection", "D": "NavigationObstacleQuery.Cast",
          "E": "NavigationObstacleQuery.TryGetOverlapEscape", "F": "BotFlightMotion.ApplyMovement",
@@ -1843,7 +1843,7 @@ def main():
     )
     graph(
         "阵地战任务目标与自主索敌",
-        "源码推导：远场风险优先有界三维A*生成缓存路线并连续跟随，规划失败可回退安全升降，保持已承诺爬升；即时身位检测逐物理步按实际速度限制速度并允许推进器制动。波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围；物理步即时丢弃失效目标，自主索敌错峰并带距离滞后，警戒返航避障同样降频。FixedUpdate提交安全参考速度，经FlightPropulsionControl转换为独立朝向和比例油门，实际施力仍由推进器和电网负责。",
+        "源码推导：先沿期望航向验证静态障碍的上方通道，上升不可行再检查下降和有界A*；已缓存路线可让位给新确认的升降通道，与当前走廊无关的移动物体继续交给动态预测；即时身位检测逐物理步按实际速度限制速度并允许推进器制动。波次明确指派的有效基地任务目标不受自主索敌半径限制，远程任务也生成接近输入；未指定任务仍只发现半径内敌对单位。所有目标继续校验启用、阵营、运行/模拟状态、场景和守卫范围；物理步即时丢弃失效目标，自主索敌错峰并带距离滞后，警戒返航避障同样降频。FixedUpdate提交安全参考速度，经FlightPropulsionControl转换为独立朝向和比例油门，实际施力仍由推进器和电网负责。",
         {
             "A": "SiegeWaveDirector.Tick", "B": "EnemyController.SetPriorityTarget",
             "C": "EnemyController.FixedUpdate", "D": "EnemyController.FindNearestOpponent",
@@ -1864,7 +1864,7 @@ def main():
             "C -->|有移动、制动或待清空命令时| R", "R -->|先求参考速度| P", "R -->|发布全舰方向和油门| G",
             "F -->|接近目标| H", "C -->|警戒返航| H", "J --> I", "F --> J",
             "J --> AE", "AE -->|整舰边界与速度预测| N", "K --> N", "AE --> O", "P --> AF", "AF -.->|返回安全参考速度| P",
-            "AE -->|静态且感知完整时先尝试升降| AD", "AD -->|实际速度加时间及速度平方提前量优先上升再下降| K", "K --> Q", "Q -->|整舰垂直及前向净空| M",
+            "AE -->|感知完整时先尝试升降| AD", "AD -->|按期望航向检查，实际速度决定提前量| K", "K --> Q", "Q -->|整舰垂直及前向净空| M",
             "C -->|移动决策刷新或组件校正到期| L", "K -.->|保持高度直至舰尾越障| L",
             "AE -->|A星路线跟随净空| W", "AD -->|按现高度走廊和升降期间滑行余量限制水平推进| W", "W --> N",
             "L -->|下降前验证，未通过保持最后安全航层| X", "X --> Y", "Y --> Q",
@@ -1890,8 +1890,8 @@ def main():
         },
         [
             "A --> O", "O --> T", "T -->|先采集周向远场| P", "P --> D", "P --> E",
-            "T -->|远场风险优先规划，保留预算与冷却| Q", "Q -->|共享快照及短期运动包络| R",
-            "T -->|静态且感知完整时先验证升降净空| S",
+            "T -->|升降不可行，按预算和冷却规划| Q", "Q -->|共享快照及短期运动包络| R",
+            "T -->|先沿期望航向验证升降净空| S",
             "O -->|爬升/A星/直达结果| B", "B --> C", "C -->|无预采集时才查询| D",
             "C -->|原意图及风险候选| F", "C -->|已规划路径或任务方向| E",
             "C --> G", "G --> H", "C -->|远场调速前复查近场| F", "B -->|安全决策覆盖航向保持| I",
@@ -2000,16 +2000,16 @@ def main():
     )
     graph(
         "友敌 AI 调试绘制",
-        "源码推导：EnemyController 同时驱动友方自主舰和敌机。DebugManager 的友方/敌方开关可在场景中预配，EnemyController 保留逐实例 Draw Debug；启用后仅在模拟运行且未被玩家驾驶时绘制。共享导航采样清空上一轮命中快照，NavigationAvoidance 缓存局部绕行命中和方向；绘制只读快照，不重新查询物理或改变驾驶输入。禁用控制器清空快照。",
+        "源码推导：EnemyController 同时驱动友方自主舰和敌机。DebugManager 的友方/敌方开关可在场景中预配，EnemyController 保留逐实例 Draw Debug；启用后仅在模拟运行且未被玩家驾驶时绘制，保留命中线、航点与方向标记，关闭范围圆和检测框。共享导航采样清空上一轮命中快照，NavigationAvoidance 缓存局部绕行命中和方向；绘制只读快照，不重新查询物理或改变驾驶输入。禁用控制器清空快照。",
         {
             "A": "EnemyController.FixedUpdate", "B": "EnemyController.ApplyObstacleAvoidance",
             "C": "NavigationAvoidance.Evaluate", "D": "EnemyController.OnDrawGizmos",
-            "E": "EnemyController.DrawDebug", "F": "EnemyController.DrawDebugCircle",
+            "E": "EnemyController.DrawDebug",
             "G": "EnemyController.OnDisable",
         },
         [
             "A -->|经移动计算或警戒返航| B", "B -->|经VesselNavigation近场回退| C",
-            "D --> E", "E -->|接近及撤退距离| F",
+            "D --> E",
             "C -.->|缓存整舰扫掠结果| E", "G -.->|清空缓存| E",
         ],
     )

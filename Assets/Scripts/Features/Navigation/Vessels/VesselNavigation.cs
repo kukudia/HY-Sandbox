@@ -85,7 +85,6 @@ internal sealed class VesselNavigation
         obstacleSpeedRatio = 1f;
         Vector3 velocity = movementBody != null ? movementBody.linearVelocity : Vector3.zero;
         climbingObstacle = false;
-        Vector3 probeDirection = velocity.sqrMagnitude > 0.01f ? velocity.normalized : desiredMove.normalized;
         avoidanceBounds = Climb.GetHullBounds(unit);
         Vector3 extents = avoidanceBounds.extents;
         extents.x += 0.25f;
@@ -125,18 +124,14 @@ internal sealed class VesselNavigation
             }
         }
 
-        // 先尝试经过验证的垂直通道；只有上升/下降不成立时，才把障碍交给水平 A*。
-        // TryGetHeight 仍会验证整舰垂直与前向净空，动态障碍继续受本轮预测快照约束。
-        bool staticClimbAvailable = Prediction.Moving == 0 && !Prediction.Saturated;
-        if (staticClimbAvailable && TryClimbObstacle(
-            unit,
-            desiredMove,
-            probeDirection,
-            speed,
-            horizon,
-            settings,
-            out Vector3 climbMovement))
+        // 越障看请求航向，实际速度用于计算预判距离和逐步制动。远处移动物体由预测单独处理。
+        if (!Prediction.Saturated && TryClimbObstacle(unit, desiredMove, horizon, settings, out Vector3 climbMovement))
         {
+            if (Path.Active)
+            {
+                Path.Clear();
+            }
+
             return climbMovement;
         }
 
@@ -193,16 +188,14 @@ internal sealed class VesselNavigation
     private bool TryClimbObstacle(
         ControlUnit unit,
         Vector3 desiredMove,
-        Vector3 probeDirection,
-        float speed,
         float horizon,
         VesselNavigationSettings settings,
         out Vector3 movement)
     {
         movement = Vector3.zero;
-        climbingObstacle = !Path.Active && settings.PreferObstacleClimb && unit.hoverFlightController != null && Climb.TryGetHeight(
+        climbingObstacle = settings.PreferObstacleClimb && unit.hoverFlightController != null && Climb.TryGetHeight(
             unit,
-            probeDirection,
+            desiredMove,
             settings.BaseHoverHeight,
             Mathf.Max(probeDistance, settings.ClimbLookAhead),
             settings.MaxObstacleClimb,
