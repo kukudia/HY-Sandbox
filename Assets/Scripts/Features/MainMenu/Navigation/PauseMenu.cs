@@ -32,19 +32,6 @@ public sealed class PauseMenu : MonoBehaviour
         resume.onClick.AddListener(Resume);
         restart.onClick.AddListener(Restart);
         mainMenu.onClick.AddListener(ReturnToMenu);
-        // An opaque overlay sorts above the additive scene's HUD and intercepts its clicks.
-        Canvas overlay = panel.GetComponent<Canvas>() ?? panel.AddComponent<Canvas>();
-        overlay.overrideSorting = true;
-        overlay.sortingOrder = short.MaxValue;
-        if (panel.GetComponent<GraphicRaycaster>() == null)
-        {
-            panel.AddComponent<GraphicRaycaster>();
-        }
-
-        Image backdrop = panel.GetComponent<Image>();
-        Color background = backdrop.color;
-        background.a = 1f;
-        backdrop.color = background;
         panel.SetActive(false);
     }
 

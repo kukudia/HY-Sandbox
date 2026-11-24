@@ -130,7 +130,17 @@ public static class VfxGraphAuthoring
     public static object Attribute(object context, string name, object value, bool multiply = false)
     {
         object block = Create("Block.SetAttribute");
-        Setting(block, "attribute", name);
+        // Unity 17.6 stores single-axis scale and angle assignments as variadic channels.
+        if (name is "scaleX" or "scaleY" or "scaleZ" or "angleX" or "angleY" or "angleZ")
+        {
+            Setting(block, "attribute", name.Substring(0, name.Length - 1));
+            Setting(block, "channels", name.Substring(name.Length - 1));
+        }
+        else
+        {
+            Setting(block, "attribute", name);
+        }
+
         if (multiply)
         {
             Setting(block, "Composition", "Multiply");

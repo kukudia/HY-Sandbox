@@ -684,11 +684,7 @@ public static class IndustrialArtGenerator
                 Block block = root.GetComponent<Block>();
                 Transform model = root.transform.Find("Model");
                 // Dedicated models own material bindings, cargo displays or authored dimensions.
-                if (block == null ||
-                    model == null ||
-                    root.GetComponent<BlockMaterial>() != null ||
-                    root.GetComponent<CargoHoldView>() != null ||
-                    prefabPath.StartsWith(BlockRoot + "/CombatStructures/", StringComparison.Ordinal))
+                if (block == null || model == null || root.GetComponent<BlockMaterial>() != null || root.GetComponent<CargoHoldView>() != null || prefabPath.StartsWith(BlockRoot + "/CombatStructures/", StringComparison.Ordinal))
                 {
                     return false;
                 }

@@ -10,6 +10,31 @@ using UnityEngine.UI;
 
 public static class NightMenuAuthoring
 {
+    public static void ConfigurePauseOverlay(PauseMenu pause)
+    {
+        using var data = new SerializedObject(pause);
+        var panel = (GameObject)data.FindProperty("panel").objectReferenceValue;
+        // 子 Canvas 必须保存为场景组件，才能在叠加关卡的 HUD 上方接收输入。
+        if (!panel.TryGetComponent(out Canvas overlay))
+        {
+            overlay = Undo.AddComponent<Canvas>(panel);
+        }
+
+        using var canvasData = new SerializedObject(overlay);
+        canvasData.FindProperty("m_OverrideSorting").boolValue = true;
+        canvasData.FindProperty("m_SortingOrder").intValue = short.MaxValue;
+        canvasData.ApplyModifiedProperties();
+        if (!panel.TryGetComponent(out GraphicRaycaster _))
+        {
+            Undo.AddComponent<GraphicRaycaster>(panel);
+        }
+
+        Image backdrop = panel.GetComponent<Image>();
+        Color background = backdrop.color;
+        background.a = 1f;
+        backdrop.color = background;
+    }
+
     [MenuItem("Tools/HY-Sandbox/Main Menu/Polish pause card")]
     public static void PolishPauseCard()
     {
@@ -190,7 +215,7 @@ public static class NightMenuAuthoring
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = rect.offsetMax = Vector2.zero;
-            root.GetComponent<Image>().color = new Color(.015f, .025f, .045f, .96f);
+            root.GetComponent<Image>().color = new Color(.015f, .025f, .045f, 1f);
             Button resume = Tab(template, rect, "Resume", new Vector2(0, 90));
             Button restart = Tab(template, rect, "Restart", Vector2.zero);
             Button menu = Tab(template, rect, "Main Menu", new Vector2(0, -90));
@@ -218,6 +243,7 @@ public static class NightMenuAuthoring
             root.SetActive(false);
         }
 
+        ConfigurePauseOverlay(SceneObjectQuery.FindInScene<PauseMenu>(scene, FindObjectsInactive.Include));
         BuildManager build = SceneObjectQuery.FindInScene<BuildManager>(scene);
         var buildData = new SerializedObject(build);
         buildData.FindProperty("_structureBuildRange").floatValue = 30f;

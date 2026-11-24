@@ -381,7 +381,6 @@ public static class EditableComponentBaker
         foreach (Rigidbody body in root.GetComponentsInChildren<Rigidbody>(true))
         {
             Ensure<FragmentLifetime>(body.gameObject);
-            Ensure<AbnormalImpulseBodyProbe>(body.gameObject);
             if (body.GetComponent<DetachedPartSmokeTrail>() == null)
             {
                 Ensure<DetachedPartSmokeTrail>(body.gameObject).enabled = false;
@@ -477,7 +476,6 @@ public static class EditableComponentBaker
         Service<TurretProjectilePool>(scene, managers);
         Service<TransientEffectPool>(scene, managers);
         ConfigurePool(Service<VfxEffectPool>(scene, managers));
-        Service<AbnormalImpulseRecorder>(scene, managers);
         VisualEffectsManager effects = Service<VisualEffectsManager>(scene, managers);
         if (SceneObjectQuery.FindInScene<GameManager>(scene, FindObjectsInactive.Include) == null)
         {

@@ -373,6 +373,7 @@ MonoBehaviour:
   beamWidth: 0.16
   beamDuration: 0.2
   beamColor: {r: 6, g: 1.1, b: 0.15, a: 1}
+  contactDiameter: 0.26
 --- !u!114 &1578290364841887270
 MonoBehaviour:
   m_ObjectHideFlags: 0

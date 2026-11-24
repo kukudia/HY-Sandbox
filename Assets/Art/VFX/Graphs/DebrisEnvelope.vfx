@@ -2774,11 +2774,11 @@ MonoBehaviour:
   m_OutputSlots: []
   m_Disabled: 0
   m_ActivationSlot: {fileID: 8926484042661614608}
-  attribute: angleZ
+  attribute: angle
   Composition: 0
   Source: 0
   Random: 2
-  channels: 6
+  channels: 2
 --- !u!114 &8926484042661614608
 MonoBehaviour:
   m_ObjectHideFlags: 0

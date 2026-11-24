@@ -71,7 +71,6 @@ public sealed class LaserTurret : Turret
         {
             _contact?.Clear();
         }
-
     }
 
     private void PlayContact()

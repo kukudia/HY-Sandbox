@@ -158,9 +158,7 @@ public static class CombatHudPlayProbe
         SiegeCombatHud entry = Object.FindAnyObjectByType<SiegeCombatHud>();
         CombatHud hud = entry.Hud;
         Check("HUD is bound to the additive battlefield", hud.Battlefield == stage.gameObject.scene);
-        Check(
-            "Only one combat HUD is active",
-            Object.FindObjectsByType<CombatHud>(FindObjectsSortMode.None).Length == 1);
+        Check("Only one combat HUD is active", Object.FindObjectsByType<CombatHud>().Length == 1);
         hud.Panels.ClearDebug();
         Check(
             "Debug drawer controls existing debug service",
@@ -323,9 +321,7 @@ public static class CombatHudPlayProbe
             yield return .1f;
         }
 
-        Check(
-            "Legacy Siege has one shared HUD",
-            Object.FindObjectsByType<CombatHud>(FindObjectsSortMode.None).Length == 1);
+        Check("Legacy Siege has one shared HUD", Object.FindObjectsByType<CombatHud>().Length == 1);
         Check("Legacy HUD binds its battlefield", hud.Battlefield == session.gameObject.scene);
         Time.timeScale = 0f;
         Durability victim = hud.Candidates.First(unit => unit.faction == UnitFaction.Enemy).cockpit.GetComponent<Durability>();
@@ -665,9 +661,7 @@ public static class CombatHudPlayProbe
 
         yield return .4f;
         CombatHud hud = Object.FindAnyObjectByType<CombatHud>();
-        Check(
-            "5v5 uses one shared HUD",
-            hud != null && Object.FindObjectsByType<CombatHud>(FindObjectsSortMode.None).Length == 1);
+        Check("5v5 uses one shared HUD", hud != null && Object.FindObjectsByType<CombatHud>().Length == 1);
         Check(
             "Both teams participate in nameplates",
             hud.Candidates.Any(unit => unit.faction == UnitFaction.Player) && hud.Candidates.Any(unit => unit.faction == UnitFaction.Enemy));

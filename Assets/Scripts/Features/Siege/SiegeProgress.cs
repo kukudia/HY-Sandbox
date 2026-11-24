@@ -34,7 +34,7 @@ public static class SiegeProgress
     /// <summary>仅供显式验证使用：把记录恢复到给定值，避免测试留下假成绩。</summary>
     public static void RestoreForProbe(int bestWave, int totalKills, int totalRuns)
     {
-    PlayerPrefs.SetInt(BestWaveKey, Mathf.Max(0, bestWave));
+        PlayerPrefs.SetInt(BestWaveKey, Mathf.Max(0, bestWave));
         PlayerPrefs.SetInt(TotalKillsKey, Mathf.Max(0, totalKills));
         PlayerPrefs.SetInt(TotalRunsKey, Mathf.Max(0, totalRuns));
         PlayerPrefs.Save();

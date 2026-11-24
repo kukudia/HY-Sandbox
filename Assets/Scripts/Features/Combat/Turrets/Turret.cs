@@ -276,5 +276,4 @@ public abstract class Turret : MonoBehaviour
     protected virtual void HideShotFeedback()
     {
     }
-
 }

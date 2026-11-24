@@ -235,7 +235,8 @@ public class HoverFlightController : MonoBehaviour
             rb = GetComponentInParent<Rigidbody>();
         }
 
-        if (rb == null)
+        // Mode transitions can keep the controller enabled while physics owns a kinematic body.
+        if (rb == null || rb.isKinematic)
         {
             return false;
         }

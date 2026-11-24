@@ -116,9 +116,6 @@ public class EnemyController : MonoBehaviour
     private float maxObstacleDescent = 12f;
     [SerializeField, Min(0.5f)]
     private float obstacleClimbClearance = 3f;
-    // 仅保留旧资产字段；当前速度比例由完整升降走廊与滑行余量决定。
-    [SerializeField, HideInInspector]
-    private float climbForwardSpeedRatio = 0.15f;
     private bool climbingObstacle;
     private float obstacleHoverHeight;
     private float _smoothedHoverHeight;
@@ -129,8 +126,8 @@ public class EnemyController : MonoBehaviour
     [Header("AI Debug")]
     [SerializeField, Tooltip("在 Scene / Game 的 Gizmos 中显示自主友舰和敌机的决策；玩家驾驶时隐藏。")]
     private bool drawDebug;
-    [SerializeField, Tooltip("显示索敌球、接近/撤退水平距离和守卫范围。")]
-    private bool showDebugRanges = true;
+    [SerializeField, Tooltip("显示接近/撤退距离与守卫锚点连线。")]
+    private bool showDebugRanges;
     [SerializeField, Min(0.1f), Tooltip("移动输入向量的显示长度（米）。")]
     private float debugVectorLength = 8f;
     private ControlUnit unit;
@@ -815,14 +812,12 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawWireSphere(origin, 1f);
         if (showDebugRanges)
         {
-            Gizmos.DrawWireSphere(origin, Mathf.Max(0f, detectionRange));
             DrawDebugCircle(origin, desiredDistance, Color.yellow);
             DrawDebugCircle(origin, retreatDistance, new Color(1f, 0.4f, 0f));
             if (guardAnchor != null)
             {
                 Gizmos.color = Color.green;
                 Gizmos.DrawLine(origin, guardAnchor.position);
-                Gizmos.DrawWireSphere(guardAnchor.position, guardRadius);
             }
         }
 

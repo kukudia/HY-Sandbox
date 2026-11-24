@@ -46,7 +46,7 @@ point,
 collision.collider != null ? collision.collider.name : null);
     }
 
-    private void Awake()
+    private void OnEnable()
     {
         if (_instance != null && _instance != this)
         {
@@ -190,7 +190,7 @@ Csv(body.linearVelocity.ToString("F3")));
         return path;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (_instance == this)
         {
