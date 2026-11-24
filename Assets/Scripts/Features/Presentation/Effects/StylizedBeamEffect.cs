@@ -13,6 +13,9 @@ public class StylizedBeamEffect : MonoBehaviour
     private float _intensity = 1f;
     private Color _color = Color.cyan;
     private bool _visible;
+    private bool _tipFade;
+    private Texture _tipGradient;
+    private UnityEngine.VFX.VisualEffect _tipGraph;
     private string _effectId = "EnergyBeam";
     public void Configure(float width, string effectId = "EnergyBeam")
     {
@@ -21,6 +24,8 @@ public class StylizedBeamEffect : MonoBehaviour
         {
             Destroy(_beam.gameObject);
             _beam = null;
+            _tipGraph = null;
+            _tipGradient = null;
         }
 
         _effectId = effectId;
@@ -39,6 +44,15 @@ public class StylizedBeamEffect : MonoBehaviour
         if (_beam != null)
         {
             _beam.SetColor(color);
+        }
+    }
+
+    internal void SetTipFade(bool value)
+    {
+        _tipFade = value;
+        if (_tipGraph != null)
+        {
+            _tipGraph.SetTexture("TipGradient", value ? _tipGradient : Texture2D.whiteTexture);
         }
     }
 
@@ -66,6 +80,16 @@ public class StylizedBeamEffect : MonoBehaviour
             {
                 _beam = Instantiate(prefab, transform);
                 _beam.SetColor(_color);
+                foreach (var graph in _beam.Graphs)
+                {
+                    if (graph != null && graph.HasTexture("TipGradient"))
+                    {
+                        _tipGraph = graph;
+                        _tipGradient = graph.GetTexture("TipGradient");
+                        SetTipFade(_tipFade);
+                        break;
+                    }
+                }
             }
         }
 

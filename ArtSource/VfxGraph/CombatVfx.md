@@ -6,7 +6,10 @@
 | --- | --- | --- |
 | DebrisSmoke | 世界空间高不透明度灰烟，出生前 0.50s 带橙色余火；8×8 图集逐帧扩散，粒子寿命 2.8s、尺寸曲线 0.35→2.2m；向上漂移并横向散开 | 38 粒子/s、容量 192、2 个共享粒子 Output，保留最多 24 条烟迹门槛；Prefab 停止后 4s 回收 |
 | LaserBeam | 沿局部 +Z 的收尖亮芯与两层橙红外晕；激光宽度参数 0.16m，可见时间 0.2s；外晕比亮芯更宽 | 单粒子、3 个 Mesh Output；无附加动态灯；LaserTurret Inspector 调宽度/时间/HDR 色 |
-| ProjectileTracer | 与激光共用 CombatBeam 图，独立 Prefab 外晕强度 0.7；真实世界位置历史形成 0.09s 短迹，宽度 0.1m、长度最多 7m | 每炮弹 32 槽固定环形缓冲；池化重用时清空；TurretShell 上 ProjectileTracer 调参 |
+| LaserContact | 默认 0.26m 的白橙色亮斑，约 50ms 后明显衰减。8 粒橙色火花沿接触面朝外散开 | 每炮塔首次命中时创建一次组合 Prefab，后续命中复用。光斑和火花各一个 Output，寿命 0.14s 和 0.16s |
+| ProjectileTracer | 使用 CombatBeam 图，独立 Prefab 外晕强度 0.7；真实世界位置历史形成 0.09s 短迹，宽度 0.1m、长度最多 7m | 每炮弹 32 槽固定环形缓冲；池化重用时清空；TurretShell 上 ProjectileTracer 调参 |
+
+激光使用独立的 LaserBeam Graph 和带轴向 UV 的网格。打空时亮芯和外晕在长度末端 13% 平滑衰减。命中使用全亮贴图，并把光斑与火花的原点对齐到实际命中表面。LaserContact Prefab 包含两个可编辑 Graph，渐隐和光斑纹理由制作入口生成。炮塔 Inspector 可编辑光斑直径，Graph 内可调色彩、亮度曲线及火花数量。
 
 源制作入口：`Assets/Editor/Presentation/Effects/CombatVfxBaker.cs`。通过 Editor Graph API 创建真实 `.vfx`、Prefab 和 Mesh 资产；菜单 **Tools / HY Sandbox / 资源管理 / 制作战斗特效**。只补缺失资产，不覆盖已存在图、模板或非空库选择；首次将旧 DetachedSmoke 默认槽迁入 DebrisSmoke。若需要全新再生，在受版本控制的隔离分支或备份后移走目标资产再执行，不能覆盖用户手改图。
 

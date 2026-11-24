@@ -285,18 +285,22 @@ def main():
     )
     graph(
         "残骸烟迹、激光与炮弹曳光",
-        "源码推导：烟迹按刚体点速度和局部锚点跟随，中低速保留最低不透明度；Graph 共用烟粒绘制短促余火；局部火焰按同刚体模型包围盒包裹并跟随中心/旋转，停止后独立老化。激光有独立库模板和显示持续时间；炮弹物理仍由 TurretProjectile 负责，LateUpdate 只读取实际位置历史绘制短迹，池回收清空。",
+        "源码推导：残骸烟迹沿局部锚点跟随。激光在 LateUpdate 更新炮口和命中表面，表面失效时从最后有效位置快速淡出。炮弹物理由 TurretProjectile 负责，表现层读取位置历史，池回收清空。",
         {
             "A": "DetachedPartSmokeTrail.Attach", "B": "DetachedPartSmokeTrail.Initialize",
             "C": "DetachedPartSmokeTrail.Update", "D": "DetachedPartSmokeTrail.StopAndRelease",
-            "M": "DetachedPartSmokeTrail.ConfigureEnvelope", "N": "DetachedPartSmokeTrail.UpdateEnvelope",
             "E": "VfxEffect.ReleaseAfterPlayback", "F": "LaserTurret.Fire",
             "G": "StylizedBeamEffect.SetVisible", "H": "TurretProjectile.Launch",
             "I": "ProjectileTracer.Begin", "J": "ProjectileTracer.LateUpdate",
             "K": "StylizedBeamEffect.SetEndpoints", "L": "ProjectileTracer.OnDisable",
+            "O": "LaserTurret.LateUpdate", "P": "LaserShotEndpoint.TryGetSurfacePose",
+            "Q": "LaserTurret.PlayContact", "R": "LaserTurret.HideShotFeedback",
+            "S": "StylizedBeamEffect.SetTipFade", "T": "LaserTurret.UpdateContactPose",
         },
-        ['A --> B', 'B --> M', 'M --> N', 'C --> N', 'B -.->|Unity Update| C', 'C -->|超时/对象失效| D', 'D --> E',
-         'F --> G', 'H --> I', 'I -.->|Unity LateUpdate| J', 'J --> K', 'J --> G',
+        ['A --> B', 'B -.->|Unity Update| C', 'C -->|超时/对象失效| D', 'D --> E',
+         'F --> G', 'F --> S', 'F -->|命中| Q', 'Q --> T',
+         'F -.->|Unity LateUpdate| O', 'O --> P', 'O --> T', 'O --> K', 'O -->|到期或淡出结束| R', 'R --> G',
+         'H --> I', 'I -.->|Unity LateUpdate| J', 'J --> K', 'J --> G',
          'L --> G'],
     )
 
@@ -1917,9 +1921,9 @@ def main():
          "F": "ControlUnit.TryGetTargetBounds", "G": "TurretTargetSelector.Probe",
          "H": "Turret.AimAndFire", "I": "LaserTurret.Fire", "J": "ProjectileTurret.Fire",
          "K": "TurretProjectile.ResolveHit", "L": "TurretHitResolver.Apply",
-         "M": "ControlUnit.ApplySurfaceDamage", "N": "Durability.ApplyDamage"},
+         "M": "ControlUnit.ApplySurfaceDamage", "N": "Durability.ApplyDamage", "O": "TurretHitscan.Fire"},
         ["A --> B", "B --> C", "B --> D", "B -->|重选| E", "E --> F", "E --> G", "D --> G",
-         "A -->|有目标且有电| H", "H --> I", "H --> J", "J -.->|炮弹命中| K", "I --> L", "K --> L", "L --> M", "M --> N"],
+         "A -->|有目标且有电| H", "H --> I", "H --> J", "J -.->|炮弹命中| K", "I --> O", "O --> L", "K --> L", "L --> M", "M --> N"],
     )
     graph(
         "EnemyController 可编辑避障试验场",

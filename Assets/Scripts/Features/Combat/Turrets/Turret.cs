@@ -92,12 +92,10 @@ public abstract class Turret : MonoBehaviour
         Supply.SetWorkRequested(this, hasTarget);
         if (!hasTarget || !Supply.isWorking)
         {
-            HideShotFeedback();
             return;
         }
 
         AimAndFire(_target);
-        UpdateShotFeedback();
     }
 
     protected virtual void OnDisable()
@@ -279,7 +277,4 @@ public abstract class Turret : MonoBehaviour
     {
     }
 
-    protected virtual void UpdateShotFeedback()
-    {
-    }
 }
