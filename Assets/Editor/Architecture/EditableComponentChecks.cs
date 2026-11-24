@@ -200,7 +200,7 @@ public static class EditableComponentChecks
         foreach (Rigidbody body in root.GetComponentsInChildren<Rigidbody>(true))
         {
             Require(
-                body.GetComponent<FragmentLifetime>() != null && body.GetComponent<DetachedPartSmokeTrail>() != null && body.GetComponent<AbnormalImpulseBodyProbe>() != null,
+                body.GetComponent<FragmentLifetime>() != null && body.GetComponent<DetachedPartSmokeTrail>() != null && body.GetComponent<AbnormalImpulseBodyProbe>()?.enabled != true,
                 path + " fragment/diagnostic dependencies");
         }
 

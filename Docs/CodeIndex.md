@@ -777,9 +777,9 @@ HY-Sandbox/
 | EditableComponentBaker | [`void ConfigurePool(VfxEffectPool pool)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L183) | private static |
 | EditableComponentBaker | [`void BakeTemplates()`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L197) | private static |
 | EditableComponentBaker | [`void MigrateTree(GameObject root)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L319) | private static |
-| EditableComponentBaker | [`T Service(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L462) | private static |
-| EditableComponentBaker | [`void ConfigureServices(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L476) | private static |
-| EditableComponentBuildStripper | [`void OnProcessScene(Scene scene, BuildReport report)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L516) | public |
+| EditableComponentBaker | [`T Service(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L461) | private static |
+| EditableComponentBaker | [`void ConfigureServices(Scene scene, Transform managers)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L475) | private static |
+| EditableComponentBuildStripper | [`void OnProcessScene(Scene scene, BuildReport report)`](../Assets/Editor/Architecture/EditableComponentBaker.cs#L514) | public |
 
 ## Assets/Editor/Architecture/EditableComponentChecks.cs
 
@@ -896,28 +896,28 @@ HY-Sandbox/
 | IndustrialArtGenerator | [`void Set(VolumeParameter<T> parameter, T value)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L576) | private static |
 | IndustrialArtGenerator | [`void RebuildConnectorPrefab()`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L582) | private static |
 | IndustrialArtGenerator | [`bool RebuildPrefab(string prefabPath)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L666) | private static |
-| IndustrialArtGenerator | [`void RemovePlaceholderRenderers(Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L708) | private static |
-| IndustrialArtGenerator | [`void BuildBlockVisual(string name, Block block, Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L727) | private static |
-| IndustrialArtGenerator | [`void ApplyCategoryPalette(string name, Transform visualRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L761) | private static |
-| IndustrialArtGenerator | [`void BuildDetailedModel( string name, Block block, Transform parent, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L781) | private static |
-| IndustrialArtGenerator | [`void BuildStructural( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L838) | private static |
-| IndustrialArtGenerator | [`void BuildDoor( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L857) | private static |
-| IndustrialArtGenerator | [`void BuildStairs(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L914) | private static |
-| IndustrialArtGenerator | [`void BuildRack(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L957) | private static |
-| IndustrialArtGenerator | [`void BuildCockpit( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1007) | private static |
-| IndustrialArtGenerator | [`void BuildGenerator( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1110) | private static |
-| IndustrialArtGenerator | [`void BuildRelay( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1216) | private static |
-| IndustrialArtGenerator | [`void BuildFlightController( Transform parent, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1279) | private static |
-| IndustrialArtGenerator | [`void BuildThruster( Transform parent, Block block, string name, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1327) | private static |
-| IndustrialArtGenerator | [`void BuildTurret(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1421) | private static |
-| IndustrialArtGenerator | [`void ConfigureTurretRig(Transform model, Transform detailedRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1561) | private static |
-| IndustrialArtGenerator | [`void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1579) | private static |
-| IndustrialArtGenerator | [`void RebuildBot(GameObject root)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1640) | private static |
-| IndustrialArtGenerator | [`Transform CreateGroup(Transform parent, string name)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1719) | private static |
-| IndustrialArtGenerator | [`MeshRenderer AddPart( Transform parent, string name, Mesh mesh, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material, bool castShadows = true)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1727) | private static |
-| IndustrialArtGenerator | [`void SetLayerRecursively(GameObject root, int layer)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1753) | private static |
-| IndustrialArtGenerator | [`void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1762) | private static |
-| IndustrialArtGenerator | [`void AddPartToScene( string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Material material)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1879) | private static |
+| IndustrialArtGenerator | [`void RemovePlaceholderRenderers(Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L704) | private static |
+| IndustrialArtGenerator | [`void BuildBlockVisual(string name, Block block, Transform model)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L723) | private static |
+| IndustrialArtGenerator | [`void ApplyCategoryPalette(string name, Transform visualRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L757) | private static |
+| IndustrialArtGenerator | [`void BuildDetailedModel( string name, Block block, Transform parent, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L777) | private static |
+| IndustrialArtGenerator | [`void BuildStructural( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L834) | private static |
+| IndustrialArtGenerator | [`void BuildDoor( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L853) | private static |
+| IndustrialArtGenerator | [`void BuildStairs(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L910) | private static |
+| IndustrialArtGenerator | [`void BuildRack(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L953) | private static |
+| IndustrialArtGenerator | [`void BuildCockpit( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1003) | private static |
+| IndustrialArtGenerator | [`void BuildGenerator( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1106) | private static |
+| IndustrialArtGenerator | [`void BuildRelay( Transform parent, Block block, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1212) | private static |
+| IndustrialArtGenerator | [`void BuildFlightController( Transform parent, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1275) | private static |
+| IndustrialArtGenerator | [`void BuildThruster( Transform parent, Block block, string name, ICollection<Renderer> renderers, ICollection<Transform> spinTargets, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1323) | private static |
+| IndustrialArtGenerator | [`void BuildTurret(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1417) | private static |
+| IndustrialArtGenerator | [`void ConfigureTurretRig(Transform model, Transform detailedRoot)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1557) | private static |
+| IndustrialArtGenerator | [`void BuildRepairBay(Transform parent, ICollection<Renderer> renderers, ICollection<Renderer> glowRenderers)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1575) | private static |
+| IndustrialArtGenerator | [`void RebuildBot(GameObject root)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1636) | private static |
+| IndustrialArtGenerator | [`Transform CreateGroup(Transform parent, string name)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1715) | private static |
+| IndustrialArtGenerator | [`MeshRenderer AddPart( Transform parent, string name, Mesh mesh, Vector3 localPosition, Vector3 localScale, Quaternion localRotation, Material material, bool castShadows = true)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1723) | private static |
+| IndustrialArtGenerator | [`void SetLayerRecursively(GameObject root, int layer)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1749) | private static |
+| IndustrialArtGenerator | [`void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1758) | private static |
+| IndustrialArtGenerator | [`void AddPartToScene( string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Material material)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1875) | private static |
 
 ## Assets/Editor/Art/Authoring/SpaceKitCurator.cs
 
@@ -1273,10 +1273,10 @@ HY-Sandbox/
 | BuildManipulationPlayChecks | [`void Capture(string message, string trace, LogType type)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L44) | private static |
 | BuildManipulationPlayChecks | [`void Tick()`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L52) | private static |
 | BuildManipulationPlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L86) | private static |
-| BuildManipulationPlayChecks | [`Vector3 Half(Block block, Quaternion rotation)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L613) | private static |
-| BuildManipulationPlayChecks | [`bool Grid(Block block)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L624) | private static |
-| BuildManipulationPlayChecks | [`bool Near(Vector3 a, Vector3 b)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L630) | private static |
-| BuildManipulationPlayChecks | [`void Check(bool valid, string name)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L631) | private static |
+| BuildManipulationPlayChecks | [`Vector3 Half(Block block, Quaternion rotation)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L623) | private static |
+| BuildManipulationPlayChecks | [`bool Grid(Block block)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L634) | private static |
+| BuildManipulationPlayChecks | [`bool Near(Vector3 a, Vector3 b)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L640) | private static |
+| BuildManipulationPlayChecks | [`void Check(bool valid, string name)`](../Assets/Editor/Building/Validation/BuildManipulationPlayChecks.cs#L641) | private static |
 
 ## Assets/Editor/Building/Validation/BuildNavigationPlayChecks.cs
 
@@ -1588,15 +1588,15 @@ HY-Sandbox/
 | CombatHudPlayProbe | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L81) | private static |
 | CombatHudPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L111) | private static |
 | CombatHudPlayProbe | [`IEnumerator Siege()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L140) | private static |
-| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L311) | private static |
-| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L348) | private static |
-| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L491) | private static |
-| CombatHudPlayProbe | [`IEnumerator RecoveryLoss(GameModeController modes, SiegeShipOption option, string loss)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L601) | private static |
-| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L657) | private static |
-| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L701) | private static |
-| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L742) | private static |
-| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L748) | private static |
-| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L759) | private static |
+| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L309) | private static |
+| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L344) | private static |
+| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L487) | private static |
+| CombatHudPlayProbe | [`IEnumerator RecoveryLoss(GameModeController modes, SiegeShipOption option, string loss)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L597) | private static |
+| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L653) | private static |
+| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L695) | private static |
+| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L736) | private static |
+| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L742) | private static |
+| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L753) | private static |
 
 ## Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs
 
@@ -1953,18 +1953,19 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| NightMenuAuthoring | [`void PolishPauseCard()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L13) | public static |
-| NightMenuAuthoring | [`void PauseLabel( Transform parent, string name, string value, float y, int size, Color color)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L95) | private static |
-| NightMenuAuthoring | [`void FitMenuCanvas()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L114) | public static |
-| NightMenuAuthoring | [`void InstallAttractEntry()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L135) | public static |
-| NightMenuAuthoring | [`void InstallPause()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L166) | public static |
-| NightMenuAuthoring | [`void InstallSiegeRestart()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L242) | private static |
-| NightMenuAuthoring | [`void InstallPreferences()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L279) | public static |
-| NightMenuAuthoring | [`void StylePreference(Toggle toggle)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L358) | private static |
-| NightMenuAuthoring | [`RectTransform Page(string name, Transform parent)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L389) | private static |
-| NightMenuAuthoring | [`Button Tab(Button template, Transform parent, string name, Vector2 position)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L400) | private static |
-| NightMenuAuthoring | [`void Place(RectTransform rect, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L410) | private static |
-| NightMenuAuthoring | [`void Bind(SerializedObject data, string name, UnityEngine.Object value)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L418) | private static |
+| NightMenuAuthoring | [`void ConfigurePauseOverlay(PauseMenu pause)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L13) | public static |
+| NightMenuAuthoring | [`void PolishPauseCard()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L38) | public static |
+| NightMenuAuthoring | [`void PauseLabel( Transform parent, string name, string value, float y, int size, Color color)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L120) | private static |
+| NightMenuAuthoring | [`void FitMenuCanvas()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L139) | public static |
+| NightMenuAuthoring | [`void InstallAttractEntry()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L160) | public static |
+| NightMenuAuthoring | [`void InstallPause()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L191) | public static |
+| NightMenuAuthoring | [`void InstallSiegeRestart()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L268) | private static |
+| NightMenuAuthoring | [`void InstallPreferences()`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L305) | public static |
+| NightMenuAuthoring | [`void StylePreference(Toggle toggle)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L384) | private static |
+| NightMenuAuthoring | [`RectTransform Page(string name, Transform parent)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L415) | private static |
+| NightMenuAuthoring | [`Button Tab(Button template, Transform parent, string name, Vector2 position)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L426) | private static |
+| NightMenuAuthoring | [`void Place(RectTransform rect, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L436) | private static |
+| NightMenuAuthoring | [`void Bind(SerializedObject data, string name, UnityEngine.Object value)`](../Assets/Editor/MainMenu/NightMenuAuthoring.cs#L444) | private static |
 
 ## Assets/Editor/MainMenu/WorkshopLayoutPreview.cs
 
@@ -3230,9 +3231,9 @@ HY-Sandbox/
 | GameModePlayChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L47) | private static |
 | GameModePlayChecks | [`void Tick()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L67) | private static |
 | GameModePlayChecks | [`IEnumerator Scenario()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L93) | private static |
-| GameModePlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L314) | private static |
-| GameModePlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L324) | private static |
-| GameModePlayChecks | [`void Finish()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L332) | private static |
+| GameModePlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L310) | private static |
+| GameModePlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L320) | private static |
+| GameModePlayChecks | [`void Finish()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L328) | private static |
 
 ## Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs
 
@@ -4585,33 +4586,33 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L147) | internal |
-| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L153) | public |
-| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L231) | private |
-| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L254) | private |
-| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L262) | private |
-| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L342) | private |
-| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L379) | private |
-| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L387) | private |
-| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L424) | private |
-| EnemyController | [`Vector3 GetReferenceVelocity()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L429) | private |
-| EnemyController | [`bool IsHoverConfigurationRefreshDue()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L457) | private |
-| EnemyController | [`void UpdatePropulsionInputIfNeeded()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L462) | private |
-| EnemyController | [`void UpdatePropulsionInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L473) | private |
-| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L488) | private |
-| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L529) | public |
-| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L537) | public |
-| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L545) | private |
-| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L597) | private |
-| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L612) | private |
-| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L639) | private |
-| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L686) | private |
-| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L704) | private |
-| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L722) | private |
-| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L739) | private |
-| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L805) | private |
-| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L810) | private |
-| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L873) | private static |
+| EnemyController | [`void ConfigureDebugDisplay(bool enabled, bool ranges)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L144) | internal |
+| EnemyController | [`EnemyNavigationSnapshot CaptureNavigation(int previousRouteRevision = -1)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L150) | public |
+| EnemyController | [`void OnEnable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L228) | private |
+| EnemyController | [`void Awake()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L251) | private |
+| EnemyController | [`void FixedUpdate()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L259) | private |
+| EnemyController | [`Vector3 CalculateDesiredMovement(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L339) | private |
+| EnemyController | [`Vector3 GetApproachDirection(Vector3 destination, Vector3 fallback)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L376) | private |
+| EnemyController | [`Vector3 PredictMovement(Vector3 proposed)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L384) | private |
+| EnemyController | [`float GetMovementInterval()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L421) | private |
+| EnemyController | [`Vector3 GetReferenceVelocity()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L426) | private |
+| EnemyController | [`bool IsHoverConfigurationRefreshDue()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L454) | private |
+| EnemyController | [`void UpdatePropulsionInputIfNeeded()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L459) | private |
+| EnemyController | [`void UpdatePropulsionInput()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L470) | private |
+| EnemyController | [`Vector3 StabilizeDirection(Vector3 candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L485) | private |
+| EnemyController | [`void SetGuardAnchor(Transform anchor, float radius)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L526) | public |
+| EnemyController | [`void SetPriorityTarget(ControlUnit targetUnit)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L534) | public |
+| EnemyController | [`ControlUnit FindNearestOpponent()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L542) | private |
+| EnemyController | [`bool IsValidOpponent(ControlUnit candidate)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L594) | private |
+| EnemyController | [`void OnDisable()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L609) | private |
+| EnemyController | [`void ConfigureHoverThrusters()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L636) | private |
+| EnemyController | [`float ConstrainDescent(float requested, Vector3 direction)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L683) | private |
+| EnemyController | [`float GetBaseHoverHeight()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L701) | private |
+| EnemyController | [`Vector3 GetStrafeDirection(Vector3 flatDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L719) | private |
+| EnemyController | [`Vector3 ApplyObstacleAvoidance(Vector3 desiredMove, Vector3 targetDirection)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L736) | private |
+| EnemyController | [`void OnDrawGizmos()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L802) | private |
+| EnemyController | [`void DrawDebug()`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L807) | private |
+| EnemyController | [`void DrawDebugCircle(Vector3 origin, float radius, Color color)`](../Assets/Scripts/Features/Combat/Enemies/EnemyController.cs#L868) | private static |
 
 ## Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs
 
@@ -5035,12 +5036,12 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | AbnormalImpulseRecorder | [`void RecordCollision(Rigidbody body, Collision collision)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L31) | public static |
-| AbnormalImpulseRecorder | [`void Awake()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L49) | private |
+| AbnormalImpulseRecorder | [`void OnEnable()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L49) | private |
 | AbnormalImpulseRecorder | [`void FixedUpdate()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L67) | private |
 | AbnormalImpulseRecorder | [`void Record( Rigidbody body, string source, float impulse, float deltaVelocity, Vector3 point, string other)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L125) | private |
 | AbnormalImpulseRecorder | [`string Csv(string value)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L180) | private static |
 | AbnormalImpulseRecorder | [`string HierarchyPath(Transform node)`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L181) | private static |
-| AbnormalImpulseRecorder | [`void OnDestroy()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L193) | private |
+| AbnormalImpulseRecorder | [`void OnDisable()`](../Assets/Scripts/Features/Diagnostics/Physics/AbnormalImpulseRecorder.cs#L193) | private |
 
 ## Assets/Scripts/Features/Diagnostics/Physics/PhysicsTelemetryHud.cs
 
@@ -5114,12 +5115,12 @@ HY-Sandbox/
 | HoverFlightController | [`void StopControlOutput()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L179) | private |
 | HoverFlightController | [`void ClearHoverThrust()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L186) | private |
 | HoverFlightController | [`bool EnsureControllerReady()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L211) | private |
-| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L252) | private |
-| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L279) | private |
-| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L285) | private |
-| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L357) | private |
-| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L405) | private |
-| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L430) | private |
+| HoverFlightController | [`void RefreshCachedPhysicsValues()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L253) | private |
+| HoverFlightController | [`void RefreshTiltLimitCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L280) | private |
+| HoverFlightController | [`void RebuildThrusterCache()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L286) | private |
+| HoverFlightController | [`void DistributeThrust(float heightAdjustment, Vector3 currentUp)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L358) | private |
+| HoverFlightController | [`void ApplyRotationCorrection(Vector3 currentUp, float outputEfficiency)`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L406) | private |
+| HoverFlightController | [`void OnDrawGizmosSelected()`](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L431) | private |
 
 ## Assets/Scripts/Features/Flight/Presentation/ThrusterInfoPanel.cs
 
@@ -5310,11 +5311,11 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | PauseMenu | [`void Awake()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L30) | private |
-| PauseMenu | [`void Toggle()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L51) | public |
-| PauseMenu | [`void Resume()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L86) | public |
-| PauseMenu | [`void Restart()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L104) | public |
-| PauseMenu | [`void ReturnToMenu()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L110) | private |
-| PauseMenu | [`void OnDisable()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L116) | private |
+| PauseMenu | [`void Toggle()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L38) | public |
+| PauseMenu | [`void Resume()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L73) | public |
+| PauseMenu | [`void Restart()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L91) | public |
+| PauseMenu | [`void ReturnToMenu()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L97) | private |
+| PauseMenu | [`void OnDisable()`](../Assets/Scripts/Features/MainMenu/Navigation/PauseMenu.cs#L103) | private |
 
 ## Assets/Scripts/Features/MainMenu/Navigation/WorkshopNavigation.cs
 

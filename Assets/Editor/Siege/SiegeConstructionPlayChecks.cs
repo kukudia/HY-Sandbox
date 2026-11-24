@@ -143,7 +143,7 @@ public static class SiegeConstructionPlayChecks
 
         Check(BuildManager.instance.HasBuildingBlueprint, "Main opens building editor");
         BuildManager.instance.selectedBlock = GameManager.instance.blocksParent.GetComponentsInChildren<Block>().Single(b => b.uniqueId == small.blocks[1].id);
-        Object.FindFirstObjectByType<SiegeBaseWorkshop>().DesignateCore();
+        Object.FindAnyObjectByType<SiegeBaseWorkshop>().DesignateCore();
         Check(
             SaveManager.instance.cachedData.siegeCoreId == small.blocks[1].id,
             "Selected real module becomes unique core");
@@ -191,7 +191,7 @@ public static class SiegeConstructionPlayChecks
         }
 
         Check(
-            modes.State == GameModeState.Failed && Object.FindFirstObjectByType<SiegeGameplayStage>() == null,
+            modes.State == GameModeState.Failed && Object.FindAnyObjectByType<SiegeGameplayStage>() == null,
             "Missing preselected base never silently falls back to the starter");
         modes.Retry();
         while (modes.State == GameModeState.Loading || modes.State == GameModeState.Returning)
@@ -216,9 +216,9 @@ public static class SiegeConstructionPlayChecks
         }
 
         Check(modes.State == GameModeState.Siege, "Main opens authored additive Siege stage: " + modes.Status);
-        var stage = Object.FindFirstObjectByType<SiegeGameplayStage>();
+        var stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
         Check(
-            stage != null && Object.FindFirstObjectByType<SiegeSession>() == null,
+            stage != null && Object.FindAnyObjectByType<SiegeSession>() == null,
             "New stage has no prototype session");
         Check(!draft.gameObject.activeSelf, "Main construction parked before deployment");
         Check(
@@ -324,7 +324,7 @@ public static class SiegeConstructionPlayChecks
             "Gameplay scene and battle state cleaned up");
         Check(File.ReadAllText(path) == designBefore, "Combat and return never mutate saved base design");
         modes.ShowSelection();
-        var modePanel = Object.FindFirstObjectByType<GameModePanel>();
+        var modePanel = Object.FindAnyObjectByType<GameModePanel>();
         var picker = (UnityEngine.UI.Dropdown)new SerializedObject(modePanel).FindProperty("baseDesigns").objectReferenceValue;
         Check(
             picker != null && picker.gameObject.activeInHierarchy && picker.options.Any(option => option.text == "Probe"),
@@ -336,7 +336,7 @@ public static class SiegeConstructionPlayChecks
             yield return null;
         }
 
-        stage = Object.FindFirstObjectByType<SiegeGameplayStage>();
+        stage = Object.FindAnyObjectByType<SiegeGameplayStage>();
         Check(stage.Base != null && stage.Base.IsAlive, "Player-authored core blueprint automatically deploys");
         stage.Retreat();
         Check(stage.Settled && stage.Status.Contains("Retreated"), "Voluntary retreat displays settlement");

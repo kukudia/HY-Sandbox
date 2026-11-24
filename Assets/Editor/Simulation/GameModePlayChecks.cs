@@ -101,7 +101,7 @@ public static class GameModePlayChecks
         GameModeController modes = PlayManager.instance.Modes;
         Check(modes != null && modes.State == GameModeState.Building, "Main owns mode entry");
         Check(
-            Object.FindObjectsByType<WorldSessionManager>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length == 0,
+            Object.FindObjectsByType<WorldSessionManager>(FindObjectsInactive.Include).Length == 0,
             "Main does not prewarm exploration");
         Transform loaded = GameManager.instance.blocksParent;
         if (loaded != null)
@@ -165,18 +165,14 @@ public static class GameModePlayChecks
             }
 
             Check(modes.State == GameModeState.Siege, "new Siege entered from Main, cycle " + cycle);
-            Check(
-                Object.FindObjectsByType<SiegeSession>(FindObjectsSortMode.None).Length == 0,
-                "legacy Siege session stays unloaded");
+            Check(Object.FindObjectsByType<SiegeSession>().Length == 0, "legacy Siege session stays unloaded");
             Check(
                 !draft.activeSelf && SceneManager.sceneCount == 2,
                 "Siege parks original and loads exactly one scene");
             Check(
-                Object.FindObjectsByType<UnityEngine.EventSystems.EventSystem>(FindObjectsSortMode.None).Length == 1,
+                Object.FindObjectsByType<UnityEngine.EventSystems.EventSystem>().Length == 1,
                 "one shared EventSystem");
-            Check(
-                Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).Count(c => c.enabled) == 1,
-                "one shared active camera");
+            Check(Object.FindObjectsByType<Camera>().Count(c => c.enabled) == 1, "one shared active camera");
             modes.ReturnToBuild();
             while (modes.State != GameModeState.Building)
             {

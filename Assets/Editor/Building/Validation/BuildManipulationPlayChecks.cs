@@ -293,7 +293,9 @@ public static class BuildManipulationPlayChecks
             yield return .15f;
             object manipulation = typeof(BuildManager).GetField("_manipulation", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(build);
             FieldInfo active = manipulation.GetType().GetField("activeHandle", BindingFlags.Instance | BindingFlags.NonPublic);
-            Check(active.GetValue(manipulation) == handle, "Real axis collider captures left mouse drag");
+            Check(
+                ReferenceEquals(active.GetValue(manipulation), handle),
+                "Real axis collider captures left mouse drag");
             Vector3 startPosition = dragged.transform.position;
             string savedBeforeDrag = File.ReadAllText(saves.GetSavePath(build.CurrentBuildName));
             foreach (int cells in new[]
@@ -342,7 +344,9 @@ public static class BuildManipulationPlayChecks
             yield return .15f;
             InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
             yield return .15f;
-            Check(active.GetValue(manipulation) == handle, "Second real axis gesture begins after redo");
+            Check(
+                ReferenceEquals(active.GetValue(manipulation), handle),
+                "Second real axis gesture begins after redo");
             InputSystem.QueueStateEvent(
                 mouse,
                 new MouseState { position = build.mainCamera.WorldToScreenPoint(hitPoint + Vector3.right * 2) }.WithButton(MouseButton.Left));
@@ -377,7 +381,9 @@ public static class BuildManipulationPlayChecks
                 yield return .1f;
                 InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
                 yield return .15f;
-                Check(active.GetValue(manipulation) == handle, interruption + " captures a fresh axis drag");
+                Check(
+                    ReferenceEquals(active.GetValue(manipulation), handle),
+                    interruption + " captures a fresh axis drag");
                 InputSystem.QueueStateEvent(
                     mouse,
                     new MouseState { position = build.mainCamera.WorldToScreenPoint(hitPoint + Vector3.right * 2) }.WithButton(MouseButton.Left));
@@ -422,7 +428,9 @@ public static class BuildManipulationPlayChecks
             InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
             yield return .15f;
             FieldInfo activeRotate = manipulation.GetType().GetField("activeRotateHandle", BindingFlags.Instance | BindingFlags.NonPublic);
-            Check(activeRotate.GetValue(manipulation) == rotateHandle, "Real rotation collider captures left mouse");
+            Check(
+                ReferenceEquals(activeRotate.GetValue(manipulation), rotateHandle),
+                "Real rotation collider captures left mouse");
             Check(
                 Quaternion.Angle(dragged.transform.rotation, orientationStart) < .01f && Near(dragged.transform.position, rotationStart),
                 "Rotation press without pointer movement preserves pose");
@@ -463,7 +471,9 @@ public static class BuildManipulationPlayChecks
             yield return .1f;
             InputSystem.QueueStateEvent(mouse, new MouseState { position = pointer }.WithButton(MouseButton.Left));
             yield return .15f;
-            Check(activeRotate.GetValue(manipulation) == rotateHandle, "Rotation recaptures after undo/redo");
+            Check(
+                ReferenceEquals(activeRotate.GetValue(manipulation), rotateHandle),
+                "Rotation recaptures after undo/redo");
             projected = (Vector3)manipulation.GetType().GetField("rotateDragStart", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(manipulation);
             turned = rotatedPosition + Quaternion.AngleAxis(90f, Vector3.forward) * (projected - rotatedPosition);
             InputSystem.QueueStateEvent(

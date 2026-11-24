@@ -1611,7 +1611,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 0
 --- !u!114 &8926484042661614573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1703,7 +1703,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 1
 --- !u!114 &8926484042661614576
 MonoBehaviour:
   m_ObjectHideFlags: 0

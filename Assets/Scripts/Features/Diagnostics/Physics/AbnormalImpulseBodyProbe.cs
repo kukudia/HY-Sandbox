@@ -14,7 +14,11 @@ public sealed class AbnormalImpulseBodyProbe : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        AbnormalImpulseRecorder.RecordCollision(_body, collision);
+        // Unity also delivers collision callbacks to disabled behaviours.
+        if (isActiveAndEnabled)
+        {
+            AbnormalImpulseRecorder.RecordCollision(_body, collision);
+        }
     }
 #endif
 }

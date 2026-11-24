@@ -98,9 +98,6 @@ MonoBehaviour:
     - model: {fileID: 114780028408030698}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 0}
-      id: 0
-      isStickyNote: 0
   stickyNoteInfos: []
   categories: []
   uiBounds:
@@ -1171,7 +1168,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 0
 --- !u!114 &8926484042661614557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1263,7 +1260,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 1
 --- !u!114 &8926484042661614560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1786,7 +1783,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 0
 --- !u!114 &8926484042661614576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1878,7 +1875,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 2
 --- !u!114 &8926484042661614579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2351,7 +2348,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 0
 --- !u!114 &8926484042661614594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2443,7 +2440,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 2
 --- !u!114 &8926484042661614597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3102,7 +3099,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 0
 --- !u!114 &8926484042661614618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3194,7 +3191,7 @@ MonoBehaviour:
   Composition: 0
   Source: 0
   Random: 0
-  channels: 6
+  channels: 2
 --- !u!114 &8926484042661614621
 MonoBehaviour:
   m_ObjectHideFlags: 0
