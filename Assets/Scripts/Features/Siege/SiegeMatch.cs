@@ -16,6 +16,7 @@ public enum SiegePhase
 public sealed class SiegeMatch
 {
     private bool returnSettlement;
+    private bool waveObjectivePending;
     /// <summary>等待舰队返航完成后统一入账的本波奖励；整备与失败阶段为零。</summary>
     public long PendingCoins
     {
@@ -114,6 +115,7 @@ public sealed class SiegeMatch
         }
 
         Wave++;
+        waveObjectivePending = false;
         long baseSize = firstWaveSize + (long)(Wave - 1) * waveGrowth;
         // 蜂群波在整除后的波次把名额放大；精英波不加量，只换更重的蓝图与更高奖励。
         long scaledSize = swarmEveryNWaves > 0 && Wave % swarmEveryNWaves == 0 && (eliteEveryNWaves <= 0 || Wave % eliteEveryNWaves != 0) ? baseSize * swarmSizeMultiplier : baseSize;
@@ -152,13 +154,29 @@ public sealed class SiegeMatch
             DefeatedAttackers++;
         }
 
-        if (PendingAttackers == 0 && attackers.Count == 0)
+        TryCompleteWave();
+        return true;
+    }
+
+    /// <summary>天气是本波独立目标。敌舰提前清空时，等天气结束再开始返航。</summary>
+    public void SetWaveObjectivePending(bool pending)
+    {
+        if (Phase != SiegePhase.Battle)
+        {
+            return;
+        }
+
+        waveObjectivePending = pending;
+        TryCompleteWave();
+    }
+
+    private void TryCompleteWave()
+    {
+        if (PendingAttackers == 0 && attackers.Count == 0 && !waveObjectivePending)
         {
             AddReward(IsEliteWave ? completionReward * eliteRewardMultiplier : completionReward);
             Phase = returnSettlement ? SiegePhase.Returning : SiegePhase.Intermission;
         }
-
-        return true;
     }
 
     /// <summary>战斗与波次结算瞬间的额外奖励（连击）；部署阶段与失败后不发放。</summary>

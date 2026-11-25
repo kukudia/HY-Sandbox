@@ -74,7 +74,7 @@ flowchart TD
     B["SiegeStrandedCockpit.ShouldRetire()"]
     click B "../Assets/Scripts/Features/Siege/Battle/SiegeStrandedCockpit.cs#L19" "打开源码"
     C["SiegeMatch.ResolveAttacker()"]
-    click C "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142" "打开源码"
+    click C "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144" "打开源码"
     D["BattleAttractStage.Start()"]
     click D "../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L51" "打开源码"
     E["BattleAttractStage.RestoreBase()"]
@@ -113,7 +113,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
 - [SiegeStrandedCockpit.ShouldRetire](../Assets/Scripts/Features/Siege/Battle/SiegeStrandedCockpit.cs#L19)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeStrandedCockpit.cs|ShouldRetire -->
-- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142)
+- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
 - [BattleAttractStage.Start](../Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs#L51)
 <!-- source: Assets/Scripts/Features/Presentation/Attract/BattleAttractStage.cs|Start -->
@@ -151,7 +151,7 @@ flowchart TD
     D["GameModeController.LaunchSiege()"]
     click D "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L92" "打开源码"
     E["SiegeGameplayStage.Enter()"]
-    click E "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99" "打开源码"
+    click E "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101" "打开源码"
     F["SiegeObserverCamera.Enter()"]
     click F "../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L42" "打开源码"
     G["SiegeObserverCamera.Update()"]
@@ -161,7 +161,7 @@ flowchart TD
     I["SiegeObserverCamera.Exit()"]
     click I "../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L211" "打开源码"
     J["SiegeGameplayStage.Exit()"]
-    click J "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662" "打开源码"
+    click J "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669" "打开源码"
     B --> A
     C --> A
     D --> E
@@ -179,7 +179,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Modes/Interface/GameModePanel.cs|Refresh -->
 - [GameModeController.LaunchSiege](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L92)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|LaunchSiege -->
-- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99)
+- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
 - [SiegeObserverCamera.Enter](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L42)
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs|Enter -->
@@ -189,7 +189,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs|PointerOverInterface -->
 - [SiegeObserverCamera.Exit](../Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs#L211)
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeObserverCamera.cs|Exit -->
-- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662)
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
 
 ## 非凸浮岛接触与独立Player验证
@@ -215,7 +215,7 @@ flowchart TD
     H["MainMenuController.LaunchSelected()"]
     click H "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L246" "打开源码"
     I["SiegeGameplayStage.BeginWave()"]
-    click I "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274" "打开源码"
+    click I "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276" "打开源码"
     J["GameModeController.ReturnToBuild()"]
     click J "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L207" "打开源码"
     K["SiegeGameplayPlayerChecks.Finish()"]
@@ -247,7 +247,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs|Run -->
 - [MainMenuController.LaunchSelected](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L246)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|LaunchSelected -->
-- [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274)
+- [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
 - [GameModeController.ReturnToBuild](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L207)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnToBuild -->
@@ -328,7 +328,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["SiegeGameplayStage.Update()"]
-    click A "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L319" "打开源码"
+    click A "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323" "打开源码"
     B["SiegeSession.Update()"]
     click B "../Assets/Scripts/Features/Siege/SiegeSession.cs#L397" "打开源码"
     C["SiegeCleanupSweep.Begin()"]
@@ -371,7 +371,7 @@ flowchart TD
     L -.->|释放并隐藏| N
 ```
 
-- [SiegeGameplayStage.Update](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L319)
+- [SiegeGameplayStage.Update](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Update -->
 - [SiegeSession.Update](../Assets/Scripts/Features/Siege/SiegeSession.cs#L397)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|Update -->
@@ -495,7 +495,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["SiegeGameplayStage.Enter()"]
-    click A "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99" "打开源码"
+    click A "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101" "打开源码"
     B["SiegeIsland.GenerateFor()"]
     click B "../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L24" "打开源码"
     C["FloatingIslandTerrain.Generate()"]
@@ -535,7 +535,7 @@ flowchart TD
     N --> B
 ```
 
-- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99)
+- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
 - [SiegeIsland.GenerateFor](../Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs#L24)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs|GenerateFor -->
@@ -669,11 +669,11 @@ flowchart TD
     N["SiegeCombatHud.PollShipControl()"]
     click N "../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L230" "打开源码"
     O["SiegeGameplayStage.TryTakeControl()"]
-    click O "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L451" "打开源码"
+    click O "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L457" "打开源码"
     P["SiegeFleet.TakeControl()"]
     click P "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L345" "打开源码"
     Q["SiegeGameplayStage.Observe()"]
-    click Q "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L473" "打开源码"
+    click Q "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L479" "打开源码"
     R["SiegeFleet.ReleaseControl()"]
     click R "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L403" "打开源码"
     S["DebugManager.SetFactionFilter()"]
@@ -734,11 +734,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|LaunchSiege -->
 - [SiegeCombatHud.PollShipControl](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L230)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|PollShipControl -->
-- [SiegeGameplayStage.TryTakeControl](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L451)
+- [SiegeGameplayStage.TryTakeControl](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L457)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|TryTakeControl -->
 - [SiegeFleet.TakeControl](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L345)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|TakeControl -->
-- [SiegeGameplayStage.Observe](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L473)
+- [SiegeGameplayStage.Observe](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L479)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Observe -->
 - [SiegeFleet.ReleaseControl](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L403)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|ReleaseControl -->
@@ -903,7 +903,7 @@ flowchart TD
     G["MainMenuController.Launch()"]
     click G "../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L293" "打开源码"
     H["SiegeGameplayStage.Enter()"]
-    click H "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99" "打开源码"
+    click H "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101" "打开源码"
     I["SiegeCombatBaseAuthoring.RaiseHangars()"]
     click I "../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L187" "打开源码"
     A --> B
@@ -931,7 +931,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs|Validate -->
 - [MainMenuController.Launch](../Assets/Scripts/Features/MainMenu/MainMenuController.cs#L293)
 <!-- source: Assets/Scripts/Features/MainMenu/MainMenuController.cs|Launch -->
-- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99)
+- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
 - [SiegeCombatBaseAuthoring.RaiseHangars](../Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs#L187)
 <!-- source: Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs|RaiseHangars -->
@@ -947,19 +947,19 @@ flowchart TD
     B["GameModeController.LoadMode()"]
     click B "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L127" "打开源码"
     C["SiegeGameplayStage.Enter()"]
-    click C "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99" "打开源码"
+    click C "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101" "打开源码"
     D["SaveManager.GetBaseBlueprintPath()"]
     click D "../Assets/Scripts/Features/Building/SaveManager.cs#L104" "打开源码"
     E["SiegeConstructionSettings.Validate()"]
     click E "../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L47" "打开源码"
     F["SiegeGameplayStage.Deploy()"]
-    click F "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L205" "打开源码"
+    click F "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L207" "打开源码"
     G["SiegeBase.Create()"]
     click G "../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48" "打开源码"
     H["BuildingRuntime.HasFullFoundationSupport()"]
     click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L259" "打开源码"
     I["SiegeGameplayStage.BeginWave()"]
-    click I "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274" "打开源码"
+    click I "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276" "打开源码"
     J["SiegeWaveDirector.Tick()"]
     click J "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L62" "打开源码"
     K["SiegeBase.Repair()"]
@@ -967,11 +967,11 @@ flowchart TD
     L["BuildingRefit.Apply()"]
     click L "../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9" "打开源码"
     M["SiegeGameplayStage.Settle()"]
-    click M "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L596" "打开源码"
+    click M "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602" "打开源码"
     N["GameModeController.ReturnRoutine()"]
     click N "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L359" "打开源码"
     O["SiegeGameplayStage.Exit()"]
-    click O "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662" "打开源码"
+    click O "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669" "打开源码"
     P["PlayDraft.Restore()"]
     click P "../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55" "打开源码"
     A -.->|保存后选择模式| B
@@ -996,19 +996,19 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeBaseWorkshop.cs|DesignateCore -->
 - [GameModeController.LoadMode](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L127)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|LoadMode -->
-- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99)
+- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
 - [SaveManager.GetBaseBlueprintPath](../Assets/Scripts/Features/Building/SaveManager.cs#L104)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|GetBaseBlueprintPath -->
 - [SiegeConstructionSettings.Validate](../Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs#L47)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeConstructionSettings.cs|Validate -->
-- [SiegeGameplayStage.Deploy](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L205)
+- [SiegeGameplayStage.Deploy](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L207)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Deploy -->
 - [SiegeBase.Create](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L48)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Create -->
 - [BuildingRuntime.HasFullFoundationSupport](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L259)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|HasFullFoundationSupport -->
-- [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274)
+- [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
 - [SiegeWaveDirector.Tick](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L62)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
@@ -1016,11 +1016,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Repair -->
 - [BuildingRefit.Apply](../Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs#L9)
 <!-- source: Assets/Scripts/Features/World/Buildings/Topology/BuildingRefit.cs|Apply -->
-- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L596)
+- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Settle -->
 - [GameModeController.ReturnRoutine](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L359)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnRoutine -->
-- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662)
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
 - [PlayDraft.Restore](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|Restore -->
@@ -1140,7 +1140,7 @@ flowchart TD
     K["SiegeReturnFlight.BeginLaunch()"]
     click K "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73" "打开源码"
     L["SiegeMatch.ResolveAttacker()"]
-    click L "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142" "打开源码"
+    click L "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144" "打开源码"
     M["SiegeReturnFlight.BeginReturn()"]
     click M "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78" "打开源码"
     N["SiegeReturnFlight.Tick()"]
@@ -1150,7 +1150,7 @@ flowchart TD
     P["SiegeFleet.Scrap()"]
     click P "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L116" "打开源码"
     Q["SiegeMatch.CompleteReturn()"]
-    click Q "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L189" "打开源码"
+    click Q "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L207" "打开源码"
     R["SiegeBase.Repair()"]
     click R "../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L151" "打开源码"
     S["SiegeFleet.GetHangar()"]
@@ -1160,7 +1160,7 @@ flowchart TD
     U["SiegeSession.FixedUpdate()"]
     click U "../Assets/Scripts/Features/Siege/SiegeSession.cs#L451" "打开源码"
     V["SiegeGameplayStage.FixedUpdate()"]
-    click V "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L501" "打开源码"
+    click V "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L507" "打开源码"
     W["SiegeReturnFlight.PublishPropulsion()"]
     click W "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L539" "打开源码"
     X["Thruster.SetGuidanceOutput()"]
@@ -1224,7 +1224,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|GetDockPose -->
 - [SiegeReturnFlight.BeginLaunch](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L73)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BeginLaunch -->
-- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142)
+- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
 - [SiegeReturnFlight.BeginReturn](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L78)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|BeginReturn -->
@@ -1234,7 +1234,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Hangars/HangarModule.cs|FixedUpdate -->
 - [SiegeFleet.Scrap](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L116)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|Scrap -->
-- [SiegeMatch.CompleteReturn](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L189)
+- [SiegeMatch.CompleteReturn](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L207)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|CompleteReturn -->
 - [SiegeBase.Repair](../Assets/Scripts/Features/Siege/Battle/SiegeBase.cs#L151)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeBase.cs|Repair -->
@@ -1244,7 +1244,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Stop -->
 - [SiegeSession.FixedUpdate](../Assets/Scripts/Features/Siege/SiegeSession.cs#L451)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|FixedUpdate -->
-- [SiegeGameplayStage.FixedUpdate](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L501)
+- [SiegeGameplayStage.FixedUpdate](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L507)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|FixedUpdate -->
 - [SiegeReturnFlight.PublishPropulsion](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L539)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|PublishPropulsion -->
@@ -1673,7 +1673,7 @@ flowchart TD
     B["OutpostDeploymentPreview.CalculateBounds()"]
     click B "../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L161" "打开源码"
     C["WorldSessionManager.ConstructBounds()"]
-    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L458" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L462" "打开源码"
     D["WorldPlayerStreamingGuard.CaptureLocalBounds()"]
     click D "../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L133" "打开源码"
     E["OutpostEncounterDirector.DeploymentBounds()"]
@@ -1738,7 +1738,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/OutpostBaseDesigner.cs|BoundsOf -->
 - [OutpostDeploymentPreview.CalculateBounds](../Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs#L161)
 <!-- source: Assets/Scripts/Features/Building/BuildingEditor/OutpostDeploymentPreview.cs|CalculateBounds -->
-- [WorldSessionManager.ConstructBounds](../Assets/Scripts/Features/World/WorldSessionManager.cs#L458)
+- [WorldSessionManager.ConstructBounds](../Assets/Scripts/Features/World/WorldSessionManager.cs#L462)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|ConstructBounds -->
 - [WorldPlayerStreamingGuard.CaptureLocalBounds](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L133)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs|CaptureLocalBounds -->
@@ -1907,15 +1907,15 @@ flowchart TD
     N["MainUIPanels.PlayerDeath()"]
     click N "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323" "打开源码"
     O["WorldSessionManager.RequestPlay()"]
-    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L188" "打开源码"
+    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L190" "打开源码"
     P["WorldSessionManager.CompletePendingPlay()"]
-    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L212" "打开源码"
+    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L214" "打开源码"
     Q["MainUIPanels.CompletePlayStart()"]
     click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267" "打开源码"
     R["MainUIPanels.CompletePlayEnd()"]
     click R "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304" "打开源码"
     S["WorldSessionManager.EndSession()"]
-    click S "../Assets/Scripts/Features/World/WorldSessionManager.cs#L327" "打开源码"
+    click S "../Assets/Scripts/Features/World/WorldSessionManager.cs#L330" "打开源码"
     T["SaveManager.LoadBlueprint()"]
     click T "../Assets/Scripts/Features/Building/SaveManager.cs#L366" "打开源码"
     U["GameModeController.ShowSelection()"]
@@ -1970,15 +1970,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayEnd -->
 - [MainUIPanels.PlayerDeath](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L323)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|PlayerDeath -->
-- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188)
+- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L190)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
-- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L212)
+- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L214)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CompletePendingPlay -->
 - [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayStart -->
 - [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L327)
+- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L330)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
 - [SaveManager.LoadBlueprint](../Assets/Scripts/Features/Building/SaveManager.cs#L366)
 <!-- source: Assets/Scripts/Features/Building/SaveManager.cs|LoadBlueprint -->
@@ -2002,11 +2002,11 @@ flowchart TD
     E["GameModeController.LoadMode()"]
     click E "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L127" "打开源码"
     F["WorldSessionManager.BindHost()"]
-    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L53" "打开源码"
+    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L55" "打开源码"
     G["WorldSessionManager.BeginPreparation()"]
-    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L99" "打开源码"
+    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L101" "打开源码"
     H["WorldSessionManager.RequestPlay()"]
-    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L188" "打开源码"
+    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L190" "打开源码"
     I["PlayManager.PlayStart()"]
     click I "../Assets/Scripts/Features/Simulation/PlayManager.cs#L113" "打开源码"
     J["GameModeController.CreateExplorationCopy()"]
@@ -2016,7 +2016,7 @@ flowchart TD
     L["PlayDraft.Park()"]
     click L "../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L17" "打开源码"
     M["SiegeGameplayStage.Enter()"]
-    click M "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99" "打开源码"
+    click M "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101" "打开源码"
     N["GameModeController.ReturnToBuild()"]
     click N "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L207" "打开源码"
     O["MainUIPanels.PlayEnd()"]
@@ -2034,9 +2034,9 @@ flowchart TD
     U["GameModeController.ReturnRoutine()"]
     click U "../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L359" "打开源码"
     V["WorldSessionManager.StopSession()"]
-    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L545" "打开源码"
+    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L551" "打开源码"
     W["SiegeGameplayStage.Exit()"]
-    click W "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662" "打开源码"
+    click W "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669" "打开源码"
     X["PlayDraft.Restore()"]
     click X "../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55" "打开源码"
     Y["GameModeController.Retry()"]
@@ -2081,11 +2081,11 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|GuardTransition -->
 - [GameModeController.LoadMode](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L127)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|LoadMode -->
-- [WorldSessionManager.BindHost](../Assets/Scripts/Features/World/WorldSessionManager.cs#L53)
+- [WorldSessionManager.BindHost](../Assets/Scripts/Features/World/WorldSessionManager.cs#L55)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BindHost -->
-- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99)
+- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L101)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
-- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188)
+- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L190)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
 - [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
@@ -2095,7 +2095,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|CreateRuntimeCopy -->
 - [PlayDraft.Park](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L17)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|Park -->
-- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99)
+- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
 - [GameModeController.ReturnToBuild](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L207)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnToBuild -->
@@ -2113,9 +2113,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|BeginReturn -->
 - [GameModeController.ReturnRoutine](../Assets/Scripts/Features/Simulation/Modes/GameModeController.cs#L359)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/GameModeController.cs|ReturnRoutine -->
-- [WorldSessionManager.StopSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L545)
+- [WorldSessionManager.StopSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L551)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopSession -->
-- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662)
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
 - [PlayDraft.Restore](../Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs#L55)
 <!-- source: Assets/Scripts/Features/Simulation/Modes/PlayDraft.cs|Restore -->
@@ -2254,7 +2254,7 @@ flowchart TD
     M["SiegeFleet.CancellationCredit()"]
     click M "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L260" "打开源码"
     N["SiegeMatch.TryExchange()"]
-    click N "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L236" "打开源码"
+    click N "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L254" "打开源码"
     O["SiegeFleet.Scrap()"]
     click O "../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L116" "打开源码"
     A -->|鼠标确认| B
@@ -2299,7 +2299,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|CancelDeployment -->
 - [SiegeFleet.CancellationCredit](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L260)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|CancellationCredit -->
-- [SiegeMatch.TryExchange](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L236)
+- [SiegeMatch.TryExchange](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L254)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|TryExchange -->
 - [SiegeFleet.Scrap](../Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs#L116)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeFleet.cs|Scrap -->
@@ -3616,49 +3616,49 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldSessionManager.Start()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L79" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L81" "打开源码"
     B["WorldSessionManager.BeginPreparation()"]
-    click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L99" "打开源码"
+    click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L101" "打开源码"
     C["WorldSessionManager.StopPreparation()"]
-    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L493" "打开源码"
+    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L497" "打开源码"
     D["WorldSessionManager.RunGuarded()"]
-    click D "../Assets/Scripts/Features/World/WorldSessionManager.cs#L339" "打开源码"
+    click D "../Assets/Scripts/Features/World/WorldSessionManager.cs#L342" "打开源码"
     E["WorldSessionManager.StreamWorld()"]
-    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L370" "打开源码"
+    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L373" "打开源码"
     F["WorldSessionManager.CompletePendingPlay()"]
-    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L212" "打开源码"
+    click F "../Assets/Scripts/Features/World/WorldSessionManager.cs#L214" "打开源码"
     G["WorldSessionManager.RequestPlay()"]
-    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L188" "打开源码"
+    click G "../Assets/Scripts/Features/World/WorldSessionManager.cs#L190" "打开源码"
     H["WorldSessionManager.CancelPlayRequest()"]
-    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L205" "打开源码"
+    click H "../Assets/Scripts/Features/World/WorldSessionManager.cs#L207" "打开源码"
     I["MainUIPanels.CompletePlayStart()"]
     click I "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267" "打开源码"
     J["PlayManager.PlayStart()"]
     click J "../Assets/Scripts/Features/Simulation/PlayManager.cs#L113" "打开源码"
     K["WorldSessionManager.EnterPlay()"]
-    click K "../Assets/Scripts/Features/World/WorldSessionManager.cs#L252" "打开源码"
+    click K "../Assets/Scripts/Features/World/WorldSessionManager.cs#L254" "打开源码"
     L["WorldSessionManager.EnableWorld()"]
-    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L284" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L287" "打开源码"
     M["BuildingRuntime.ActivateRoutine()"]
     click M "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L127" "打开源码"
     N["WorldSessionManager.EndSession()"]
-    click N "../Assets/Scripts/Features/World/WorldSessionManager.cs#L327" "打开源码"
+    click N "../Assets/Scripts/Features/World/WorldSessionManager.cs#L330" "打开源码"
     O["WorldSessionManager.Fail()"]
-    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L525" "打开源码"
+    click O "../Assets/Scripts/Features/World/WorldSessionManager.cs#L530" "打开源码"
     P["WorldSessionManager.Update()"]
-    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L443" "打开源码"
+    click P "../Assets/Scripts/Features/World/WorldSessionManager.cs#L446" "打开源码"
     Q["MainUIPanels.CompletePlayEnd()"]
     click Q "../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304" "打开源码"
     R["WorldSessionManager.OnDisable()"]
-    click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L540" "打开源码"
+    click R "../Assets/Scripts/Features/World/WorldSessionManager.cs#L546" "打开源码"
     S["WorldBuildingManager.ClearSession()"]
     click S "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240" "打开源码"
     T["ProceduralVoxelWorld.ClearStreaming()"]
     click T "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L373" "打开源码"
     U["WorldSessionManager.PrepareWorld()"]
-    click U "../Assets/Scripts/Features/World/WorldSessionManager.cs#L139" "打开源码"
+    click U "../Assets/Scripts/Features/World/WorldSessionManager.cs#L141" "打开源码"
     V["WorldSessionManager.FinishEntering()"]
-    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L318" "打开源码"
+    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L321" "打开源码"
     W["WorldLoadingPanel.Show()"]
     click W "../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L39" "打开源码"
     X["WorldBuildingManager.PrepareForUnload()"]
@@ -3670,7 +3670,7 @@ flowchart TD
     AA["LootDrop.Release()"]
     click AA "../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L221" "打开源码"
     AB["WorldSessionManager.StopSession()"]
-    click AB "../Assets/Scripts/Features/World/WorldSessionManager.cs#L545" "打开源码"
+    click AB "../Assets/Scripts/Features/World/WorldSessionManager.cs#L551" "打开源码"
     A --> B
     B --> C
     B --> S
@@ -3707,49 +3707,49 @@ flowchart TD
     R --> T
 ```
 
-- [WorldSessionManager.Start](../Assets/Scripts/Features/World/WorldSessionManager.cs#L79)
+- [WorldSessionManager.Start](../Assets/Scripts/Features/World/WorldSessionManager.cs#L81)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Start -->
-- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99)
+- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L101)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
-- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L493)
+- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L497)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopPreparation -->
-- [WorldSessionManager.RunGuarded](../Assets/Scripts/Features/World/WorldSessionManager.cs#L339)
+- [WorldSessionManager.RunGuarded](../Assets/Scripts/Features/World/WorldSessionManager.cs#L342)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RunGuarded -->
-- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L370)
+- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L373)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StreamWorld -->
-- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L212)
+- [WorldSessionManager.CompletePendingPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L214)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CompletePendingPlay -->
-- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188)
+- [WorldSessionManager.RequestPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L190)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|RequestPlay -->
-- [WorldSessionManager.CancelPlayRequest](../Assets/Scripts/Features/World/WorldSessionManager.cs#L205)
+- [WorldSessionManager.CancelPlayRequest](../Assets/Scripts/Features/World/WorldSessionManager.cs#L207)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|CancelPlayRequest -->
 - [MainUIPanels.CompletePlayStart](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L267)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayStart -->
 - [PlayManager.PlayStart](../Assets/Scripts/Features/Simulation/PlayManager.cs#L113)
 <!-- source: Assets/Scripts/Features/Simulation/PlayManager.cs|PlayStart -->
-- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L252)
+- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L254)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
-- [WorldSessionManager.EnableWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L284)
+- [WorldSessionManager.EnableWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L287)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnableWorld -->
 - [BuildingRuntime.ActivateRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L127)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|ActivateRoutine -->
-- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L327)
+- [WorldSessionManager.EndSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L330)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EndSession -->
-- [WorldSessionManager.Fail](../Assets/Scripts/Features/World/WorldSessionManager.cs#L525)
+- [WorldSessionManager.Fail](../Assets/Scripts/Features/World/WorldSessionManager.cs#L530)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Fail -->
-- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443)
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L446)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [MainUIPanels.CompletePlayEnd](../Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs#L304)
 <!-- source: Assets/Scripts/Features/Presentation/Interface/MainUIPanels.cs|CompletePlayEnd -->
-- [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L540)
+- [WorldSessionManager.OnDisable](../Assets/Scripts/Features/World/WorldSessionManager.cs#L546)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|OnDisable -->
 - [WorldBuildingManager.ClearSession](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L240)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|ClearSession -->
 - [ProceduralVoxelWorld.ClearStreaming](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L373)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|ClearStreaming -->
-- [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L139)
+- [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L141)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|PrepareWorld -->
-- [WorldSessionManager.FinishEntering](../Assets/Scripts/Features/World/WorldSessionManager.cs#L318)
+- [WorldSessionManager.FinishEntering](../Assets/Scripts/Features/World/WorldSessionManager.cs#L321)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|FinishEntering -->
 - [WorldLoadingPanel.Show](../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L39)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs|Show -->
@@ -3761,7 +3761,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Bots/Collection/CollectionBot.cs|PrepareForHomeDestruction -->
 - [LootDrop.Release](../Assets/Scripts/Features/Salvage/Drops/LootDrop.cs#L221)
 <!-- source: Assets/Scripts/Features/Salvage/Drops/LootDrop.cs|Release -->
-- [WorldSessionManager.StopSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L545)
+- [WorldSessionManager.StopSession](../Assets/Scripts/Features/World/WorldSessionManager.cs#L551)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopSession -->
 
 ## 独立世界组件夹具的启动加载遮罩
@@ -3771,9 +3771,9 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldSessionManager.Start()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L79" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L81" "打开源码"
     B["WorldSessionManager.BeginPreparation()"]
-    click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L99" "打开源码"
+    click B "../Assets/Scripts/Features/World/WorldSessionManager.cs#L101" "打开源码"
     C["WorldLoadingPanel.ShowStartup()"]
     click C "../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L63" "打开源码"
     D["WorldLoadingPanel.Update()"]
@@ -3794,9 +3794,9 @@ flowchart TD
     D -->|载具与世界就绪，隐藏| E
 ```
 
-- [WorldSessionManager.Start](../Assets/Scripts/Features/World/WorldSessionManager.cs#L79)
+- [WorldSessionManager.Start](../Assets/Scripts/Features/World/WorldSessionManager.cs#L81)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Start -->
-- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99)
+- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L101)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
 - [WorldLoadingPanel.ShowStartup](../Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs#L63)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldLoadingPanel.cs|ShowStartup -->
@@ -3816,7 +3816,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldSessionManager.PrepareWorld()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L139" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L141" "打开源码"
     B["WorldBuildingLibrary.LoadRoutine()"]
     click B "../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19" "打开源码"
     C["WorldBuildingValidation.ValidateBlueprint()"]
@@ -3832,13 +3832,13 @@ flowchart TD
     H["StreamingWorldTerrain.SurfaceHeight()"]
     click H "../Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs#L26" "打开源码"
     I["WorldSessionManager.EnterPlay()"]
-    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L252" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L254" "打开源码"
     J["ProceduralVoxelWorld.FindSpawnSurface()"]
     click J "../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L55" "打开源码"
     K["WorldDistanceView.Enter()"]
     click K "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L340" "打开源码"
     L["WorldSessionManager.StopPreparation()"]
-    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L493" "打开源码"
+    click L "../Assets/Scripts/Features/World/WorldSessionManager.cs#L497" "打开源码"
     M["WorldDistanceView.Dispose()"]
     click M "../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L367" "打开源码"
     N["WorldDistanceView.BuildRingColumn()"]
@@ -3880,7 +3880,7 @@ flowchart TD
     M -->|取消订阅| U
 ```
 
-- [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L139)
+- [WorldSessionManager.PrepareWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L141)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|PrepareWorld -->
 - [WorldBuildingLibrary.LoadRoutine](../Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs#L19)
 <!-- source: Assets/Scripts/Features/World/Buildings/Data/WorldBuildingLibrary.cs|LoadRoutine -->
@@ -3896,13 +3896,13 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|Rebuild -->
 - [StreamingWorldTerrain.SurfaceHeight](../Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs#L26)
 <!-- source: Assets/Scripts/Features/World/Terrain/StreamingWorldTerrain.cs|SurfaceHeight -->
-- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L252)
+- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L254)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
 - [ProceduralVoxelWorld.FindSpawnSurface](../Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs#L55)
 <!-- source: Assets/Scripts/Features/World/Terrain/ProceduralVoxelWorld.cs|FindSpawnSurface -->
 - [WorldDistanceView.Enter](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L340)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|Enter -->
-- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L493)
+- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L497)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopPreparation -->
 - [WorldDistanceView.Dispose](../Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs#L367)
 <!-- source: Assets/Scripts/Features/World/Presentation/WorldDistanceView.cs|Dispose -->
@@ -3930,7 +3930,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["WorldSessionManager.StreamWorld()"]
-    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L370" "打开源码"
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L373" "打开源码"
     B["WorldRegionStreaming.LoadNext()"]
     click B "../Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs#L32" "打开源码"
     C["WorldBuildingStreaming.UnloadDistantRoutine()"]
@@ -3954,7 +3954,7 @@ flowchart TD
     L["WorldBuildingManager.RestoreBuildingRoutine()"]
     click L "../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140" "打开源码"
     M["WorldSessionManager.FixedUpdate()"]
-    click M "../Assets/Scripts/Features/World/WorldSessionManager.cs#L418" "打开源码"
+    click M "../Assets/Scripts/Features/World/WorldSessionManager.cs#L421" "打开源码"
     N["WorldPlayerStreamingGuard.Tick()"]
     click N "../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L31" "打开源码"
     O["WorldPlayerStreamingGuard.HasTerrainForBounds()"]
@@ -3987,7 +3987,7 @@ flowchart TD
     N -.->|预测路径中点Focus，下一渲染帧| A
 ```
 
-- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L370)
+- [WorldSessionManager.StreamWorld](../Assets/Scripts/Features/World/WorldSessionManager.cs#L373)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StreamWorld -->
 - [WorldRegionStreaming.LoadNext](../Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs#L32)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldRegionStreaming.cs|LoadNext -->
@@ -4011,7 +4011,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|RestoreAvailable -->
 - [WorldBuildingManager.RestoreBuildingRoutine](../Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs#L140)
 <!-- source: Assets/Scripts/Features/World/Buildings/WorldBuildingManager.cs|RestoreBuildingRoutine -->
-- [WorldSessionManager.FixedUpdate](../Assets/Scripts/Features/World/WorldSessionManager.cs#L418)
+- [WorldSessionManager.FixedUpdate](../Assets/Scripts/Features/World/WorldSessionManager.cs#L421)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|FixedUpdate -->
 - [WorldPlayerStreamingGuard.Tick](../Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs#L31)
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldPlayerStreamingGuard.cs|Tick -->
@@ -4703,7 +4703,7 @@ flowchart TD
     H["BuildingRuntime.InitializeRoutine()"]
     click H "../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L71" "打开源码"
     I["WorldSessionManager.Update()"]
-    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L443" "打开源码"
+    click I "../Assets/Scripts/Features/World/WorldSessionManager.cs#L446" "打开源码"
     J["OutpostEncounterDirector.Tick()"]
     click J "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51" "打开源码"
     K["OutpostEncounterDirector.Spawn()"]
@@ -4719,7 +4719,7 @@ flowchart TD
     P["OutpostEncounterDirector.Clear()"]
     click P "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L337" "打开源码"
     Q["WorldSessionManager.BeginPreparation()"]
-    click Q "../Assets/Scripts/Features/World/WorldSessionManager.cs#L99" "打开源码"
+    click Q "../Assets/Scripts/Features/World/WorldSessionManager.cs#L101" "打开源码"
     R["OutpostHud.Update()"]
     click R "../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L19" "打开源码"
     S["OutpostHud.Format()"]
@@ -4763,7 +4763,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/Streaming/WorldBuildingStreaming.cs|LoadColumn -->
 - [BuildingRuntime.InitializeRoutine](../Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs#L71)
 <!-- source: Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs|InitializeRoutine -->
-- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443)
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L446)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Tick -->
@@ -4779,7 +4779,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|ReportDefeated -->
 - [OutpostEncounterDirector.Clear](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L337)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Clear -->
-- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99)
+- [WorldSessionManager.BeginPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L101)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|BeginPreparation -->
 - [OutpostHud.Update](../Assets/Scripts/Features/World/Outposts/OutpostHud.cs#L19)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostHud.cs|Update -->
@@ -4939,7 +4939,7 @@ flowchart TD
     D["EnemySpawner.SpawnRandomEnemy()"]
     click D "../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L110" "打开源码"
     E["WorldSessionManager.Update()"]
-    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L443" "打开源码"
+    click E "../Assets/Scripts/Features/World/WorldSessionManager.cs#L446" "打开源码"
     F["OutpostEncounterDirector.Tick()"]
     click F "../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51" "打开源码"
     G["OutpostEncounterDirector.Spawn()"]
@@ -4995,7 +4995,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|Update -->
 - [EnemySpawner.SpawnRandomEnemy](../Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs#L110)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemySpawner.cs|SpawnRandomEnemy -->
-- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443)
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L446)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
 - [OutpostEncounterDirector.Tick](../Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/World/Outposts/OutpostEncounterDirector.cs|Tick -->
@@ -5039,7 +5039,7 @@ flowchart TD
     C["EnemyBlueprintFactory.Spawn()"]
     click C "../Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs#L12" "打开源码"
     D["SiegeMatch.RegisterAttacker()"]
-    click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L130" "打开源码"
+    click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L132" "打开源码"
     E["VisualEffectsManager.TryPlayEnemySpawnPortal()"]
     click E "../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L232" "打开源码"
     F["VisualEffectsManager.PlayEnemySpawnPortal()"]
@@ -5083,7 +5083,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
 - [EnemyBlueprintFactory.Spawn](../Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs#L12)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs|Spawn -->
-- [SiegeMatch.RegisterAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L130)
+- [SiegeMatch.RegisterAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L132)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|RegisterAttacker -->
 - [VisualEffectsManager.TryPlayEnemySpawnPortal](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L232)
 <!-- source: Assets/Scripts/Features/Presentation/VisualEffectsManager.cs|TryPlayEnemySpawnPortal -->
@@ -5376,17 +5376,17 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["SiegeMatch.BeginNextWave()"]
-    click A "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L109" "打开源码"
+    click A "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L110" "打开源码"
     B["SiegeMatch.CanSpawn()"]
-    click B "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L125" "打开源码"
+    click B "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L127" "打开源码"
     C["SiegeMatch.RegisterAttacker()"]
-    click C "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L130" "打开源码"
+    click C "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L132" "打开源码"
     D["SiegeMatch.ResolveAttacker()"]
-    click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142" "打开源码"
+    click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144" "打开源码"
     E["SiegeMatch.TrySpend()"]
-    click E "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L219" "打开源码"
+    click E "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L237" "打开源码"
     F["SiegeMatch.LoseBase()"]
-    click F "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L247" "打开源码"
+    click F "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L265" "打开源码"
     G["SiegeRulesChecks.Run()"]
     click G "../Assets/Editor/Siege/Validation/Rules/SiegeRulesChecks.cs#L17" "打开源码"
     A -.->|等待场景生成器| B
@@ -5400,17 +5400,17 @@ flowchart TD
     G --> F
 ```
 
-- [SiegeMatch.BeginNextWave](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L109)
+- [SiegeMatch.BeginNextWave](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L110)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|BeginNextWave -->
-- [SiegeMatch.CanSpawn](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L125)
+- [SiegeMatch.CanSpawn](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L127)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|CanSpawn -->
-- [SiegeMatch.RegisterAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L130)
+- [SiegeMatch.RegisterAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L132)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|RegisterAttacker -->
-- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142)
+- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
-- [SiegeMatch.TrySpend](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L219)
+- [SiegeMatch.TrySpend](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L237)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|TrySpend -->
-- [SiegeMatch.LoseBase](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L247)
+- [SiegeMatch.LoseBase](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L265)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|LoseBase -->
 - [SiegeRulesChecks.Run](../Assets/Editor/Siege/Validation/Rules/SiegeRulesChecks.cs#L17)
 <!-- source: Assets/Editor/Siege/Validation/Rules/SiegeRulesChecks.cs|Run -->
@@ -5450,7 +5450,7 @@ flowchart TD
     N["SiegeRefit.IsClear()"]
     click N "../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L9" "打开源码"
     O["SiegeMatch.TrySpend()"]
-    click O "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L219" "打开源码"
+    click O "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L237" "打开源码"
     P["SiegeDeploymentView.OnEnable()"]
     click P "../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L57" "打开源码"
     Q["SiegeBase.Create()"]
@@ -5553,7 +5553,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs|Repair -->
 - [SiegeRefit.IsClear](../Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs#L9)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeRefit.cs|IsClear -->
-- [SiegeMatch.TrySpend](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L219)
+- [SiegeMatch.TrySpend](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L237)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|TrySpend -->
 - [SiegeDeploymentView.OnEnable](../Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs#L57)
 <!-- source: Assets/Scripts/Features/Siege/Interface/SiegeDeploymentView.cs|OnEnable -->
@@ -5605,9 +5605,9 @@ flowchart TD
     B["SiegeWaveDirector.PickBlueprint()"]
     click B "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L146" "打开源码"
     C["SiegeMatch.ResolveAttacker()"]
-    click C "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142" "打开源码"
+    click C "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144" "打开源码"
     D["SiegeMatch.GrantBonus()"]
-    click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L165" "打开源码"
+    click D "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L183" "打开源码"
     E["SiegeSession.TickKillStreak()"]
     click E "../Assets/Scripts/Features/Siege/SiegeSession.cs#L484" "打开源码"
     F["SiegeSession.Update()"]
@@ -5628,9 +5628,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|Tick -->
 - [SiegeWaveDirector.PickBlueprint](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L146)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|PickBlueprint -->
-- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142)
+- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
-- [SiegeMatch.GrantBonus](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L165)
+- [SiegeMatch.GrantBonus](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L183)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|GrantBonus -->
 - [SiegeSession.TickKillStreak](../Assets/Scripts/Features/Siege/SiegeSession.cs#L484)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|TickKillStreak -->
@@ -5860,7 +5860,7 @@ flowchart TD
     A["SiegeSession.BeginNextWave()"]
     click A "../Assets/Scripts/Features/Siege/SiegeSession.cs#L245" "打开源码"
     B["SiegeMatch.BeginNextWave()"]
-    click B "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L109" "打开源码"
+    click B "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L110" "打开源码"
     C["SiegeSession.SetSimulationActive()"]
     click C "../Assets/Scripts/Features/Siege/SiegeSession.cs#L557" "打开源码"
     D["SiegeSession.Update()"]
@@ -5872,7 +5872,7 @@ flowchart TD
     G["EnemyIdentity.ReportDefeated()"]
     click G "../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L9" "打开源码"
     H["SiegeMatch.ResolveAttacker()"]
-    click H "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142" "打开源码"
+    click H "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144" "打开源码"
     I["Durability.ChangeDurability()"]
     click I "../Assets/Scripts/Features/Combat/Damage/Durability.cs#L191" "打开源码"
     J["DestroyManager.DestroyGameObject()"]
@@ -5937,7 +5937,7 @@ flowchart TD
 
 - [SiegeSession.BeginNextWave](../Assets/Scripts/Features/Siege/SiegeSession.cs#L245)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|BeginNextWave -->
-- [SiegeMatch.BeginNextWave](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L109)
+- [SiegeMatch.BeginNextWave](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L110)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|BeginNextWave -->
 - [SiegeSession.SetSimulationActive](../Assets/Scripts/Features/Siege/SiegeSession.cs#L557)
 <!-- source: Assets/Scripts/Features/Siege/SiegeSession.cs|SetSimulationActive -->
@@ -5949,7 +5949,7 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyBlueprintFactory.cs|Spawn -->
 - [EnemyIdentity.ReportDefeated](../Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs#L9)
 <!-- source: Assets/Scripts/Features/Combat/Enemies/EnemyIdentity.cs|ReportDefeated -->
-- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142)
+- [SiegeMatch.ResolveAttacker](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|ResolveAttacker -->
 - [Durability.ChangeDurability](../Assets/Scripts/Features/Combat/Damage/Durability.cs#L191)
 <!-- source: Assets/Scripts/Features/Combat/Damage/Durability.cs|ChangeDurability -->
@@ -7252,7 +7252,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["SiegeGameplayStage.Enter()"]
-    click A "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99" "打开源码"
+    click A "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101" "打开源码"
     B["SiegeCombatHud.Enter()"]
     click B "../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L89" "打开源码"
     C["CombatHud.Bind()"]
@@ -7290,17 +7290,17 @@ flowchart TD
     X["SiegePhaseClock.Tick()"]
     click X "../Assets/Scripts/Features/Siege/Gameplay/SiegePhaseClock.cs#L50" "打开源码"
     Y["SiegeGameplayStage.Update()"]
-    click Y "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L319" "打开源码"
+    click Y "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323" "打开源码"
     Z["SiegeGameplayStage.Settle()"]
-    click Z "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L596" "打开源码"
+    click Z "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602" "打开源码"
     AA["SiegeGameplayStage.BeginWave()"]
-    click AA "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274" "打开源码"
+    click AA "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276" "打开源码"
     AB["SiegeWaveDirector.BeginWave()"]
     click AB "../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L23" "打开源码"
     Q["SiegeCombatHud.Update()"]
     click Q "../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L119" "打开源码"
     R["SiegeGameplayStage.Exit()"]
-    click R "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662" "打开源码"
+    click R "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669" "打开源码"
     S["SiegeCombatHud.Exit()"]
     click S "../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L102" "打开源码"
     T["CombatHudPanels.Restore()"]
@@ -7318,9 +7318,9 @@ flowchart TD
     AG["SiegeReturnFlight.Finish()"]
     click AG "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L559" "打开源码"
     AH["SiegeGameplayStage.FixedUpdate()"]
-    click AH "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L501" "打开源码"
+    click AH "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L507" "打开源码"
     AI["SiegeMatch.CompleteReturn()"]
-    click AI "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L189" "打开源码"
+    click AI "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L207" "打开源码"
     AJ["SiegeReturnFlight.Tick()"]
     click AJ "../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L397" "打开源码"
     AK["SiegeReturnFlight.ReleasePropulsion()"]
@@ -7361,7 +7361,7 @@ flowchart TD
     AH -->|全舰入库或报废| AI
 ```
 
-- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99)
+- [SiegeGameplayStage.Enter](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Enter -->
 - [SiegeCombatHud.Enter](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L89)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|Enter -->
@@ -7399,17 +7399,17 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegePhaseClock.cs|BeginBattle -->
 - [SiegePhaseClock.Tick](../Assets/Scripts/Features/Siege/Gameplay/SiegePhaseClock.cs#L50)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegePhaseClock.cs|Tick -->
-- [SiegeGameplayStage.Update](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L319)
+- [SiegeGameplayStage.Update](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Update -->
-- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L596)
+- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Settle -->
-- [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274)
+- [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
 - [SiegeWaveDirector.BeginWave](../Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs#L23)
 <!-- source: Assets/Scripts/Features/Siege/Battle/SiegeWaveDirector.cs|BeginWave -->
 - [SiegeCombatHud.Update](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L119)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|Update -->
-- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662)
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
 - [SiegeCombatHud.Exit](../Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs#L102)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/Interface/SiegeCombatHud.cs|Exit -->
@@ -7427,9 +7427,9 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|FailReturn -->
 - [SiegeReturnFlight.Finish](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L559)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Finish -->
-- [SiegeGameplayStage.FixedUpdate](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L501)
+- [SiegeGameplayStage.FixedUpdate](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L507)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|FixedUpdate -->
-- [SiegeMatch.CompleteReturn](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L189)
+- [SiegeMatch.CompleteReturn](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L207)
 <!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|CompleteReturn -->
 - [SiegeReturnFlight.Tick](../Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs#L397)
 <!-- source: Assets/Scripts/Features/Siege/Fleet/SiegeReturnFlight.cs|Tick -->
@@ -7439,3 +7439,127 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/Flight/Thrusters/Thruster.cs|EndGuidance -->
 - [HoverFlightController.PrepareFlightHandoff](../Assets/Scripts/Features/Flight/HoverFlightController.cs#L93)
 <!-- source: Assets/Scripts/Features/Flight/HoverFlightController.cs|PrepareFlightHandoff -->
+
+## Exploration 与 Siege 特殊天气
+
+源码推导：Exploration 进入可操作状态后按会话种子和时间抽取。Siege 在战斗波次开始时抽取，并在天气结束前保留波次。命中事件后显示 30 个模拟秒预警，再产生陨石或龙卷风。失败和场景退出清理尚未发生的预警和全部自有事件实例。
+
+```mermaid
+flowchart TD
+    A["WorldSessionManager.EnterPlay()"]
+    click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L254" "打开源码"
+    B["WeatherEventDirector.StartExploration()"]
+    click B "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L46" "打开源码"
+    C["WorldSessionManager.Update()"]
+    click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L446" "打开源码"
+    D["WeatherEventDirector.TickExploration()"]
+    click D "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L53" "打开源码"
+    E["SiegeGameplayStage.BeginWave()"]
+    click E "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276" "打开源码"
+    F["WeatherEventDirector.BeginWave()"]
+    click F "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L64" "打开源码"
+    G["SiegeGameplayStage.Update()"]
+    click G "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323" "打开源码"
+    H["WeatherEventDirector.Tick()"]
+    click H "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L84" "打开源码"
+    I["WeatherEventDirector.Present()"]
+    click I "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L146" "打开源码"
+    J["WeatherEventDirector.SpawnMeteor()"]
+    click J "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L119" "打开源码"
+    K["WeatherTornado.Begin()"]
+    click K "../Assets/Scripts/Features/Weather/WeatherTornado.cs#L26" "打开源码"
+    L["WeatherTornado.FixedUpdate()"]
+    click L "../Assets/Scripts/Features/Weather/WeatherTornado.cs#L34" "打开源码"
+    M["WeatherTornado.ApplyWind()"]
+    click M "../Assets/Scripts/Features/Weather/WeatherTornado.cs#L48" "打开源码"
+    N["WeatherTornado.EmitFunnel()"]
+    click N "../Assets/Scripts/Features/Weather/WeatherTornado.cs#L79" "打开源码"
+    O["SiegeMatch.SetWaveObjectivePending()"]
+    click O "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L162" "打开源码"
+    P["SiegeMatch.TryCompleteWave()"]
+    click P "../Assets/Scripts/Features/Siege/SiegeMatch.cs#L173" "打开源码"
+    Q["WorldSessionManager.StopPreparation()"]
+    click Q "../Assets/Scripts/Features/World/WorldSessionManager.cs#L497" "打开源码"
+    R["SiegeGameplayStage.Exit()"]
+    click R "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669" "打开源码"
+    S["WeatherEventDirector.Clear()"]
+    click S "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L159" "打开源码"
+    T["WeatherEventDirector.Finish()"]
+    click T "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L166" "打开源码"
+    U["SiegeGameplayStage.Settle()"]
+    click U "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602" "打开源码"
+    V["WorldSessionManager.Fail()"]
+    click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L530" "打开源码"
+    W["WeatherEventDirector.OnDisable()"]
+    click W "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L198" "打开源码"
+    A --> B
+    C --> D
+    D -->|计时波次到期| F
+    D --> H
+    E --> F
+    E --> O
+    G --> H
+    G --> O
+    F -->|抽中后立即显示| I
+    H -->|更新倒计时和活动提示| I
+    H -->|倒计时到期且命中陨石雨| J
+    H -->|倒计时到期且命中龙卷风| K
+    K -.->|后续物理步| L
+    L --> M
+    L --> N
+    O --> P
+    H -->|事件到期| T
+    Q --> S
+    R --> S
+    U --> S
+    V --> S
+    W --> S
+    S --> T
+```
+
+- [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L254)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
+- [WeatherEventDirector.StartExploration](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L46)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|StartExploration -->
+- [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L446)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
+- [WeatherEventDirector.TickExploration](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L53)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|TickExploration -->
+- [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
+- [WeatherEventDirector.BeginWave](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L64)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|BeginWave -->
+- [SiegeGameplayStage.Update](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Update -->
+- [WeatherEventDirector.Tick](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L84)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|Tick -->
+- [WeatherEventDirector.Present](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L146)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|Present -->
+- [WeatherEventDirector.SpawnMeteor](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L119)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|SpawnMeteor -->
+- [WeatherTornado.Begin](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L26)
+<!-- source: Assets/Scripts/Features/Weather/WeatherTornado.cs|Begin -->
+- [WeatherTornado.FixedUpdate](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L34)
+<!-- source: Assets/Scripts/Features/Weather/WeatherTornado.cs|FixedUpdate -->
+- [WeatherTornado.ApplyWind](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L48)
+<!-- source: Assets/Scripts/Features/Weather/WeatherTornado.cs|ApplyWind -->
+- [WeatherTornado.EmitFunnel](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L79)
+<!-- source: Assets/Scripts/Features/Weather/WeatherTornado.cs|EmitFunnel -->
+- [SiegeMatch.SetWaveObjectivePending](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L162)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|SetWaveObjectivePending -->
+- [SiegeMatch.TryCompleteWave](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L173)
+<!-- source: Assets/Scripts/Features/Siege/SiegeMatch.cs|TryCompleteWave -->
+- [WorldSessionManager.StopPreparation](../Assets/Scripts/Features/World/WorldSessionManager.cs#L497)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopPreparation -->
+- [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
+- [WeatherEventDirector.Clear](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L159)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|Clear -->
+- [WeatherEventDirector.Finish](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L166)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|Finish -->
+- [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602)
+<!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Settle -->
+- [WorldSessionManager.Fail](../Assets/Scripts/Features/World/WorldSessionManager.cs#L530)
+<!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Fail -->
+- [WeatherEventDirector.OnDisable](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L198)
+<!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|OnDisable -->

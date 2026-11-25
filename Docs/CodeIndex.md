@@ -243,7 +243,10 @@ HY-Sandbox/
 │   │   │           └── SiegeTransientEffectChecks.cs
 │   │   ├── Simulation/
 │   │   │   ├── GameModeAuthoring.cs
-│   │   │   └── GameModePlayChecks.cs
+│   │   │   ├── GameModePlayChecks.cs
+│   │   │   └── Weather/
+│   │   │       ├── WeatherEventAuthoring.cs
+│   │   │       └── WeatherPlayChecks.cs
 │   │   └── World/
 │   │       ├── WorldSessionAuthoring.cs
 │   │       ├── Buildings/
@@ -631,6 +634,9 @@ HY-Sandbox/
 │           │       ├── Rack.cs
 │           │       ├── RuntimeUnitMember.cs
 │           │       └── UnitFaction.cs
+│           ├── Weather/
+│           │   ├── WeatherEventDirector.cs
+│           │   └── WeatherTornado.cs
 │           └── World/
 │               ├── WorldGenerationSettings.cs
 │               ├── WorldSessionManager.cs
@@ -3231,6 +3237,35 @@ HY-Sandbox/
 | GameModePlayChecks | [`void Check(bool success, string description)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L310) | private static |
 | GameModePlayChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L320) | private static |
 | GameModePlayChecks | [`void Finish()`](../Assets/Editor/Simulation/GameModePlayChecks.cs#L328) | private static |
+
+## Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs
+
+// 职责：创建可编辑的天气资产并把同一套预警与效果装入两个玩法场景。 // 入口：Tools/HY-Sandbox/Weather/Install。重复运行只补齐缺少的资产和场景绑定。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WeatherEventAuthoring | [`void Install()`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L20) | public static |
+| WeatherEventAuthoring | [`void EnsureEditMode()`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L38) | private static |
+| WeatherEventAuthoring | [`GameObject BuildPrefab(string path, Func<GameObject> create)`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L46) | private static |
+| WeatherEventAuthoring | [`GameObject CreateMeteor()`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L71) | private static |
+| WeatherEventAuthoring | [`GameObject CreateTornado()`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L84) | private static |
+| WeatherEventAuthoring | [`Material BuildDustMaterial()`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L114) | private static |
+| WeatherEventAuthoring | [`Texture2D BuildDustTexture()`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L147) | private static |
+| WeatherEventAuthoring | [`GameObject CreateDirector(GameObject tornado, GameObject meteor)`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L177) | private static |
+| WeatherEventAuthoring | [`void BindScene(string path, GameObject prefab)`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L221) | private static |
+| WeatherEventAuthoring | [`void SetReference(Component target, string field, UnityEngine.Object value)`](../Assets/Editor/Simulation/Weather/WeatherEventAuthoring.cs#L268) | private static |
+
+## Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs
+
+// 职责：从两份正式场景重新读取天气绑定，并在 Play Mode 强制覆盖两种随机结果。 // 入口：Tools/HY-Sandbox/Weather/Verify，在 Play Mode 调用。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WeatherPlayChecks | [`void Verify()`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L12) | public static |
+| WeatherPlayChecks | [`void VerifyScene(string path, bool exploration, Action completed)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L32) | private static |
+| WeatherPlayChecks | [`void VerifyEvents(WeatherEventDirector weather, bool exploration)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L58) | private static |
+| WeatherPlayChecks | [`int CountActiveHazards(WeatherEventDirector weather)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L138) | private static |
+| WeatherPlayChecks | [`void Require(bool passed, string message)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L143) | private static |
 
 ## Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs
 
@@ -6422,33 +6457,33 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeGameplayStage | [`void Enter( GameModeController host, GameObject[] buildEnvironment, string blueprintName = null, TextAsset example = null, string exampleName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L99) | public |
-| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L187) | private |
-| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L205) | private |
-| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L274) | public |
-| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L293) | public |
-| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L319) | private |
-| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L386) | public |
-| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L394) | public |
-| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L402) | public |
-| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L413) | private |
-| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L424) | public |
-| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L433) | public |
-| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L442) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L451) | public |
-| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L467) | public |
-| SiegeGameplayStage | [`void Observe()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L473) | public |
-| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L487) | public |
-| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L501) | private |
-| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L543) | private |
-| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L586) | private |
-| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L591) | public |
-| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L596) | private |
-| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L625) | public |
-| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L645) | private |
-| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L654) | private |
-| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L662) | public |
-| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L704) | private |
+| SiegeGameplayStage | [`void Enter( GameModeController host, GameObject[] buildEnvironment, string blueprintName = null, TextAsset example = null, string exampleName = null)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L101) | public |
+| SiegeGameplayStage | [`void ValidatePose()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L189) | private |
+| SiegeGameplayStage | [`bool Deploy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L207) | private |
+| SiegeGameplayStage | [`bool BeginWave()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276) | public |
+| SiegeGameplayStage | [`bool Repair()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L297) | public |
+| SiegeGameplayStage | [`void Update()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323) | private |
+| SiegeGameplayStage | [`void SelectDefender(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L392) | public |
+| SiegeGameplayStage | [`void SelectAttacker(int index)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L400) | public |
+| SiegeGameplayStage | [`bool RefreshBlueprints()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L408) | public |
+| SiegeGameplayStage | [`void RefreshDefenders()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L419) | private |
+| SiegeGameplayStage | [`bool TryDeployAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L430) | public |
+| SiegeGameplayStage | [`bool TryReplaceAt(int optionIndex, int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L439) | public |
+| SiegeGameplayStage | [`bool TryCancelDeployment(int dock, out string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L448) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(int slot)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L457) | public |
+| SiegeGameplayStage | [`bool TryTakeControl(string id)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L473) | public |
+| SiegeGameplayStage | [`void Observe()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L479) | public |
+| SiegeGameplayStage | [`bool TryRepairShip(string id, bool repairBase = false)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L493) | public |
+| SiegeGameplayStage | [`void FixedUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L507) | private |
+| SiegeGameplayStage | [`void SetSimulation(bool active)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L549) | private |
+| SiegeGameplayStage | [`void LoseBase()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L592) | private |
+| SiegeGameplayStage | [`void Retreat()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L597) | public |
+| SiegeGameplayStage | [`void Settle(string reason)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602) | private |
+| SiegeGameplayStage | [`void ReturnToMenu()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L632) | public |
+| SiegeGameplayStage | [`void ShowCoreMarker(Transform parent, Vector3 localPosition)`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L652) | private |
+| SiegeGameplayStage | [`void LateUpdate()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L661) | private |
+| SiegeGameplayStage | [`void Exit()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669) | public |
+| SiegeGameplayStage | [`void OnDestroy()`](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L712) | private |
 
 ## Assets/Scripts/Features/Siege/Gameplay/SiegeIsland.cs
 
@@ -6689,19 +6724,21 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L109) | public |
-| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L125) | public |
-| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L130) | public |
-| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L142) | public |
-| SiegeMatch | [`bool GrantBonus(int coins)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L165) | public |
-| SiegeMatch | [`bool EnableReturnSettlement()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L177) | public |
-| SiegeMatch | [`bool CompleteReturn()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L189) | public |
-| SiegeMatch | [`void AddReward(int amount)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L202) | private |
-| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L214) | public |
-| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L219) | public |
-| SiegeMatch | [`bool CanExchange(long price, long credit)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L231) | public |
-| SiegeMatch | [`bool TryExchange(long price, long credit)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L236) | public |
-| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L247) | public |
+| SiegeMatch | [`bool BeginNextWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L110) | public |
+| SiegeMatch | [`bool CanSpawn(int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L127) | public |
+| SiegeMatch | [`bool RegisterAttacker(string id, int maximumActive)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L132) | public |
+| SiegeMatch | [`bool ResolveAttacker(string id, bool defeated)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L144) | public |
+| SiegeMatch | [`void SetWaveObjectivePending(bool pending)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L162) | public |
+| SiegeMatch | [`void TryCompleteWave()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L173) | private |
+| SiegeMatch | [`bool GrantBonus(int coins)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L183) | public |
+| SiegeMatch | [`bool EnableReturnSettlement()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L195) | public |
+| SiegeMatch | [`bool CompleteReturn()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L207) | public |
+| SiegeMatch | [`void AddReward(int amount)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L220) | private |
+| SiegeMatch | [`bool CanAfford(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L232) | public |
+| SiegeMatch | [`bool TrySpend(long price)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L237) | public |
+| SiegeMatch | [`bool CanExchange(long price, long credit)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L249) | public |
+| SiegeMatch | [`bool TryExchange(long price, long credit)`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L254) | public |
+| SiegeMatch | [`void LoseBase()`](../Assets/Scripts/Features/Siege/SiegeMatch.cs#L265) | public |
 
 ## Assets/Scripts/Features/Siege/SiegeProgress.cs
 
@@ -7238,6 +7275,35 @@ HY-Sandbox/
 // 职责：定义阵营和运行单元归属，支持友敌判断与残骸追踪。
 
 数据/配置/接口定义，无方法体。
+
+## Assets/Scripts/Features/Weather/WeatherEventDirector.cs
+
+// 职责：按玩法波次抽取天气，拥有预警、事件实例和清理。 // 入口：BeginWave() / Tick() / TickExploration() / Clear()。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WeatherEventDirector | [`void StartExploration(float now, int seed)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L46) | public |
+| WeatherEventDirector | [`void TickExploration(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L53) | public |
+| WeatherEventDirector | [`void BeginWave(float now)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L64) | public |
+| WeatherEventDirector | [`void Tick(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L84) | public |
+| WeatherEventDirector | [`void SpawnMeteor(Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L119) | private |
+| WeatherEventDirector | [`bool IsDestroyed(Rigidbody body)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L141) | private static |
+| WeatherEventDirector | [`void Present(int seconds)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L146) | private |
+| WeatherEventDirector | [`void Clear()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L159) | public |
+| WeatherEventDirector | [`void Finish()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L166) | private |
+| WeatherEventDirector | [`void Retire(GameObject instance)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L192) | private static |
+| WeatherEventDirector | [`void OnDisable()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L198) | private |
+
+## Assets/Scripts/Features/Weather/WeatherTornado.cs
+
+// 职责：移动龙卷风，在物理步向动态单位施加旋转风力与升力并驱动漏斗粒子。 // 入口：Begin() 设置经过事件中心的路径。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| WeatherTornado | [`void Begin(Vector3 focus, float angle)`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L26) | public |
+| WeatherTornado | [`void FixedUpdate()`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L34) | private |
+| WeatherTornado | [`void ApplyWind()`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L48) | private |
+| WeatherTornado | [`void EmitFunnel(float dt)`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L79) | private |
 
 ## Assets/Scripts/Features/World/Buildings/BuildingRuntime.cs
 
@@ -7807,26 +7873,26 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WorldSessionManager | [`void BindHost(GameObject[] environment, WorldLoadingPanel panel, GameModeController owner)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L53) | public |
-| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L79) | private |
-| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L90) | private |
-| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L99) | public |
-| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L139) | private |
-| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L188) | public |
-| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L205) | public |
-| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L212) | private |
-| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L230) | public |
-| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L252) | public |
-| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L284) | private |
-| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L318) | private |
-| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L327) | public |
-| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L339) | private |
-| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L370) | private |
-| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L418) | private |
-| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L443) | private |
-| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L458) | private static |
-| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L463) | private |
-| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L493) | private |
-| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L525) | private |
-| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L540) | private |
-| WorldSessionManager | [`void StopSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L545) | public |
+| WorldSessionManager | [`void BindHost(GameObject[] environment, WorldLoadingPanel panel, GameModeController owner)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L55) | public |
+| WorldSessionManager | [`void Start()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L81) | private |
+| WorldSessionManager | [`void OnEnable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L92) | private |
+| WorldSessionManager | [`void BeginPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L101) | public |
+| WorldSessionManager | [`IEnumerator PrepareWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L141) | private |
+| WorldSessionManager | [`void RequestPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L190) | public |
+| WorldSessionManager | [`void CancelPlayRequest()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L207) | public |
+| WorldSessionManager | [`void CompletePendingPlay()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L214) | private |
+| WorldSessionManager | [`bool CanEnterPlay(Transform construct, out string reason)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L232) | public |
+| WorldSessionManager | [`void EnterPlay(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L254) | public |
+| WorldSessionManager | [`IEnumerator EnableWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L287) | private |
+| WorldSessionManager | [`void FinishEntering()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L321) | private |
+| WorldSessionManager | [`void EndSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L330) | public |
+| WorldSessionManager | [`IEnumerator RunGuarded(int version, IEnumerator work)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L342) | private |
+| WorldSessionManager | [`IEnumerator StreamWorld()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L373) | private |
+| WorldSessionManager | [`void FixedUpdate()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L421) | private |
+| WorldSessionManager | [`void Update()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L446) | private |
+| WorldSessionManager | [`Bounds ConstructBounds(Transform construct)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L462) | private static |
+| WorldSessionManager | [`void SetBuildEnvironmentVisible(bool visible)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L467) | private |
+| WorldSessionManager | [`void StopPreparation()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L497) | private |
+| WorldSessionManager | [`void Fail(Exception error)`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L530) | private |
+| WorldSessionManager | [`void OnDisable()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L546) | private |
+| WorldSessionManager | [`void StopSession()`](../Assets/Scripts/Features/World/WorldSessionManager.cs#L551) | public |

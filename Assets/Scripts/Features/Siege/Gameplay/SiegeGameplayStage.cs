@@ -65,6 +65,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
     private BlockDataList design;
     private TextMesh coreMarker;
     private string designWarnings;
+    [SerializeField]
+    private WeatherEventDirector weather;
     private SiegeWaveDirector waves;
     private SiegeWreckBudget wrecks;
     private SiegeShipOption[] attackers = Array.Empty<SiegeShipOption>();
@@ -281,6 +283,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 
         SetSimulation(true);
         waves.BeginWave(Time.time);
+        weather?.BeginWave(Time.time);
+        Match.SetWaveObjectivePending(weather != null && weather.HasEvent);
         clock.BeginBattle(Settings.WaveSpawnDelay);
         cleanup.Stop();
         Fleet.SetCombatActive(true);
@@ -371,6 +375,8 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
                 combat.MaximumEnemyWreckBlocks,
                 combat.EnemyWreckLifetime,
                 combat.EnemyWreckRetirePerScan);
+            weather?.Tick(Time.time, Base.Core.transform.position);
+            Match.SetWaveObjectivePending(weather != null && weather.HasEvent);
             waves.Tick(Time.time);
             waves.CheckFleetStalemate(Fleet, Time.time, flightSettings.disabledGrace);
             if (Match.Phase == SiegePhase.Returning)
@@ -615,6 +621,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
 
         cleanup.Stop();
         waves?.Stop();
+        weather?.Clear();
         flight?.Stop();
         Fleet?.SetCombatActive(false);
         SetSimulation(false);
@@ -672,6 +679,7 @@ public sealed class SiegeGameplayStage : MonoBehaviour, ISiegeDeploymentHost
         cleanup.Stop();
         Application.runInBackground = previousBackground;
         waves?.Stop();
+        weather?.Clear();
         flight?.Stop();
         if (Fleet != null)
         {

@@ -116,3 +116,7 @@ tmp_stats.py
 tmp_stride.py
 tmp_trim.py
 ProfileAnalyzer/tmp0.pdata
+
+# Local imported weather source pack.
+/Assets/Art/TornadoParticle
+/Assets/Art/TornadoParticle.meta

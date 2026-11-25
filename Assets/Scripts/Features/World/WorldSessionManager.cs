@@ -27,6 +27,8 @@ public sealed class WorldSessionManager : MonoBehaviour
     private GameObject[] buildEnvironment = Array.Empty<GameObject>();
     [SerializeField]
     private WorldLoadingPanel loadingPanel;
+    [SerializeField]
+    private WeatherEventDirector weather;
     private readonly Dictionary<GameObject, bool> environmentStates = new Dictionary<GameObject, bool>();
     private WorldBuildingStreaming buildingStreaming;
     private OutpostEncounterDirector outposts;
@@ -269,6 +271,7 @@ public sealed class WorldSessionManager : MonoBehaviour
 
         SetBuildEnvironmentVisible(false);
         State = WorldSessionState.Playing;
+        weather?.StartExploration(Time.time, SessionSeed);
         distanceView.Enter(Camera.main);
         streamingFocus = construct.position;
         playerGuard = new WorldPlayerStreamingGuard(world, Settings);
@@ -445,6 +448,7 @@ public sealed class WorldSessionManager : MonoBehaviour
         if (State == WorldSessionState.Playing && !entering && player != null)
         {
             outposts?.Tick(player.position);
+            weather?.TickExploration(Time.time, player.position);
         }
 
         if (failureNeedsExit)
@@ -492,6 +496,7 @@ public sealed class WorldSessionManager : MonoBehaviour
 
     private void StopPreparation()
     {
+        weather?.Clear();
         generation++;
         if (activationRoutine != null)
         {
@@ -524,6 +529,7 @@ public sealed class WorldSessionManager : MonoBehaviour
 
     private void Fail(Exception error)
     {
+        weather?.Clear();
         FinishEntering();
         outposts?.Clear();
         outposts = null;

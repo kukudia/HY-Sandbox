@@ -99,3 +99,8 @@ Assets/Scripts/Features/Combat/Interface/Nameplates.meta whitespace=-blank-at-eo
 Assets/Scripts/Features/Combat/Interface/Notifications.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/Combat/Interface/Panels.meta whitespace=-blank-at-eol
 Assets/Scripts/Features/Combat/Interface/Threats.meta whitespace=-blank-at-eol
+
+# Weather assets retain the empty serialized values written by Unity.
+Assets/Art/Weather.meta whitespace=-blank-at-eol
+Assets/Art/Weather/** whitespace=-blank-at-eol
+Assets/Scripts/Features/Weather.meta whitespace=-blank-at-eol
