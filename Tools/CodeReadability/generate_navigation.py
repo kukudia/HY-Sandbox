@@ -2084,6 +2084,15 @@ def main():
          "K -.->|后续物理步| L", "L --> M", "L --> N", "O --> P",
          "H -->|事件到期| T", "Q --> S", "R --> S", "U --> S", "V --> S", "W --> S", "S --> T"],
     )
+    graph(
+        "下拉菜单首帧点击",
+        "源码推导：场景与 Prefab 绑定 ReadyDropdown。启用时执行一次 uGUI 基类初始化，准备淡入淡出状态，随后走原生点击、选项与关闭逻辑。独立回归在 Play Mode 中主动触发同帧点击。",
+        {"A": "DropdownTemplateAuthoring.Create", "B": "DropdownTemplateAuthoring.UpgradeComponent",
+         "C": "ReadyDropdown.OnEnable", "D": "ReadyDropdown.Initialize", "E": "ReadyDropdown.Start",
+         "F": "DropdownLifecycleProbe.VerifyControl"},
+        ["A --> B", "B -.->|场景或Prefab装载| C", "C --> D", "E -->|已初始化时跳过| D",
+         "F -.->|启用实例后同帧发送点击| C"],
+    )
     doc = """# HY-Sandbox 运行时函数图
 
     这些图根据当前源码和调用者整理，用于寻找功能入口，不是采样得到的实际执行轨迹。实线表示直接调用（标注“经”时包含明确中间函数）；虚线标出协程、事件或注入动作。Unity Update/FixedUpdate 的独立入口不代表脚本执行顺序。

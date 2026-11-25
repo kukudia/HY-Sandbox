@@ -1,5 +1,10 @@
 # HY-Sandbox 风险登记与行为契约
 
+### R43 · uGUI 下拉菜单首帧点击（2026-11-25）
+
+uGUI 2.6.0 的 `Dropdown.Start` 创建淡入淡出控制器。控件在本帧启用后立即收到点击时，旧实现会在 `AlphaFadeList` 里访问空引用。项目控件由 `ReadyDropdown.OnEnable` 提前执行一次原生初始化。脚本重载后运行时标记重新初始化。Edit Mode 持久化迁移 18 个控件。Play Mode 复现旧控件异常，并对 12 个正式场景或 Prefab 控件实例检查同帧展开、选择回调、关闭和重新打开。未逐个运行研究场景。
+
+
 ### R42 · 特殊天气时序与风场（2026-11-25）
 
 `WeatherEventDirector.Tick` 以模拟时间驱动预警与活动期。抽中天气的 Siege 波次由 `SiegeMatch.SetWaveObjectivePending` 挡住提前返航，战斗时限、失败与退出仍能结束并清理天气。Play Mode 重新加载两个正式场景，强制覆盖两种结果，检查 30 秒预警、归零时才生成、实例归属、取消和到期清理，以及 Siege 先清敌再完成天气时的一次性结算。

@@ -121,7 +121,7 @@ public static class OutpostEditorAuthoring
         }
 
         ((RectTransform)root.transform).sizeDelta += Vector2.up * 36f;
-        GameObject obj = DefaultControls.CreateDropdown(new DefaultControls.Resources());
+        GameObject obj = DropdownTemplateAuthoring.Create(new DefaultControls.Resources());
         Place(obj, root.transform, "BuildingTemplate", new Vector2(266f, 30f), new Vector2(14f, -146f));
         GameObject buttonObject = DefaultControls.CreateButton(new DefaultControls.Resources());
         Place(buttonObject, root.transform, "CopyTemplate", new Vector2(126f, 30f), new Vector2(286f, -146f));
@@ -195,7 +195,7 @@ public static class OutpostEditorAuthoring
     private static Dropdown Dropdown(Transform parent, string name, string caption, float y)
     {
         Label(parent, name + "Label", caption, new Vector2(128f, 30f), new Vector2(14f, y));
-        GameObject obj = DefaultControls.CreateDropdown(new DefaultControls.Resources());
+        GameObject obj = DropdownTemplateAuthoring.Create(new DefaultControls.Resources());
         Place(obj, parent, name, new Vector2(266f, 30f), new Vector2(146f, y));
         return obj.GetComponent<Dropdown>();
     }

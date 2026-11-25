@@ -283,6 +283,7 @@
     <Compile Include="Assets\Scripts\Features\World\Terrain\FloatingIslandTerrain.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Structures\Data\BlueprintStructureLibrary.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Interface\Nameplates\CombatNameplate.cs" />
+    <Compile Include="Assets\Scripts\Features\Presentation\Interface\ReadyDropdown.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\BuildPlacementGeometry.cs" />
     <Compile Include="Assets\Scripts\Features\Bootstrap\RuntimeObjectTemplates.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintBlockFactory.cs" />

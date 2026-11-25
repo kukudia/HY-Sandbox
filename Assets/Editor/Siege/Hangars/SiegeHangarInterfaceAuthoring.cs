@@ -59,7 +59,7 @@ public static class SiegeHangarInterfaceAuthoring
                     new Vector2(20, 15),
                     new Vector2(420, 44),
                     25));
-            GameObject dropdownObject = DefaultControls.CreateDropdown(new DefaultControls.Resources());
+            GameObject dropdownObject = DropdownTemplateAuthoring.Create(new DefaultControls.Resources());
             dropdownObject.name = "Ship Blueprints";
             dropdownObject.transform.SetParent(card, false);
             Place((RectTransform)dropdownObject.transform, new Vector2(20, 75), new Vector2(420, 46));

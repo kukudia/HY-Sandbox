@@ -1,6 +1,7 @@
 // 职责：统一自有uGUI下拉项的行高、文字留白和对比度，保存可继续编辑的模板。
 // 入口：Apply() / UpgradeAll()；制作工具重用相同规则，避免重新生成后退回默认20px行高。
 using System;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -10,6 +11,109 @@ using UnityEngine.UI;
 
 public static class DropdownTemplateAuthoring
 {
+    private const string ReadyScriptPath = "Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs";
+    public static GameObject Create(DefaultControls.Resources resources)
+    {
+        GameObject control = DefaultControls.CreateDropdown(resources);
+        UpgradeComponent(control.GetComponent<Dropdown>());
+        return control;
+    }
+
+    private static bool UpgradeComponent(Dropdown dropdown)
+    {
+        if (dropdown.GetType() != typeof(Dropdown))
+        {
+            return false;
+        }
+
+        MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(ReadyScriptPath);
+        if (script == null || script.GetClass() != typeof(ReadyDropdown))
+        {
+            throw new InvalidOperationException("The ReadyDropdown script has not imported.");
+        }
+
+        GameObject owner = dropdown.gameObject;
+        var serialized = new SerializedObject(dropdown);
+        // Change the serialized script in place so existing component references and events survive.
+        serialized.FindProperty("m_Script").objectReferenceValue = script;
+        serialized.ApplyModifiedPropertiesWithoutUndo();
+        if (owner.GetComponent<ReadyDropdown>() == null)
+        {
+            throw new InvalidOperationException("Could not migrate dropdown on " + owner.name);
+        }
+
+        return true;
+    }
+
+    [MenuItem("Tools/HY-Sandbox/UI/Upgrade dropdown lifecycle")]
+    public static void UpgradeLifecycle()
+    {
+        if (EditorApplication.isPlayingOrWillChangePlaymode || Enumerable.Range(0, SceneManager.sceneCount).Any(i => SceneManager.GetSceneAt(i).isDirty))
+        {
+            throw new InvalidOperationException("Save scenes and exit Play Mode first.");
+        }
+
+        int count = 0;
+        SceneSetup[] setup = EditorSceneManager.GetSceneManagerSetup();
+        try
+        {
+            foreach (string path in FindDropdownAssets("t:Prefab", "Assets/Resources", "Assets/Art/CombatHud"))
+            {
+                GameObject root = PrefabUtility.LoadPrefabContents(path);
+                try
+                {
+                    int changed = UpgradeTree(root);
+                    if (changed > 0)
+                    {
+                        PrefabUtility.SaveAsPrefabAsset(root, path);
+                        count += changed;
+                    }
+                }
+                finally
+                {
+                    PrefabUtility.UnloadPrefabContents(root);
+                }
+            }
+
+            foreach (string path in FindDropdownAssets("t:Scene", "Assets/Scenes"))
+            {
+                Scene scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
+                int changed = scene.GetRootGameObjects().Sum(UpgradeTree);
+                if (changed > 0)
+                {
+                    EditorSceneManager.MarkSceneDirty(scene);
+                    EditorSceneManager.SaveScene(scene);
+                    count += changed;
+                }
+            }
+        }
+        finally
+        {
+            EditorSceneManager.RestoreSceneManagerSetup(setup);
+        }
+
+        Debug.Log($"Dropdown lifecycle migration saved {count} controls.");
+    }
+
+    private static string[] FindDropdownAssets(string filter, params string[] folders)
+    {
+        return AssetDatabase.FindAssets(filter, folders).Select(AssetDatabase.GUIDToAssetPath).Where(path => File.ReadAllText(path).Contains("m_AlphaFadeSpeed:")).ToArray();
+    }
+
+    private static int UpgradeTree(GameObject root)
+    {
+        int count = 0;
+        foreach (Dropdown dropdown in root.GetComponentsInChildren<Dropdown>(true))
+        {
+            if (UpgradeComponent(dropdown))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     public static void Apply(Dropdown dropdown)
     {
         if (dropdown.template == null || dropdown.itemText == null)

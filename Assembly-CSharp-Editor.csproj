@@ -81,6 +81,7 @@
     <Compile Include="Assets\Editor\Combat\Diagnostics\FlightCourseChecks.cs" />
     <Compile Include="Assets\Editor\Siege\Authoring\SiegeConstructionAuthoring.cs" />
     <Compile Include="Assets\Editor\Navigation\Validation\EnemyPredictionPlayChecks.cs" />
+    <Compile Include="Assets\Editor\Presentation\Interface\DropdownLifecycleProbe.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\BlockStatusSetup.cs" />
     <Compile Include="Assets\Editor\Combat\SkirmishArenaAuthoring.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\NativeVfxPlaybackProbe.cs" />

@@ -83,7 +83,7 @@ public static class CombatDiagnosticsAuthoring
         }
 
         toggles.arraySize = 6;
-        Dropdown dropdown = DefaultControls.CreateDropdown(new DefaultControls.Resources()).GetComponent<Dropdown>();
+        Dropdown dropdown = DropdownTemplateAuthoring.Create(new DefaultControls.Resources()).GetComponent<Dropdown>();
         dropdown.name = "Diagnostic faction";
         RectTransform rect = dropdown.GetComponent<RectTransform>();
         rect.SetParent(window, false);

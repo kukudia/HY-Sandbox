@@ -7563,3 +7563,41 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Fail -->
 - [WeatherEventDirector.OnDisable](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L198)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|OnDisable -->
+
+## 下拉菜单首帧点击
+
+源码推导：场景与 Prefab 绑定 ReadyDropdown。启用时执行一次 uGUI 基类初始化，准备淡入淡出状态，随后走原生点击、选项与关闭逻辑。独立回归在 Play Mode 中主动触发同帧点击。
+
+```mermaid
+flowchart TD
+    A["DropdownTemplateAuthoring.Create()"]
+    click A "../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L15" "打开源码"
+    B["DropdownTemplateAuthoring.UpgradeComponent()"]
+    click B "../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L22" "打开源码"
+    C["ReadyDropdown.OnEnable()"]
+    click C "../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L10" "打开源码"
+    D["ReadyDropdown.Initialize()"]
+    click D "../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L27" "打开源码"
+    E["ReadyDropdown.Start()"]
+    click E "../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L19" "打开源码"
+    F["DropdownLifecycleProbe.VerifyControl()"]
+    click F "../Assets/Editor/Presentation/Interface/DropdownLifecycleProbe.cs#L114" "打开源码"
+    A --> B
+    B -.->|场景或Prefab装载| C
+    C --> D
+    E -->|已初始化时跳过| D
+    F -.->|启用实例后同帧发送点击| C
+```
+
+- [DropdownTemplateAuthoring.Create](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L15)
+<!-- source: Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs|Create -->
+- [DropdownTemplateAuthoring.UpgradeComponent](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L22)
+<!-- source: Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs|UpgradeComponent -->
+- [ReadyDropdown.OnEnable](../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L10)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs|OnEnable -->
+- [ReadyDropdown.Initialize](../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L27)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs|Initialize -->
+- [ReadyDropdown.Start](../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L19)
+<!-- source: Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs|Start -->
+- [DropdownLifecycleProbe.VerifyControl](../Assets/Editor/Presentation/Interface/DropdownLifecycleProbe.cs#L114)
+<!-- source: Assets/Editor/Presentation/Interface/DropdownLifecycleProbe.cs|VerifyControl -->

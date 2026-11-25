@@ -27,7 +27,7 @@ public static class SiegeInterfaceAuthoring
         SiegeSession session = SceneObjectQuery.FindInActiveScene<SiegeSession>();
         font = hud.GetComponentsInChildren<Text>(true).Select(text => text.font).FirstOrDefault(item => item != null) ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         Dropdown source = hud.GetComponentsInChildren<Dropdown>(true).FirstOrDefault();
-        GameObject template = source != null ? Object.Instantiate(source.gameObject) : DefaultControls.CreateDropdown(new DefaultControls.Resources());
+        GameObject template = source != null ? Object.Instantiate(source.gameObject) : DropdownTemplateAuthoring.Create(new DefaultControls.Resources());
         template.SetActive(false);
         template.name = "Temporary dropdown template";
         Undo.RegisterFullObjectHierarchyUndo(hud.gameObject, "Migrate Siege interface");

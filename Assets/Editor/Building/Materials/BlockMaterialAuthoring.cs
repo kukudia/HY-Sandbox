@@ -148,7 +148,7 @@ public static class BlockMaterialAuthoring
         Transform parent = palette.transform;
         Directory.CreateDirectory("Temp/Building");
         File.Copy(scene.path, "Temp/Building/Main-before-material-selector.unity", true);
-        GameObject control = parent.Find("MaterialSelector") != null ? parent.Find("MaterialSelector").gameObject : UnityEngine.UI.DefaultControls.CreateDropdown(new UnityEngine.UI.DefaultControls.Resources());
+        GameObject control = parent.Find("MaterialSelector") != null ? parent.Find("MaterialSelector").gameObject : DropdownTemplateAuthoring.Create(new UnityEngine.UI.DefaultControls.Resources());
         control.name = "MaterialSelector";
         control.transform.SetParent(parent, false);
         var rect = (RectTransform)control.transform;

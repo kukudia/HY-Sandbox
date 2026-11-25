@@ -539,7 +539,7 @@ public static class MainMenuAuthoring
 
     private static Dropdown Dropdown(string name, Transform parent, Vector2 position, Vector2 size)
     {
-        Dropdown control = DefaultControls.CreateDropdown(new DefaultControls.Resources()).GetComponent<Dropdown>();
+        Dropdown control = DropdownTemplateAuthoring.Create(new DefaultControls.Resources()).GetComponent<Dropdown>();
         control.name = name;
         Place(control.GetComponent<RectTransform>(), parent, position, size);
         control.GetComponent<Image>().color = new Color(.16f, .22f, .3f);

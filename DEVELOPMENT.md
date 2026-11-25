@@ -1,5 +1,12 @@
 # HY-Sandbox 开发入口
 
+## 下拉菜单首帧点击（2026-11-25）
+
+主菜单、建造、Siege、建筑编辑器和共享战斗 HUD 的 uGUI 下拉菜单使用 `ReadyDropdown`，在启用时准备原生淡入淡出。场景和 Prefab 保留组件 ID、选项、模板和回调。编辑器制作入口使用 `DropdownTemplateAuthoring.Create` 创建同一类型。
+
+在主菜单的 Play Mode 运行 `Tools/HY-Sandbox/UI/Verify dropdown lifecycle` 可复现旧控件在 `Start` 前被点击的异常，并检查迁移后的实际模板。详见[风险登记](Docs/ProjectRiskRegister.md)和[函数图](Docs/RuntimeFlow.md)。
+
+
 ## 特殊天气（2026-11-25）
 
 两种正式玩法每波以 40% 概率抽取一种特殊事件，陨石雨与龙卷风等概率。Exploration 进入可操作状态后开始第一波天气抽取，之后每 90 个模拟秒抽取一次。Siege 在开战时抽取，抽中天气的波次等事件结束并清完敌舰后进入返航。两个模式都在抽中后立即显示 30 秒预警，活动阶段默认 25 秒。

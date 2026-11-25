@@ -144,6 +144,7 @@ HY-Sandbox/
 │   │   │   │   └── VfxGraphAuthoring.cs
 │   │   │   ├── Interface/
 │   │   │   │   ├── BlockStatusSetup.cs
+│   │   │   │   ├── DropdownLifecycleProbe.cs
 │   │   │   │   ├── DropdownTemplateAuthoring.cs
 │   │   │   │   └── ReturnStatusSetup.cs
 │   │   │   ├── Resources/
@@ -545,6 +546,7 @@ HY-Sandbox/
 │           │       ├── MainUIButtons.cs
 │           │       ├── MainUIPanels.cs
 │           │       ├── PanelTransitions.cs
+│           │       ├── ReadyDropdown.cs
 │           │       ├── ReturnStatusPanel.cs
 │           │       ├── StatusIcon.cs
 │           │       └── UIInteractionFeedback.cs
@@ -2194,14 +2196,30 @@ HY-Sandbox/
 | BlockStatusSetup | [`Button GetOrCreateButton(Transform panel, Transform rowTemplate, string rowName, string label)`](../Assets/Editor/Presentation/Interface/BlockStatusSetup.cs#L189) | private static |
 | BlockStatusSetup | [`T FindComponentInScene(Scene scene)`](../Assets/Editor/Presentation/Interface/BlockStatusSetup.cs#L213) | private static |
 
+## Assets/Editor/Presentation/Interface/DropdownLifecycleProbe.cs
+
+// 职责：验证真实菜单模板在首次启用的同一帧可接收点击。 // 入口：Tools/HY-Sandbox/UI/Verify dropdown lifecycle。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| DropdownLifecycleProbe | [`void Verify()`](../Assets/Editor/Presentation/Interface/DropdownLifecycleProbe.cs#L16) | public static |
+| DropdownLifecycleProbe | [`IEnumerator Run()`](../Assets/Editor/Presentation/Interface/DropdownLifecycleProbe.cs#L27) | private static |
+| DropdownLifecycleProbe | [`void VerifyControl(ReadyDropdown source, Transform root, PointerEventData click)`](../Assets/Editor/Presentation/Interface/DropdownLifecycleProbe.cs#L114) | private static |
+| DropdownLifecycleProbe | [`void Require(bool condition, string message)`](../Assets/Editor/Presentation/Interface/DropdownLifecycleProbe.cs#L149) | private static |
+
 ## Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs
 
 // 职责：统一自有uGUI下拉项的行高、文字留白和对比度，保存可继续编辑的模板。 // 入口：Apply() / UpgradeAll()；制作工具重用相同规则，避免重新生成后退回默认20px行高。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| DropdownTemplateAuthoring | [`void Apply(Dropdown dropdown)`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L13) | public static |
-| DropdownTemplateAuthoring | [`void UpgradeAll()`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L65) | public static |
+| DropdownTemplateAuthoring | [`GameObject Create(DefaultControls.Resources resources)`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L15) | public static |
+| DropdownTemplateAuthoring | [`bool UpgradeComponent(Dropdown dropdown)`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L22) | private static |
+| DropdownTemplateAuthoring | [`void UpgradeLifecycle()`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L48) | public static |
+| DropdownTemplateAuthoring | [`string[] FindDropdownAssets(string filter, params string[] folders)`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L98) | private static |
+| DropdownTemplateAuthoring | [`int UpgradeTree(GameObject root)`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L103) | private static |
+| DropdownTemplateAuthoring | [`void Apply(Dropdown dropdown)`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L117) | public static |
+| DropdownTemplateAuthoring | [`void UpgradeAll()`](../Assets/Editor/Presentation/Interface/DropdownTemplateAuthoring.cs#L169) | public static |
 
 ## Assets/Editor/Presentation/Interface/ReturnStatusSetup.cs
 
@@ -6212,6 +6230,16 @@ HY-Sandbox/
 | PanelTransitions | [`void Show(GameObject panel, bool show, float duration)`](../Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L29) | public |
 | PanelTransitions | [`IEnumerator Fade(GameObject panel, bool show, float duration)`](../Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L53) | private |
 | PanelTransitions | [`void SetInteraction(GameObject panel, bool interactable)`](../Assets/Scripts/Features/Presentation/Interface/PanelTransitions.cs#L88) | public static |
+
+## Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs
+
+// 职责：在下拉菜单接收输入前初始化 uGUI 的淡入淡出状态。 // 入口：OnEnable()；保留 Dropdown 的模板、选项和输入行为。
+
+| 类型 | 方法签名 | 可见性 |
+| --- | --- | --- |
+| ReadyDropdown | [`void OnEnable()`](../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L10) | protected override |
+| ReadyDropdown | [`void Start()`](../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L19) | protected override |
+| ReadyDropdown | [`void Initialize()`](../Assets/Scripts/Features/Presentation/Interface/ReadyDropdown.cs#L27) | private |
 
 ## Assets/Scripts/Features/Presentation/Interface/ReturnStatusPanel.cs
 

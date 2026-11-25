@@ -162,7 +162,7 @@ public static class SiegeConstructionAuthoring
         Dropdown picker;
         if (old == null)
         {
-            GameObject obj = DefaultControls.CreateDropdown(new DefaultControls.Resources());
+            GameObject obj = DropdownTemplateAuthoring.Create(new DefaultControls.Resources());
             obj.name = "Base Selection";
             obj.transform.SetParent(modePanel.transform, false);
             RectTransform rect = (RectTransform)obj.transform;

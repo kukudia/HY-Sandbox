@@ -15707,9 +15707,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1033253363}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d0b652f32a2cc243917e4028fa0f046, type: 3}
+  m_Script: {fileID: 11500000, guid: 487ab269412f3004baf98e02fa5d7389, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Dropdown
+  m_EditorClassIdentifier: Assembly-CSharp::ReadyDropdown
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -25557,9 +25557,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1600371821}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d0b652f32a2cc243917e4028fa0f046, type: 3}
+  m_Script: {fileID: 11500000, guid: 487ab269412f3004baf98e02fa5d7389, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Dropdown
+  m_EditorClassIdentifier: Assembly-CSharp::ReadyDropdown
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
