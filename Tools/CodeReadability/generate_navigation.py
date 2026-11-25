@@ -2065,7 +2065,7 @@ def main():
     )
     graph(
         "Exploration 与 Siege 特殊天气",
-        "源码推导：Exploration 进入可操作状态后按会话种子和时间抽取。Siege 在战斗波次开始时抽取，并在天气结束前保留波次。命中事件后显示 30 个模拟秒预警，再按间隔生成陨石或启动龙卷风。风场定期刷新活动刚体快照，并在物理步向同一物理场景内、处于范围内的非运动学刚体施力。失败和场景退出清理尚未发生的预警和全部自有事件实例。",
+        "源码推导：Exploration 进入可操作状态后按会话种子和时间抽取。Siege 在战斗波次开始时抽取，并在天气结束前保留波次。命中事件后显示 15 个模拟秒预警，随后进入默认 40 秒的陨石雨或 60 秒的龙卷风活动期。风场定期刷新活动刚体快照，并在物理步向同一物理场景内、处于范围内的非运动学刚体施力。失败和场景退出清理尚未发生的预警和全部自有事件实例。",
         {"A": "WorldSessionManager.EnterPlay", "B": "WeatherEventDirector.StartExploration",
          "C": "WorldSessionManager.Update", "D": "WeatherEventDirector.TickExploration",
          "E": "SiegeGameplayStage.BeginWave", "F": "WeatherEventDirector.BeginWave",

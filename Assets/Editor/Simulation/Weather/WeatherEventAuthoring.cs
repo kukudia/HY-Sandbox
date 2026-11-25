@@ -209,7 +209,7 @@ public static class WeatherEventAuthoring
         label.alignment = TextAlignmentOptions.Center;
         label.color = new Color(1f, .72f, .33f);
         label.raycastTarget = false;
-        label.text = "METEOR SHOWER  /  IN 30s";
+        label.text = $"METEOR SHOWER  /  IN {WeatherEventDirector.WarningSeconds:00}s";
         banner.SetActive(false);
         SetReference(director, "warning", label);
         SetReference(director, "warningBanner", banner);

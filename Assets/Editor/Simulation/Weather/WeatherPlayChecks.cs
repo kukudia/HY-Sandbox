@@ -53,6 +53,7 @@ public static class WeatherPlayChecks
     private static void VerifyEvents(WeatherEventDirector weather, bool exploration)
     {
         float now = Time.time;
+        float startsAt = now + 15f;
         Vector3 focus = new Vector3(280f, 500f, 180f);
         SerializedObject config = new SerializedObject(weather);
         config.FindProperty("eventChance").floatValue = 1f;
@@ -74,9 +75,9 @@ public static class WeatherPlayChecks
             string title = label.text.Split('/')[0].Trim();
             results.Add(title);
             Require(
-                weather.HasEvent && label.isActiveAndEnabled && label.text.Contains("30s"),
-                "Weather must warn at wave start.");
-            weather.Tick(now + 29.9f, focus);
+                weather.HasEvent && label.isActiveAndEnabled && label.text.Contains("15s"),
+                "Weather must show a 15-second warning at wave start.");
+            weather.Tick(startsAt - .1f, focus);
             Require(
                 label.text.Contains("01s") && CountActiveHazards(weather) == 0,
                 "Weather began before the warning elapsed.");
@@ -95,11 +96,12 @@ public static class WeatherPlayChecks
             Require(
                 match.Phase == SiegePhase.Battle && match.PendingCoins == 2,
                 "Clearing the enemy early should retain the weather wave.");
-            weather.Tick(now + 30f, focus);
+            weather.Tick(startsAt, focus);
             Require(
                 label.text.Contains("ACTIVE") && CountActiveHazards(weather) == 1,
                 "Expected one active hazard when the countdown expires.");
-            if (title == "METEOR SHOWER")
+            bool isMeteorShower = title == "METEOR SHOWER";
+            if (isMeteorShower)
             {
                 Rigidbody body = weather.GetComponentInChildren<Rigidbody>();
                 Require(
@@ -108,9 +110,9 @@ public static class WeatherPlayChecks
                 Vector3 horizontalVelocity = Vector3.ProjectOnPlane(body.linearVelocity, Vector3.up);
                 float measuredSpeed = horizontalVelocity.magnitude;
                 Require(Mathf.Abs(measuredSpeed - 36f) < .1f, "Meteor horizontal speed must be 36 m/s.");
-                weather.Tick(now + 30.29f, focus);
+                weather.Tick(startsAt + .29f, focus);
                 Require(CountActiveHazards(weather) == 1, "Meteor interval must not elapse before 0.30 seconds.");
-                weather.Tick(now + 30.31f, focus);
+                weather.Tick(startsAt + .31f, focus);
                 Require(CountActiveHazards(weather) == 2, "Expected a second meteor at the new interval.");
             }
             else
@@ -121,7 +123,13 @@ public static class WeatherPlayChecks
                     "Tornado must start at the focus altitude.");
             }
 
-            weather.Tick(now + 56f, focus);
+            float endsAt = startsAt + (isMeteorShower ? 40f : 60f);
+            weather.Tick(endsAt - .1f, focus);
+            match.SetWaveObjectivePending(weather.HasEvent);
+            Require(
+                weather.HasEvent && label.isActiveAndEnabled && CountActiveHazards(weather) > 0 && match.Phase == SiegePhase.Battle,
+                $"{title} must stay active and hold the wave until its duration ends.");
+            weather.Tick(endsAt, focus);
             match.SetWaveObjectivePending(weather.HasEvent);
             Require(
                 !label.isActiveAndEnabled && CountActiveHazards(weather) == 0,
@@ -168,7 +176,7 @@ public static class WeatherPlayChecks
                 "Bodies in the extended wind field should be pulled.");
             Require(fixedBody.position == fixedPosition, "Wind must leave kinematic bodies in place.");
             Require(outside.linearVelocity == Vector3.zero, "Wind must leave bodies beyond its range alone.");
-            Debug.Log("Weather checks passed: both scenes, warning, meteor cadence and speed, tornado pull and range, cleanup and Siege early-clear gate.");
+            Debug.Log("Weather checks passed: both scenes, 15-second warning, 40-second meteor shower, 60-second tornado, hazard behavior, cleanup and Siege early-clear gate.");
         }
         finally
         {

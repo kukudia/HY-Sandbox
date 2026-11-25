@@ -208,7 +208,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeatherEventDirector
   eventChance: 0.4
   explorationWaveInterval: 90
-  eventDuration: 25
+  meteorDuration: 40
+  tornadoDuration: 60
   warning: {fileID: 239099186489878598}
   warningBanner: {fileID: 4100786609004028360}
   meteorPrefab: {fileID: 3899253428210490093, guid: d1aab8cab63ec9d4ea14c6986b4387a4, type: 3}
@@ -281,7 +282,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: METEOR SHOWER  /  IN 30s
+  m_text: METEOR SHOWER  /  IN 15s
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8aafb2a880e20304c95e2eb6d4bb0456, type: 2}
   m_sharedMaterial: {fileID: 7174573022935685860, guid: 8aafb2a880e20304c95e2eb6d4bb0456, type: 2}

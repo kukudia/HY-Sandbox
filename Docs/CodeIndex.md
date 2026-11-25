@@ -3285,11 +3285,11 @@ HY-Sandbox/
 | WeatherPlayChecks | [`void Verify()`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L13) | public static |
 | WeatherPlayChecks | [`void VerifyScene(string path, bool exploration, Action completed)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L27) | private static |
 | WeatherPlayChecks | [`void VerifyEvents(WeatherEventDirector weather, bool exploration)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L53) | private static |
-| WeatherPlayChecks | [`void VerifyWind()`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L140) | private static |
-| WeatherPlayChecks | [`IEnumerator VerifyWindAfterPhysics(GameObject root, Vector3 center)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L149) | private static |
-| WeatherPlayChecks | [`Rigidbody CreateWindBody(Transform root, Vector3 position, bool kinematic)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L179) | private static |
-| WeatherPlayChecks | [`int CountActiveHazards(WeatherEventDirector weather)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L190) | private static |
-| WeatherPlayChecks | [`void Require(bool passed, string message)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L195) | private static |
+| WeatherPlayChecks | [`void VerifyWind()`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L148) | private static |
+| WeatherPlayChecks | [`IEnumerator VerifyWindAfterPhysics(GameObject root, Vector3 center)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L157) | private static |
+| WeatherPlayChecks | [`Rigidbody CreateWindBody(Transform root, Vector3 position, bool kinematic)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L187) | private static |
+| WeatherPlayChecks | [`int CountActiveHazards(WeatherEventDirector weather)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L198) | private static |
+| WeatherPlayChecks | [`void Require(bool passed, string message)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L203) | private static |
 
 ## Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs
 
@@ -7558,17 +7558,17 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WeatherEventDirector | [`void StartExploration(float now, int seed)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L49) | public |
-| WeatherEventDirector | [`void TickExploration(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L56) | public |
-| WeatherEventDirector | [`void BeginWave(float now)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L67) | public |
-| WeatherEventDirector | [`void Tick(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L87) | public |
-| WeatherEventDirector | [`void SpawnMeteor(Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L122) | private |
-| WeatherEventDirector | [`bool IsDestroyed(Rigidbody body)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L146) | private static |
-| WeatherEventDirector | [`void Present(int seconds)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L151) | private |
-| WeatherEventDirector | [`void Clear()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L164) | public |
-| WeatherEventDirector | [`void Finish()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L171) | private |
-| WeatherEventDirector | [`void Retire(GameObject instance)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L197) | private static |
-| WeatherEventDirector | [`void OnDisable()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L203) | private |
+| WeatherEventDirector | [`void StartExploration(float now, int seed)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L51) | public |
+| WeatherEventDirector | [`void TickExploration(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L58) | public |
+| WeatherEventDirector | [`void BeginWave(float now)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L69) | public |
+| WeatherEventDirector | [`void Tick(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L90) | public |
+| WeatherEventDirector | [`void SpawnMeteor(Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L125) | private |
+| WeatherEventDirector | [`bool IsDestroyed(Rigidbody body)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L149) | private static |
+| WeatherEventDirector | [`void Present(int seconds)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L154) | private |
+| WeatherEventDirector | [`void Clear()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L167) | public |
+| WeatherEventDirector | [`void Finish()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L174) | private |
+| WeatherEventDirector | [`void Retire(GameObject instance)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L200) | private static |
+| WeatherEventDirector | [`void OnDisable()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L206) | private |
 
 ## Assets/Scripts/Features/Weather/WeatherTornado.cs
 

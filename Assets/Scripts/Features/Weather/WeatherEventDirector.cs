@@ -6,14 +6,16 @@ using UnityEngine;
 
 public sealed class WeatherEventDirector : MonoBehaviour
 {
-    public const float WarningSeconds = 30f;
+    public const float WarningSeconds = 15f;
     private const float MeteorFlightSeconds = 1.7f;
     [SerializeField, Range(0f, 1f)]
     private float eventChance = .4f;
     [SerializeField, Min(1f)]
     private float explorationWaveInterval = 90f;
     [SerializeField, Min(1f)]
-    private float eventDuration = 25f;
+    private float meteorDuration = 40f;
+    [SerializeField, Min(1f)]
+    private float tornadoDuration = 60f;
     [SerializeField]
     private TMP_Text warning;
     [SerializeField]
@@ -79,7 +81,8 @@ public sealed class WeatherEventDirector : MonoBehaviour
 
         current = random.Next(2) == 0 ? Weather.MeteorShower : Weather.Tornado;
         startsAt = now + WarningSeconds;
-        endsAt = startsAt + Mathf.Max(1f, eventDuration);
+        float duration = current == Weather.MeteorShower ? meteorDuration : tornadoDuration;
+        endsAt = startsAt + Mathf.Max(1f, duration);
         nextMeteor = startsAt;
         Present((int)WarningSeconds);
     }

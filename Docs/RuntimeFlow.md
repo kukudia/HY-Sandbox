@@ -7442,30 +7442,30 @@ flowchart TD
 
 ## Exploration 与 Siege 特殊天气
 
-源码推导：Exploration 进入可操作状态后按会话种子和时间抽取。Siege 在战斗波次开始时抽取，并在天气结束前保留波次。命中事件后显示 30 个模拟秒预警，再按间隔生成陨石或启动龙卷风。风场定期刷新活动刚体快照，并在物理步向同一物理场景内、处于范围内的非运动学刚体施力。失败和场景退出清理尚未发生的预警和全部自有事件实例。
+源码推导：Exploration 进入可操作状态后按会话种子和时间抽取。Siege 在战斗波次开始时抽取，并在天气结束前保留波次。命中事件后显示 15 个模拟秒预警，随后进入默认 40 秒的陨石雨或 60 秒的龙卷风活动期。风场定期刷新活动刚体快照，并在物理步向同一物理场景内、处于范围内的非运动学刚体施力。失败和场景退出清理尚未发生的预警和全部自有事件实例。
 
 ```mermaid
 flowchart TD
     A["WorldSessionManager.EnterPlay()"]
     click A "../Assets/Scripts/Features/World/WorldSessionManager.cs#L254" "打开源码"
     B["WeatherEventDirector.StartExploration()"]
-    click B "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L49" "打开源码"
+    click B "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L51" "打开源码"
     C["WorldSessionManager.Update()"]
     click C "../Assets/Scripts/Features/World/WorldSessionManager.cs#L446" "打开源码"
     D["WeatherEventDirector.TickExploration()"]
-    click D "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L56" "打开源码"
+    click D "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L58" "打开源码"
     E["SiegeGameplayStage.BeginWave()"]
     click E "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276" "打开源码"
     F["WeatherEventDirector.BeginWave()"]
-    click F "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L67" "打开源码"
+    click F "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L69" "打开源码"
     G["SiegeGameplayStage.Update()"]
     click G "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323" "打开源码"
     H["WeatherEventDirector.Tick()"]
-    click H "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L87" "打开源码"
+    click H "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L90" "打开源码"
     I["WeatherEventDirector.Present()"]
-    click I "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L151" "打开源码"
+    click I "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L154" "打开源码"
     J["WeatherEventDirector.SpawnMeteor()"]
-    click J "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L122" "打开源码"
+    click J "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L125" "打开源码"
     K["WeatherTornado.Begin()"]
     click K "../Assets/Scripts/Features/Weather/WeatherTornado.cs#L31" "打开源码"
     L["WeatherTornado.FixedUpdate()"]
@@ -7483,15 +7483,15 @@ flowchart TD
     R["SiegeGameplayStage.Exit()"]
     click R "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669" "打开源码"
     S["WeatherEventDirector.Clear()"]
-    click S "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L164" "打开源码"
+    click S "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L167" "打开源码"
     T["WeatherEventDirector.Finish()"]
-    click T "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L171" "打开源码"
+    click T "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L174" "打开源码"
     U["SiegeGameplayStage.Settle()"]
     click U "../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602" "打开源码"
     V["WorldSessionManager.Fail()"]
     click V "../Assets/Scripts/Features/World/WorldSessionManager.cs#L530" "打开源码"
     W["WeatherEventDirector.OnDisable()"]
-    click W "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L203" "打开源码"
+    click W "../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L206" "打开源码"
     A --> B
     C --> D
     D -->|计时波次到期| F
@@ -7519,23 +7519,23 @@ flowchart TD
 
 - [WorldSessionManager.EnterPlay](../Assets/Scripts/Features/World/WorldSessionManager.cs#L254)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|EnterPlay -->
-- [WeatherEventDirector.StartExploration](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L49)
+- [WeatherEventDirector.StartExploration](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L51)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|StartExploration -->
 - [WorldSessionManager.Update](../Assets/Scripts/Features/World/WorldSessionManager.cs#L446)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Update -->
-- [WeatherEventDirector.TickExploration](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L56)
+- [WeatherEventDirector.TickExploration](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L58)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|TickExploration -->
 - [SiegeGameplayStage.BeginWave](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L276)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|BeginWave -->
-- [WeatherEventDirector.BeginWave](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L67)
+- [WeatherEventDirector.BeginWave](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L69)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|BeginWave -->
 - [SiegeGameplayStage.Update](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L323)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Update -->
-- [WeatherEventDirector.Tick](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L87)
+- [WeatherEventDirector.Tick](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L90)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|Tick -->
-- [WeatherEventDirector.Present](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L151)
+- [WeatherEventDirector.Present](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L154)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|Present -->
-- [WeatherEventDirector.SpawnMeteor](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L122)
+- [WeatherEventDirector.SpawnMeteor](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L125)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|SpawnMeteor -->
 - [WeatherTornado.Begin](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L31)
 <!-- source: Assets/Scripts/Features/Weather/WeatherTornado.cs|Begin -->
@@ -7553,15 +7553,15 @@ flowchart TD
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|StopPreparation -->
 - [SiegeGameplayStage.Exit](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L669)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Exit -->
-- [WeatherEventDirector.Clear](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L164)
+- [WeatherEventDirector.Clear](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L167)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|Clear -->
-- [WeatherEventDirector.Finish](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L171)
+- [WeatherEventDirector.Finish](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L174)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|Finish -->
 - [SiegeGameplayStage.Settle](../Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs#L602)
 <!-- source: Assets/Scripts/Features/Siege/Gameplay/SiegeGameplayStage.cs|Settle -->
 - [WorldSessionManager.Fail](../Assets/Scripts/Features/World/WorldSessionManager.cs#L530)
 <!-- source: Assets/Scripts/Features/World/WorldSessionManager.cs|Fail -->
-- [WeatherEventDirector.OnDisable](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L203)
+- [WeatherEventDirector.OnDisable](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L206)
 <!-- source: Assets/Scripts/Features/Weather/WeatherEventDirector.cs|OnDisable -->
 
 ## 下拉菜单首帧点击
