@@ -247,6 +247,7 @@
     <Compile Include="Assets\Editor\Combat\Validation\EnemyBlueprintPoolChecks.cs" />
     <Compile Include="Assets\Editor\Salvage\SalvageAssetBaker.cs" />
     <Compile Include="Assets\Editor\World\Validation\WorldLab\WorldLabPersistenceChecks.cs" />
+    <Compile Include="Assets\Editor\Simulation\Weather\WeatherPlayChecks.cs" />
     <Compile Include="Assets\Editor\Combat\EnemyLabComplexAuthoring.cs" />
     <Compile Include="Assets\Editor\Presentation\Resources\VfxCatalogMigration.cs" />
     <Compile Include="Assets\Editor\Presentation\Interface\ReturnStatusSetup.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Assets\Editor\Flight\ThrusterHudSetup.cs" />
     <Compile Include="Assets\Editor\Presentation\Validation\CombatVfxCapture.cs" />
     <Compile Include="Assets\Editor\Siege\Validation\Fleet\SiegeWorkshopChecks.cs" />
+    <Compile Include="Assets\Editor\Simulation\Weather\WeatherEventAuthoring.cs" />
     <Compile Include="Assets\Editor\Salvage\CargoReturnFileChecks.cs" />
     <Compile Include="Assets\Editor\Building\BlockDataTables\BlockCsvRegressionChecks.cs" />
     <Compile Include="Assets\Editor\Art\BlockArtIntegrator.cs" />

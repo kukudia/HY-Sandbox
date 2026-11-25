@@ -1,4 +1,14 @@
 # HY-Sandbox 开发入口
+
+## 特殊天气（2026-11-25）
+
+两种正式玩法每波以 40% 概率抽取一种特殊事件，陨石雨与龙卷风等概率。Exploration 进入可操作状态后开始第一波天气抽取，之后每 90 个模拟秒抽取一次。Siege 在开战时抽取，抽中天气的波次等事件结束并清完敌舰后进入返航。两个模式都在抽中后立即显示 30 秒预警，活动阶段默认 25 秒。
+
+- `Assets/Scripts/Features/Weather/` 包含 `WeatherEventDirector.cs`（抽取、预警、陨石生成与清理）和 `WeatherTornado.cs`（移动、粒子与物理风场）。
+- `Assets/Art/Weather/` 保存两个场景共用的 `Weather Events.prefab`、陨石与龙卷风 Prefab、URP 粒子材质和可复现的 64 像素漏斗贴图。龙卷风半径 28 米、高约 50 米，粒子上限 192。陨石沿用现有 Sphere 模板与撞击表现。原 `TornadoParticle` 包作为本地美术源移入 `Assets/Art/TornadoParticle`。
+- 通过 Inspector 修改出现概率、探索抽取间隔、持续时间与风场参数。场景首次安装使用 `Tools/HY-Sandbox/Weather/Install`。在无活动对局的 Play Mode 调用 `Tools/HY-Sandbox/Weather/Verify` 可强制重现两种天气和提前清敌边界。见[函数图](Docs/RuntimeFlow.md)及[风险登记](Docs/ProjectRiskRegister.md#r42--特殊天气时序与风场2026-11-25)。
+
+
 本轮验收补充：隔离 Siege 伤害门控后重跑炮塔检查 32 项全部通过；直接在 Siege 部署阶段运行时，3 项伤害断言会被战斗阶段门控拒绝，不能作为 Fire 回归证据。
 炮塔追踪复用上次命中的碰撞体，冷却结束且炮口对准后才确认遮挡，实际发射成功才开始冷却。建筑、基地与飞船共用 BlueprintAssemblyBuilder、BatchConnectionBuilder 和 RuntimeGroupBuilder，建筑单独负责地基、逐块耐久和流式生命周期。
 

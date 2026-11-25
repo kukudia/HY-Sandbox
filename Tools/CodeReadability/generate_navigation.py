@@ -2063,6 +2063,27 @@ def main():
          "AG --> AK", "AK -->|成功出库继承悬浮推力| AL",
          "AG -->|接管时锁定本模块当前高度| AM", "AH -->|全舰入库或报废| AI"],
     )
+    graph(
+        "Exploration 与 Siege 特殊天气",
+        "源码推导：Exploration 进入可操作状态后按会话种子和时间抽取。Siege 在战斗波次开始时抽取，并在天气结束前保留波次。命中事件后显示 30 个模拟秒预警，再产生陨石或龙卷风。失败和场景退出清理尚未发生的预警和全部自有事件实例。",
+        {"A": "WorldSessionManager.EnterPlay", "B": "WeatherEventDirector.StartExploration",
+         "C": "WorldSessionManager.Update", "D": "WeatherEventDirector.TickExploration",
+         "E": "SiegeGameplayStage.BeginWave", "F": "WeatherEventDirector.BeginWave",
+         "G": "SiegeGameplayStage.Update", "H": "WeatherEventDirector.Tick",
+         "I": "WeatherEventDirector.Present", "J": "WeatherEventDirector.SpawnMeteor",
+         "K": "WeatherTornado.Begin", "L": "WeatherTornado.FixedUpdate",
+         "M": "WeatherTornado.ApplyWind", "N": "WeatherTornado.EmitFunnel",
+         "O": "SiegeMatch.SetWaveObjectivePending", "P": "SiegeMatch.TryCompleteWave",
+         "Q": "WorldSessionManager.StopPreparation", "R": "SiegeGameplayStage.Exit",
+         "S": "WeatherEventDirector.Clear", "T": "WeatherEventDirector.Finish",
+         "U": "SiegeGameplayStage.Settle", "V": "WorldSessionManager.Fail",
+         "W": "WeatherEventDirector.OnDisable"},
+        ["A --> B", "C --> D", "D -->|计时波次到期| F", "D --> H", "E --> F", "E --> O",
+         "G --> H", "G --> O", "F -->|抽中后立即显示| I", "H -->|更新倒计时和活动提示| I",
+         "H -->|倒计时到期且命中陨石雨| J", "H -->|倒计时到期且命中龙卷风| K",
+         "K -.->|后续物理步| L", "L --> M", "L --> N", "O --> P",
+         "H -->|事件到期| T", "Q --> S", "R --> S", "U --> S", "V --> S", "W --> S", "S --> T"],
+    )
     doc = """# HY-Sandbox 运行时函数图
 
     这些图根据当前源码和调用者整理，用于寻找功能入口，不是采样得到的实际执行轨迹。实线表示直接调用（标注“经”时包含明确中间函数）；虚线标出协程、事件或注入动作。Unity Update/FixedUpdate 的独立入口不代表脚本执行顺序。
