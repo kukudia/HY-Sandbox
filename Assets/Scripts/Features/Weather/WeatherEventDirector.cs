@@ -7,6 +7,7 @@ using UnityEngine;
 public sealed class WeatherEventDirector : MonoBehaviour
 {
     public const float WarningSeconds = 30f;
+    private const float MeteorFlightSeconds = 1.7f;
     [SerializeField, Range(0f, 1f)]
     private float eventChance = .4f;
     [SerializeField, Min(1f)]
@@ -24,7 +25,9 @@ public sealed class WeatherEventDirector : MonoBehaviour
     [SerializeField, Min(5f)]
     private float meteorRadius = 42f;
     [SerializeField, Min(.2f)]
-    private float meteorInterval = .75f;
+    private float meteorInterval = .30f;
+    [SerializeField, Min(0f)]
+    private float meteorHorizontalSpeed = 36f;
     private enum Weather
     {
         None,
@@ -109,7 +112,7 @@ public sealed class WeatherEventDirector : MonoBehaviour
                 tornado.Begin(focus, (float)random.NextDouble() * Mathf.PI * 2f);
             }
         }
-        else if (now >= nextMeteor && endsAt - now > 1.7f)
+        else if (now >= nextMeteor && endsAt - now > MeteorFlightSeconds)
         {
             nextMeteor = now + Mathf.Max(.2f, meteorInterval);
             SpawnMeteor(focus);
@@ -126,12 +129,14 @@ public sealed class WeatherEventDirector : MonoBehaviour
         float angle = (float)random.NextDouble() * Mathf.PI * 2f;
         float radius = Mathf.Sqrt((float)random.NextDouble()) * meteorRadius;
         Vector3 target = focus + new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
-        Vector3 drift = new Vector3(16f, 0f, 9f);
+        Vector3 horizontalVelocity = new Vector3(16f, 0f, 9f).normalized * meteorHorizontalSpeed;
+        // Offset the launch point so faster drift still crosses the chosen target.
+        Vector3 drift = horizontalVelocity * MeteorFlightSeconds;
         Rigidbody meteor = Instantiate(meteorPrefab, target - drift + Vector3.up * 85f, UnityEngine.Random.rotation, transform);
         float size = Mathf.Lerp(1.6f, 3.8f, (float)random.NextDouble());
         meteor.transform.localScale *= size;
         meteor.mass = size * 65f;
-        meteor.linearVelocity = (drift + Vector3.down * 85f) / 1.7f;
+        meteor.linearVelocity = horizontalVelocity + Vector3.down * (85f / MeteorFlightSeconds);
         meteor.angularVelocity = Vector3.one * 2f;
         meteors.RemoveAll(IsDestroyed);
         meteors.Add(meteor);

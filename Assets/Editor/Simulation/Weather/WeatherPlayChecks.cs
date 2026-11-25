@@ -1,6 +1,7 @@
 // 职责：从两份正式场景重新读取天气绑定，并在 Play Mode 强制覆盖两种随机结果。
 // 入口：Tools/HY-Sandbox/Weather/Verify，在 Play Mode 调用。
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
@@ -20,13 +21,7 @@ public static class WeatherPlayChecks
         VerifyScene(
             GameModeAuthoring.ExplorationPath,
             true,
-            () => VerifyScene(
-                GameModeAuthoring.SiegePath,
-                false,
-                () =>
-        {
-            Debug.Log("Weather checks passed: both scene references, 30-second warnings, two weather prefabs, cleanup and Siege early-clear gate.");
-        }));
+            () => VerifyScene(GameModeAuthoring.SiegePath, false, VerifyWind));
     }
 
     private static void VerifyScene(string path, bool exploration, Action completed)
@@ -110,6 +105,13 @@ public static class WeatherPlayChecks
                 Require(
                     body != null && body.linearVelocity.y < -1f && body.position.y > focus.y,
                     "Meteor must fall near the focus.");
+                Vector3 horizontalVelocity = Vector3.ProjectOnPlane(body.linearVelocity, Vector3.up);
+                float measuredSpeed = horizontalVelocity.magnitude;
+                Require(Mathf.Abs(measuredSpeed - 36f) < .1f, "Meteor horizontal speed must be 36 m/s.");
+                weather.Tick(now + 30.29f, focus);
+                Require(CountActiveHazards(weather) == 1, "Meteor interval must not elapse before 0.30 seconds.");
+                weather.Tick(now + 30.31f, focus);
+                Require(CountActiveHazards(weather) == 2, "Expected a second meteor at the new interval.");
             }
             else
             {
@@ -133,6 +135,56 @@ public static class WeatherPlayChecks
         weather.BeginWave(now);
         weather.Clear();
         Require(!weather.HasEvent && !label.isActiveAndEnabled, "Cancellation must dismiss the warning.");
+    }
+
+    private static void VerifyWind()
+    {
+        const string path = "Assets/Art/Weather/Weather Tornado.prefab";
+        GameObject root = new GameObject("Weather wind checks");
+        WeatherTornado tornado = UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(path), root.transform).GetComponent<WeatherTornado>();
+        tornado.Begin(new Vector3(280f, 500f, 180f), 0f);
+        tornado.StartCoroutine(VerifyWindAfterPhysics(root, tornado.transform.position));
+    }
+
+    private static IEnumerator VerifyWindAfterPhysics(GameObject root, Vector3 center)
+    {
+        try
+        {
+            Rigidbody inner = CreateWindBody(root.transform, center + Vector3.forward * 10f, false);
+            Rigidbody outer = CreateWindBody(root.transform, center + Vector3.forward * 34f, false);
+            Rigidbody above = CreateWindBody(root.transform, center + Vector3.up * 60f + Vector3.forward * 10f, false);
+            Vector3 fixedPosition = center + Vector3.forward * 10f;
+            Rigidbody fixedBody = CreateWindBody(root.transform, fixedPosition, true);
+            Rigidbody outside = CreateWindBody(root.transform, center + Vector3.forward * 50f, false);
+            float duration = 3 * Time.fixedDeltaTime;
+            for (int step = 0; step < 3; step++)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+
+            Require(inner.linearVelocity.z < -14f * duration, "A collider-free body should receive the stronger pull.");
+            Require(
+                outer.linearVelocity.z < 0f && above.linearVelocity.z < 0f,
+                "Bodies in the extended wind field should be pulled.");
+            Require(fixedBody.position == fixedPosition, "Wind must leave kinematic bodies in place.");
+            Require(outside.linearVelocity == Vector3.zero, "Wind must leave bodies beyond its range alone.");
+            Debug.Log("Weather checks passed: both scenes, warning, meteor cadence and speed, tornado pull and range, cleanup and Siege early-clear gate.");
+        }
+        finally
+        {
+            UnityEngine.Object.Destroy(root);
+        }
+    }
+
+    private static Rigidbody CreateWindBody(Transform root, Vector3 position, bool kinematic)
+    {
+        GameObject probe = new GameObject("Weather wind probe");
+        probe.transform.SetParent(root);
+        probe.transform.position = position;
+        Rigidbody body = probe.AddComponent<Rigidbody>();
+        body.useGravity = false;
+        body.isKinematic = kinematic;
+        return body;
     }
 
     private static int CountActiveHazards(WeatherEventDirector weather)

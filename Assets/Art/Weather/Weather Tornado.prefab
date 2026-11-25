@@ -2344,9 +2344,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherTornado
   funnel: {fileID: 5057128932118520371}
-  radius: 28
-  height: 50
+  radius: 45
+  height: 70
   speed: 5
   swirl: 18
-  pull: 9
+  pull: 24
   lift: 11

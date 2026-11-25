@@ -214,7 +214,8 @@ MonoBehaviour:
   meteorPrefab: {fileID: 3899253428210490093, guid: d1aab8cab63ec9d4ea14c6986b4387a4, type: 3}
   tornadoPrefab: {fileID: 6170713316181254242, guid: c8dd2b697b248a74691944019a4e18b5, type: 3}
   meteorRadius: 42
-  meteorInterval: 0.75
+  meteorInterval: 0.3
+  meteorHorizontalSpeed: 36
 --- !u!1 &7874408985382457420
 GameObject:
   m_ObjectHideFlags: 0

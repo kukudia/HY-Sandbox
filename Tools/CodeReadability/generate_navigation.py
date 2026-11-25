@@ -2065,7 +2065,7 @@ def main():
     )
     graph(
         "Exploration 与 Siege 特殊天气",
-        "源码推导：Exploration 进入可操作状态后按会话种子和时间抽取。Siege 在战斗波次开始时抽取，并在天气结束前保留波次。命中事件后显示 30 个模拟秒预警，再产生陨石或龙卷风。失败和场景退出清理尚未发生的预警和全部自有事件实例。",
+        "源码推导：Exploration 进入可操作状态后按会话种子和时间抽取。Siege 在战斗波次开始时抽取，并在天气结束前保留波次。命中事件后显示 30 个模拟秒预警，再按间隔生成陨石或启动龙卷风。风场定期刷新活动刚体快照，并在物理步向同一物理场景内、处于范围内的非运动学刚体施力。失败和场景退出清理尚未发生的预警和全部自有事件实例。",
         {"A": "WorldSessionManager.EnterPlay", "B": "WeatherEventDirector.StartExploration",
          "C": "WorldSessionManager.Update", "D": "WeatherEventDirector.TickExploration",
          "E": "SiegeGameplayStage.BeginWave", "F": "WeatherEventDirector.BeginWave",
@@ -2080,7 +2080,7 @@ def main():
          "W": "WeatherEventDirector.OnDisable"},
         ["A --> B", "C --> D", "D -->|计时波次到期| F", "D --> H", "E --> F", "E --> O",
          "G --> H", "G --> O", "F -->|抽中后立即显示| I", "H -->|更新倒计时和活动提示| I",
-         "H -->|倒计时到期且命中陨石雨| J", "H -->|倒计时到期且命中龙卷风| K",
+         "H -->|倒计时结束后按生成间隔| J", "H -->|倒计时结束且命中龙卷风| K",
          "K -.->|后续物理步| L", "L --> M", "L --> N", "O --> P",
          "H -->|事件到期| T", "Q --> S", "R --> S", "U --> S", "V --> S", "W --> S", "S --> T"],
     )

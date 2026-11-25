@@ -3282,11 +3282,14 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WeatherPlayChecks | [`void Verify()`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L12) | public static |
-| WeatherPlayChecks | [`void VerifyScene(string path, bool exploration, Action completed)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L32) | private static |
-| WeatherPlayChecks | [`void VerifyEvents(WeatherEventDirector weather, bool exploration)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L58) | private static |
-| WeatherPlayChecks | [`int CountActiveHazards(WeatherEventDirector weather)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L138) | private static |
-| WeatherPlayChecks | [`void Require(bool passed, string message)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L143) | private static |
+| WeatherPlayChecks | [`void Verify()`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L13) | public static |
+| WeatherPlayChecks | [`void VerifyScene(string path, bool exploration, Action completed)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L27) | private static |
+| WeatherPlayChecks | [`void VerifyEvents(WeatherEventDirector weather, bool exploration)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L53) | private static |
+| WeatherPlayChecks | [`void VerifyWind()`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L140) | private static |
+| WeatherPlayChecks | [`IEnumerator VerifyWindAfterPhysics(GameObject root, Vector3 center)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L149) | private static |
+| WeatherPlayChecks | [`Rigidbody CreateWindBody(Transform root, Vector3 position, bool kinematic)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L179) | private static |
+| WeatherPlayChecks | [`int CountActiveHazards(WeatherEventDirector weather)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L190) | private static |
+| WeatherPlayChecks | [`void Require(bool passed, string message)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L195) | private static |
 
 ## Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs
 
@@ -7555,28 +7558,28 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WeatherEventDirector | [`void StartExploration(float now, int seed)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L46) | public |
-| WeatherEventDirector | [`void TickExploration(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L53) | public |
-| WeatherEventDirector | [`void BeginWave(float now)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L64) | public |
-| WeatherEventDirector | [`void Tick(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L84) | public |
-| WeatherEventDirector | [`void SpawnMeteor(Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L119) | private |
-| WeatherEventDirector | [`bool IsDestroyed(Rigidbody body)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L141) | private static |
-| WeatherEventDirector | [`void Present(int seconds)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L146) | private |
-| WeatherEventDirector | [`void Clear()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L159) | public |
-| WeatherEventDirector | [`void Finish()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L166) | private |
-| WeatherEventDirector | [`void Retire(GameObject instance)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L192) | private static |
-| WeatherEventDirector | [`void OnDisable()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L198) | private |
+| WeatherEventDirector | [`void StartExploration(float now, int seed)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L49) | public |
+| WeatherEventDirector | [`void TickExploration(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L56) | public |
+| WeatherEventDirector | [`void BeginWave(float now)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L67) | public |
+| WeatherEventDirector | [`void Tick(float now, Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L87) | public |
+| WeatherEventDirector | [`void SpawnMeteor(Vector3 focus)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L122) | private |
+| WeatherEventDirector | [`bool IsDestroyed(Rigidbody body)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L146) | private static |
+| WeatherEventDirector | [`void Present(int seconds)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L151) | private |
+| WeatherEventDirector | [`void Clear()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L164) | public |
+| WeatherEventDirector | [`void Finish()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L171) | private |
+| WeatherEventDirector | [`void Retire(GameObject instance)`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L197) | private static |
+| WeatherEventDirector | [`void OnDisable()`](../Assets/Scripts/Features/Weather/WeatherEventDirector.cs#L203) | private |
 
 ## Assets/Scripts/Features/Weather/WeatherTornado.cs
 
-// 职责：移动龙卷风，在物理步向动态单位施加旋转风力与升力并驱动漏斗粒子。 // 入口：Begin() 设置经过事件中心的路径。
+// 职责：移动龙卷风，在物理步向动态刚体施加旋转风力与升力并驱动漏斗粒子。 // 入口：Begin() 设置经过事件中心的路径。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| WeatherTornado | [`void Begin(Vector3 focus, float angle)`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L26) | public |
-| WeatherTornado | [`void FixedUpdate()`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L34) | private |
-| WeatherTornado | [`void ApplyWind()`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L48) | private |
-| WeatherTornado | [`void EmitFunnel(float dt)`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L79) | private |
+| WeatherTornado | [`void Begin(Vector3 focus, float angle)`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L31) | public |
+| WeatherTornado | [`void FixedUpdate()`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L39) | private |
+| WeatherTornado | [`void ApplyWind()`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L53) | private |
+| WeatherTornado | [`void EmitFunnel(float dt)`](../Assets/Scripts/Features/Weather/WeatherTornado.cs#L93) | private |
 
 ## Assets/Scripts/Features/World/Outposts/EnemyOutpostData.cs
 

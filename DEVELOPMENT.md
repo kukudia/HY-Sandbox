@@ -12,7 +12,7 @@
 两种正式玩法每波以 40% 概率抽取一种特殊事件，陨石雨与龙卷风等概率。Exploration 进入可操作状态后开始第一波天气抽取，之后每 90 个模拟秒抽取一次。Siege 在开战时抽取，抽中天气的波次等事件结束并清完敌舰后进入返航。两个模式都在抽中后立即显示 30 秒预警，活动阶段默认 25 秒。
 
 - `Assets/Scripts/Features/Weather/` 包含 `WeatherEventDirector.cs`（抽取、预警、陨石生成与清理）和 `WeatherTornado.cs`（移动、粒子与物理风场）。
-- `Assets/Art/Weather/` 保存两个场景共用的 `Weather Events.prefab`、陨石与龙卷风 Prefab、URP 粒子材质和可复现的 64 像素漏斗贴图。龙卷风半径 28 米、高约 50 米，粒子上限 192。陨石沿用现有 Sphere 模板与撞击表现。原 `TornadoParticle` 包作为本地美术源移入 `Assets/Art/TornadoParticle`。
+- `Assets/Art/Weather/` 保存两种玩法共用的天气、陨石与龙卷风 Prefab。陨石默认每 0.30 个模拟秒生成一颗，水平速度为 36 m/s。龙卷风水平半径 45 米，向上作用 70 米，最大向心加速度为 24 m/s²。同一物理场景内，风场中的活动非运动学刚体均会受力，包括没有 Collider 的刚体。原 `TornadoParticle` 包作为本地美术源移入 `Assets/Art/TornadoParticle`。
 - 通过 Inspector 修改出现概率、探索抽取间隔、持续时间与风场参数。场景首次安装使用 `Tools/HY-Sandbox/Weather/Install`。在无活动对局的 Play Mode 调用 `Tools/HY-Sandbox/Weather/Verify` 可强制重现两种天气和提前清敌边界。见[函数图](Docs/RuntimeFlow.md)及[风险登记](Docs/ProjectRiskRegister.md#r42--特殊天气时序与风场2026-11-25)。
 
 

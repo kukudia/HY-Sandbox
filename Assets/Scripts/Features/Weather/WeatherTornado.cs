@@ -1,23 +1,28 @@
-// 职责：移动龙卷风，在物理步向动态单位施加旋转风力与升力并驱动漏斗粒子。
+// 职责：移动龙卷风，在物理步向动态刚体施加旋转风力与升力并驱动漏斗粒子。
 // 入口：Begin() 设置经过事件中心的路径。
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public sealed class WeatherTornado : MonoBehaviour
 {
+    private const float BodyRefreshSeconds = .15f;
     [SerializeField]
     private ParticleSystem funnel;
     [SerializeField, Min(1f)]
-    private float radius = 28f;
+    private float radius = 45f;
     [SerializeField, Min(1f)]
-    private float height = 50f;
+    private float height = 70f;
     [SerializeField, Min(0f)]
     private float speed = 5f;
     [SerializeField, Min(0f)]
     private float swirl = 18f;
     [SerializeField, Min(0f)]
-    private float pull = 9f;
+    private float pull = 24f;
     [SerializeField, Min(0f)]
     private float lift = 11f;
+    private Rigidbody[] bodies = Array.Empty<Rigidbody>();
+    private float refreshAt;
     private Vector3 direction;
     private float elapsed;
     private float emissionCarry;
@@ -47,28 +52,37 @@ public sealed class WeatherTornado : MonoBehaviour
 
     private void ApplyWind()
     {
-        var units = ControlUnit.RuntimeUnits;
-        for (int index = 0; index < units.Count; index++)
+        if (elapsed >= refreshAt)
         {
-            ControlUnit unit = units[index];
-            if (unit == null || unit.gameObject.scene != gameObject.scene || !unit.IsSimulationActive)
+            // A collider query would miss bodies without a collider or with collisions disabled.
+            bodies = FindObjectsByType<Rigidbody>();
+            refreshAt = elapsed + BodyRefreshSeconds;
+        }
+
+        Vector3 center = transform.position;
+        float radiusSquared = radius * radius;
+        PhysicsScene physicsScene = gameObject.scene.GetPhysicsScene();
+        foreach (Rigidbody body in bodies)
+        {
+            if (body == null || body.isKinematic || !body.gameObject.activeInHierarchy)
             {
                 continue;
             }
 
-            Vector3 offset = unit.transform.position - transform.position;
+            Vector3 offset = body.position - center;
             if (offset.y < -radius || offset.y > height)
             {
                 continue;
             }
 
             offset.y = 0f;
-            float distance = offset.magnitude;
-            if (distance >= radius || !unit.TryGetComponent(out Rigidbody body) || body.isKinematic)
+            float distanceSquared = offset.sqrMagnitude;
+            if (distanceSquared >= radiusSquared || body.gameObject.scene.GetPhysicsScene() != physicsScene)
             {
                 continue;
             }
 
+            float distance = Mathf.Sqrt(distanceSquared);
             Vector3 radial = offset.normalized;
             Vector3 tangent = Vector3.Cross(Vector3.up, radial);
             float strength = 1f - distance / radius;
