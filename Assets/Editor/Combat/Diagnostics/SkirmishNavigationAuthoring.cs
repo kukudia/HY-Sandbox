@@ -45,7 +45,7 @@ public static class SkirmishNavigationAuthoring
 
         if (data.FindProperty("debugFont").objectReferenceValue == null)
         {
-            data.FindProperty("debugFont").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+            data.FindProperty("debugFont").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
         }
 
         SerializedProperty tracks = data.FindProperty("enemyTracks");

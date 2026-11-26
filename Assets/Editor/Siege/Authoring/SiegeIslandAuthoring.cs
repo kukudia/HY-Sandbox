@@ -56,7 +56,7 @@ public static class SiegeIslandAuthoring
         PreviewCurrent();
         Scene scene = SceneManager.GetActiveScene();
         SiegeIsland island = SceneObjectQuery.FindInScene<SiegeIsland>(scene);
-        const string folder = "Assets/Siege/IslandMeshes";
+        const string folder = "Assets/Art/Siege/IslandMeshes";
         if (!AssetDatabase.IsValidFolder(folder))
         {
             AssetDatabase.CreateFolder("Assets/Siege", "IslandMeshes");
@@ -99,10 +99,6 @@ public static class SiegeIslandAuthoring
         string[] paths =
         {
             "Assets/Scenes/SiegeGameplay.unity",
-            "Assets/Scenes/Research/Siege.unity",
-            "Assets/Scenes/SiegeStress.unity",
-            "Assets/Scenes/Research/SiegeMixedStress.unity",
-            "Assets/Scenes/Research/SiegeLargeStress.unity"
         };
         foreach (string path in paths)
         {
@@ -165,7 +161,7 @@ public static class SiegeIslandAuthoring
         };
         for (int i = 0; i < names.Length; i++)
         {
-            materials.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/WorldLab/" + names[i] + ".mat");
+            materials.GetArrayElementAtIndex(i).objectReferenceValue = AssetDatabase.LoadAssetAtPath<Material>("Assets/Art/Terrain/" + names[i] + ".mat");
         }
 
         terrainData.ApplyModifiedPropertiesWithoutUndo();

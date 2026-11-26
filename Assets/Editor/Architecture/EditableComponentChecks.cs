@@ -14,8 +14,6 @@ public static class EditableComponentChecks
 {
     private const BindingFlags Instance = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
     private const string ReportFolder = "Temp/EditableComponentsChecks";
-    private static Rigidbody fallingDebris;
-    private static float debrisStartHeight;
     public static string RunWorkshop()
     {
         SiegeWorkshop workshop = SceneObjectQuery.FindInActiveScene<SiegeWorkshop>();
@@ -36,66 +34,6 @@ public static class EditableComponentChecks
 
         checks.Add("PASS workshop closes and restores original scene and UI without saving player data");
         return WriteReport("workshop", checks);
-    }
-
-    public static string RunWorldPlay()
-    {
-        Require(
-            Application.isPlaying && SceneManager.GetActiveScene().path == "Assets/Scenes/Research/WorldLab.unity",
-            "WorldLab Play required");
-        var checks = new List<string>();
-        ProceduralVoxelWorld world = SceneObjectQuery.FindInActiveScene<ProceduralVoxelWorld>();
-        world.Generate();
-        VoxelWorldChunk[] chunks = world.GetComponentsInChildren<VoxelWorldChunk>();
-        Require(chunks.Length > 0, "Generated chunks exist");
-        foreach (VoxelWorldChunk chunk in chunks)
-        {
-            Mesh mesh = chunk.GetComponent<MeshFilter>().sharedMesh;
-            Require(
-                mesh != null && (mesh.vertexCount == 0 || chunk.GetComponent<MeshCollider>().sharedMesh == mesh),
-                "Chunk prefab retains render and physics composition");
-        }
-
-        checks.Add("PASS terrain generation instantiates chunk templates with valid render/collision meshes");
-        VoxelStructureCollapse collapse = world.GetComponent<VoxelStructureCollapse>();
-        Require(collapse != null, "Authored collapse component exists");
-        collapse.enabled = false;
-        var first = new Vector3Int(4, 22, 4);
-        var second = new Vector3Int(4, 23, 4);
-        world.SetCell(first, 3);
-        world.SetCell(second, 3);
-        world.FlushDirty();
-        Physics.SyncTransforms();
-        collapse.ResolveDetached();
-        Require(world.Data.Get(first) == 0 && world.Data.Get(second) == 0, "Detached cells removed from source");
-        foreach (VoxelDebrisPiece piece in Object.FindObjectsByType<VoxelDebrisPiece>())
-        {
-            if (Vector3.Distance(piece.transform.position, world.CellCenter(first) - Vector3.one * world.CellSize * 0.5f) < 0.01f)
-            {
-                Mesh mesh = piece.GetComponent<MeshFilter>().sharedMesh;
-                Require(
-                    piece.GetComponents<BoxCollider>().Length == 2 && mesh.triangles.Length == 36 && mesh.bounds.size == new Vector3(world.CellSize, world.CellSize * 2f, world.CellSize),
-                    "Two-cell fragment preserves exact geometry and compound collision");
-                fallingDebris = piece.GetComponent<Rigidbody>();
-                debrisStartHeight = piece.transform.position.y;
-                Require(
-                    Vector3.Distance(fallingDebris.position, piece.transform.position) < 0.001f,
-                    "Prefab rigidbody starts at the requested world pose before its first physics step");
-                Require(!fallingDebris.isKinematic && fallingDebris.useGravity, "Debris remains physical");
-            }
-        }
-
-        Require(fallingDebris != null && world.PendingChunks == 0, "Source collision updated before simulation");
-        checks.Add("PASS detached voxel template preserves compound colliders, culled internal faces and source collision removal");
-        return WriteReport("world", checks);
-    }
-
-    public static string VerifyWorldMotion()
-    {
-        Require(
-            fallingDebris != null && fallingDebris.position.y < debrisStartHeight - 0.05f,
-            "Instantiated fragment falls in real PhysX frames");
-        return WriteReport("world-motion", new List<string> { "PASS authored voxel debris falls across real Play frames" });
     }
 
     public static string AuditAssets()

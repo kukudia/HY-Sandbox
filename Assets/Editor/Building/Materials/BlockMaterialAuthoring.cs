@@ -157,7 +157,7 @@ public static class BlockMaterialAuthoring
         rect.pivot = new Vector2(.5f, 0);
         rect.offsetMin = new Vector2(6, 4);
         rect.offsetMax = new Vector2(-14, 34);
-        var font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        var font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
         foreach (var text in control.GetComponentsInChildren<UnityEngine.UI.Text>(true))
         {
             text.font = font;

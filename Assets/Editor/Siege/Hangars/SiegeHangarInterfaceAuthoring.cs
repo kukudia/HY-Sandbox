@@ -139,11 +139,7 @@ public static class SiegeHangarInterfaceAuthoring
         {
             foreach (string path in new[]
             {
-                "Assets/Scenes/Research/Siege.unity",
                 "Assets/Scenes/SiegeGameplay.unity",
-                "Assets/Scenes/SiegeStress.unity",
-                "Assets/Scenes/Research/SiegeMixedStress.unity",
-                "Assets/Scenes/Research/SiegeLargeStress.unity"
             }
 
             )

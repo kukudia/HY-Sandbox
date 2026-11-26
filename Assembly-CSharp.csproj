@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Generated file, do not modify, your changes will be overwritten (use AssetPostprocessor.OnGeneratedCSProject) -->
   <PropertyGroup>
@@ -79,7 +79,6 @@
     <Compile Include="Assets\Scripts\Features\Building\Interface\SaveUIPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\StylizedBeamEffect.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Materials\BlockMaterialCatalog.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\WorldLab\WorldLabController.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeReturnFlight.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Units\Cockpit.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Structures\Streaming\BlueprintStructureStreaming.cs" />
@@ -88,15 +87,12 @@
     <Compile Include="Assets\Scripts\Features\World\WorldGenerationSettings.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\MainUIButtons.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\UIInteractionFeedback.cs" />
-    <Compile Include="Assets\Layer Lab\Scripts\PanelControl.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Lab\EnemyLabPanel.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeIsland.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\VfxEffect.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BuildingEditor\BuildingFootprint.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\WorldLab\WorldLabDebrisProbe.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\DebugManager.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Interface\Panels\CombatHudPanels.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\Siege\SiegeDrivingPlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\MainMenu\Navigation\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\DurabilityDebugLabels.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\ProjectileTracer.cs" />
@@ -108,7 +104,6 @@
     <Compile Include="Assets\Scripts\Features\Building\BuildManager.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\IBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\BeamFade.cs" />
-    <Compile Include="Assets\Real Fire &amp; Smoke\Demo\Scripts\RealFireDragMouseOrbit.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\GroupAction.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Lab\EnemyLabMovingObstacle.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegePhaseClock.cs" />
@@ -128,7 +123,6 @@
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\TurretHitscan.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Physics\PhysicsTelemetryHud.cs" />
     <Compile Include="Assets\Scripts\Features\Weather\WeatherTornado.cs" />
-    <Compile Include="Assets\Scripts\Features\Siege\Validation\SiegeEngineCounters.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Fleet\SiegeBlueprintCatalog.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Navigation\BotNavigationPolicy.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Thrusters\HoverThruster.cs" />
@@ -237,13 +231,11 @@
     <Compile Include="Assets\Scripts\Features\MainMenu\Library\MenuBlueprintLibrary.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interface\BuildPaletteItem.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\LightFade.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\Siege\SiegePlayerSurvey.cs" />
     <Compile Include="Assets\Scripts\Features\World\Presentation\WorldDistanceView.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Tracking\NavigationFlightTrace.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\IconManager.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BlockConnectionSnapshot.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarEntranceButton.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\WorldLab\WorldLabPhysicsProbe.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\TurretProjectilePool.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarRules.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\SiegeConstructionSettings.cs" />
@@ -253,12 +245,10 @@
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\ProjectileTurret.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\ISiegeDeploymentHost.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Vessels\VesselNavigation.cs" />
-    <Compile Include="Assets\Real Fire &amp; Smoke\Scripts\RealFireLightFade.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Structures\Data\BlueprintStructureState.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\LaserTurret.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Cargo\CargoHold.cs" />
     <Compile Include="Assets\Scripts\Features\World\Validation\OutpostPlayerChecks.cs" />
-    <Compile Include="Assets\Real Fire &amp; Smoke\Demo\Scripts\RealFireSceneSelect.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Groups\GroupPhysicsSettings.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Actions\MoveBlockAction.cs" />
     <Compile Include="Assets\Scripts\Features\Salvage\Cargo\CargoPersistence.cs" />
@@ -266,7 +256,6 @@
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Projectiles\TurretProjectile.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Diagnostics\SimulationWorkMetrics.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Damage\CollisionDamageResolver.cs" />
-    <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Battle\SiegeCleanupSweep.cs" />
     <Compile Include="Assets\Scripts\Features\MainMenu\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\IndustrialPartMotion.cs" />
@@ -275,11 +264,9 @@
     <Compile Include="Assets\Scripts\Features\Diagnostics\Interface\PerformanceMonitor.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Repair\RepairBot.cs" />
     <Compile Include="Assets\Scripts\Features\World\Outposts\OutpostEncounterDirector.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\WorldLab\BlueprintStructureCatalog.cs" />
     <Compile Include="Assets\Scripts\Features\Bots\Collection\CollectionBot.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Block.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Interface\SiegeObserverCamera.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\WorldLab\WorldLabPersistence.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\FloatingIslandTerrain.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Structures\Data\BlueprintStructureLibrary.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Interface\Nameplates\CombatNameplate.cs" />
@@ -289,7 +276,6 @@
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintBlockFactory.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Workshop\SiegeWorkshopStage.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Structures\Topology\BlueprintStructureRefit.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\Siege\SiegePlayerChecks.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Interface\Notifications\CombatFeedItem.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\ChangeHangarEntranceAction.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Physics\ImpactPhysics.cs" />
@@ -326,7 +312,6 @@
     <Compile Include="Assets\Scripts\Features\Navigation\NavigationAvoidanceResult.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Gameplay\Interface\SiegeCombatHud.cs" />
     <Compile Include="Assets\Scripts\Features\Power\Presentation\PowerConnectionVisuals.cs" />
-    <Compile Include="Assets\Real Fire &amp; Smoke\Demo\Scripts\RealFireLoopScript.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Turrets\Turret.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Planning\NavigationLocalPath.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintFileStore.cs" />
@@ -336,7 +321,6 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Interface\PanelTransitions.cs" />
     <Compile Include="Assets\Scripts\Features\Siege\Hangars\HangarResizeButton.cs" />
     <Compile Include="Assets\Scripts\Features\World\Streaming\WorldPlayerStreamingGuard.cs" />
-    <Compile Include="Assets\Real Fire &amp; Smoke\Scripts\RealFireLightFlicker.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\ConnectorPlacementHints.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Features\Flight\Hover\HoverControlSolver.cs" />
@@ -348,7 +332,6 @@
     <Compile Include="Assets\Scripts\Features\Power\Network\PowerNetworkBaseline.cs" />
     <Compile Include="Assets\Scripts\Features\Building\Interaction\RotateAxisHandle.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Interface\Threats\CombatThreatView.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\WorldLab\BlueprintStructurePalette.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\Destruction\VoxelDebrisPiece.cs" />
     <Compile Include="Assets\Scripts\Features\World\Terrain\VoxelWorldChunk.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Damage\ExplosionPropagation.cs" />
@@ -364,7 +347,6 @@
     <Compile Include="Assets\Scripts\Features\Presentation\Effects\TransientEffectPool.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlockData.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Enemies\EnemyController.cs" />
-    <Compile Include="Assets\Layer Lab\Scripts\PanelView.cs" />
     <Compile Include="Assets\Scripts\Features\Diagnostics\Physics\AbnormalImpulseBodyProbe.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Attract\BattleAttractCamera.cs" />
     <Compile Include="Assets\Scripts\Features\Combat\Skirmish\SkirmishHud.cs" />
@@ -386,12 +368,10 @@
     <Compile Include="Assets\Scripts\Features\Salvage\Cargo\CargoItem.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\Diagnostics\Lab\EnemyLabBlueprints.cs" />
     <Compile Include="Assets\Scripts\Features\Navigation\NavigationAvoidanceSettings.cs" />
-    <Compile Include="Assets\Scripts\Features\Research\Siege\SiegeStressPopulation.cs" />
     <Compile Include="Assets\Scripts\Features\World\Persistence\VoxelWorldEdits.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Camera\CameraFraming.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BlockConnections.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\CargoVisual.cs" />
-    <Compile Include="Assets\UNI VFX\Common\Scripts\UNI_SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\Features\Building\BlueprintLoading\BlueprintAssemblyBuilder.cs" />
     <Compile Include="Assets\Scripts\Features\Presentation\Blocks\CargoHoldView.cs" />
     <Compile Include="Assets\Scripts\Features\Simulation\Connections\BatchConnectionBuilder.cs" />
@@ -401,43 +381,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Logs\v0.1.12.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\Art\Typography\Shaders\TMPro.cginc" />
     <None Include="Assets\PolygonSciFiSpace\Shaders\SyntyStudios_Asteroid.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />
-    <None Include="Assets\Real Fire &amp; Smoke\Shaders\RealRefractionShader.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
-    <None Include="Assets\Real Fire &amp; Smoke\Shaders\RefractionShader.shader" />
     <None Include="Assets\PolygonSciFiSpace\Shaders\POLYGON_Triplanar.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\PolygonSciFiSpace\Shaders\SyntyStudios_Triplanar_ObjectSpace.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
-    <None Include="Assets\CUBE - Spaceships Pack 01\www.meshtint.com.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
-    <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
-    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Art\Typography\Sprites\EmojiOne Attribution.txt" />
+    <None Include="Assets\Art\Typography\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\Art\Typography\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\Art\Typography\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Logs\v0.1.11.txt" />
     <None Include="Assets\PolygonSciFiSpace\Shaders\SyntyStudios_Planet.shader" />
-    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Art\Typography\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\Logs\v0.1.18.txt" />
-    <None Include="Assets\CUBE - Spaceships Pack 01\Read me.txt" />
     <None Include="Assets\Logs\v0.1.14.txt" />
     <None Include="Assets\PolygonSciFiSpace\Shaders\SyntyStudios_Planet_Lines.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\PolygonSciFiSpace\Shaders\POLYGON_SpaceShip_Rim.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
-    <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
-    <None Include="Assets\Real Fire &amp; Smoke\Readme.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
+    <None Include="Assets\Art\Typography\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\Art\Typography\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\Art\Typography\Shaders\TMP_Sprite.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

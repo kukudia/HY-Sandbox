@@ -222,7 +222,7 @@ public static class PhysicsSandboxProbe
         var host = new GameObject("Building impact probe");
         SceneManager.MoveGameObjectToScene(host, scene);
         BlueprintStructureRegistry manager = host.AddComponent<BlueprintStructureRegistry>();
-        BlockDataList blueprint = WorldBuildingAuthoring.CreateSample();
+        BlockDataList blueprint = CreateSample();
         var health = new float[blueprint.blocks.Count];
         for (int i = 0; i < health.Length; i++)
         {
@@ -421,5 +421,25 @@ public static class PhysicsSandboxProbe
         string result = string.Join("\n", checks) + (error == null ? "\nALL PASSED" : "\n" + error);
         File.WriteAllText("Temp/PhysicsUI/Validation.txt", result);
         return result;
+    }
+
+    private static BlockDataList CreateSample()
+    {
+        var blueprint = new BlockDataList
+        {
+            foundation = new BuildingFoundationData()
+        };
+        Add(blueprint, "PowerGeneratingUnit", new Vector3(-1f, 1f, -1f));
+        Add(blueprint, "CargoHold", new Vector3(1f, 1f, 1f));
+        Add(blueprint, "PowerTransmissionDevice", new Vector3(0.5f, 0.5f, -1.5f));
+        Add(blueprint, "1x1x1", new Vector3(-0.5f, 0.5f, 0.5f));
+        Add(blueprint, "Turret", new Vector3(-0.5f, 2.5f, -0.5f));
+        return blueprint;
+    }
+
+    private static void Add(BlockDataList blueprint, string resource, Vector3 position)
+    {
+        Block prefab = Resources.Load<GameObject>("Blocks/" + resource).GetComponent<Block>();
+        blueprint.blocks.Add(new BlockData(prefab) { id = "part-" + blueprint.blocks.Count, resourcePath = "Assets/Resources/Blocks/" + resource + ".prefab", posX = position.x, posY = position.y, posZ = position.z, rotX = 0f, rotY = 0f, rotZ = 0f, rotW = 1f });
     }
 }

@@ -10,38 +10,6 @@ using Object = UnityEngine.Object;
 
 public static class VfxCatalogChecks
 {
-    public static string CheckPreservation(string baselineRoot)
-    {
-        int count = 0;
-        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { baselineRoot }))
-        {
-            string baselinePath = AssetDatabase.GUIDToAssetPath(guid);
-            string currentPath = "Assets" + baselinePath.Substring(baselineRoot.Length);
-            GameObject before = AssetDatabase.LoadAssetAtPath<GameObject>(baselinePath);
-            GameObject after = AssetDatabase.LoadAssetAtPath<GameObject>(currentPath);
-            var current = after.GetComponentsInChildren<VfxEffect>(true).ToDictionary(effect => GlobalObjectId.GetGlobalObjectIdSlow(effect).targetObjectId);
-            foreach (VfxEffect old in before.GetComponentsInChildren<VfxEffect>(true))
-            {
-                Require(
-                    current.TryGetValue(GlobalObjectId.GetGlobalObjectIdSlow(old).targetObjectId, out VfxEffect migrated),
-                    "Component identity: " + currentPath);
-                Require(
-                    old.transform.localPosition == migrated.transform.localPosition && old.transform.localRotation == migrated.transform.localRotation && old.transform.localScale == migrated.transform.localScale,
-                    "Anchor transform: " + currentPath);
-                if (!migrated.IsGroup)
-                {
-                    Require(
-                        VfxCatalogMigration.Signature(old) == VfxCatalogMigration.Signature(BlockVfxLibrary.Instance.Resolve(migrated.EffectId)),
-                        "Appearance changed: " + currentPath + "/" + old.name);
-                }
-
-                count++;
-            }
-        }
-
-        return $"PASS: {count} component identities, transforms and leaf graph signatures preserved.";
-    }
-
     public static string CheckAssets()
     {
         Require(!Application.isPlaying, "Requires Edit Mode");

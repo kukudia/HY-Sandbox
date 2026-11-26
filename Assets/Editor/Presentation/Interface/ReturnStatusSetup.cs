@@ -49,7 +49,7 @@ public static class ReturnStatusSetup
             labelRect.offsetMin = new Vector2(18f, 10f);
             labelRect.offsetMax = new Vector2(-18f, -10f);
             Text text = label.GetComponent<Text>();
-            text.font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+            text.font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
             if (text.font == null)
             {
                 throw new MissingReferenceException("Main interface font missing.");

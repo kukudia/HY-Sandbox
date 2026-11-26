@@ -115,7 +115,6 @@ public static class BlueprintIntegrityAudit
         {
             "Assets/Siege",
             "Assets/Resources/WorldBlueprints",
-            "Assets/WorldLab/Buildings"
         }
 
         )

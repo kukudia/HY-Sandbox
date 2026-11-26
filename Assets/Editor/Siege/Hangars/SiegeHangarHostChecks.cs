@@ -49,12 +49,6 @@ public static class SiegeHangarHostChecks
         Start("stage-wide", "Assets/Scenes/MainMenu.unity");
     }
 
-    [MenuItem("Tools/HY-Sandbox/Siege/Validate prototype hangar host")]
-    public static void RunPrototype()
-    {
-        Start("prototype", "Assets/Scenes/Research/Siege.unity");
-    }
-
     private static void Start(string target, string path)
     {
         if (EditorApplication.isPlaying || SceneManager.sceneCount != 1 || SceneManager.GetActiveScene().path != path || SceneManager.GetActiveScene().isDirty)

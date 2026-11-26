@@ -92,7 +92,7 @@ public static class SkirmishArenaAuthoring
         copy.SetActive(true);
         CombatHud combatHud = copy.GetComponent<CombatHud>();
         EditorSceneManager.CloseScene(main, true);
-        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
         Text title = Label(
             canvas.transform,
             "Round Status",

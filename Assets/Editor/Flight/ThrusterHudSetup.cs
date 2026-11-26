@@ -31,7 +31,7 @@ public static class ThrusterHudSetup
         }
 
         MainUIPanels panels = scene.GetRootGameObjects().SelectMany(root => root.GetComponentsInChildren<MainUIPanels>(true)).Single();
-        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
         if (font == null)
         {
             throw new MissingReferenceException("Chakra Petch font is missing.");

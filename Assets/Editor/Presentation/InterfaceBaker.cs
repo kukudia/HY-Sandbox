@@ -30,7 +30,7 @@ public static class InterfaceBaker
             throw new System.InvalidOperationException("Open Main before polishing the interface.");
         }
 
-        _font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        _font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
         if (_font == null)
         {
             throw new MissingReferenceException("Chakra Petch font is missing.");

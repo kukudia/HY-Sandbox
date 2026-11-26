@@ -19,7 +19,7 @@ public static class EnemyAvoidanceLabAuthoring
         }
 
         Scene previous = SceneManager.GetActiveScene();
-        Scene source = EditorSceneManager.OpenScene("Assets/Scenes/Research/Siege.unity", OpenSceneMode.Additive);
+        Scene source = EditorSceneManager.OpenScene("Assets/Scenes/Build.unity", OpenSceneMode.Additive);
         Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
         SceneManager.SetActiveScene(scene);
         try
@@ -412,8 +412,6 @@ public static class EnemyAvoidanceLabAuthoring
         foreach (string scenePath in new[]
         {
             "Assets/Scenes/Build.unity",
-            "Assets/Scenes/Research/Siege.unity",
-            "Assets/Scenes/Research/WorldLab.unity"
         }
 
         )

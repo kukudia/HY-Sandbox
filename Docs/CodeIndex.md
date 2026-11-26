@@ -26,8 +26,7 @@ HY-Sandbox/
 │   │   ├── Art/
 │   │   │   ├── BlockArtIntegrator.cs
 │   │   │   ├── Authoring/
-│   │   │   │   ├── IndustrialArtGenerator.cs
-│   │   │   │   └── SpaceKitCurator.cs
+│   │   │   │   └── IndustrialArtGenerator.cs
 │   │   │   ├── Preview/
 │   │   │   │   └── BlockArtPreview.cs
 │   │   │   └── Validation/
@@ -35,8 +34,7 @@ HY-Sandbox/
 │   │   │       ├── BlockArtPlayProbe.cs
 │   │   │       └── BlockArtValidation.cs
 │   │   ├── Bots/
-│   │   │   ├── BotNavigationPlayProbe.cs
-│   │   │   └── BotNavigationPolicyMigration.cs
+│   │   │   └── BotNavigationPlayProbe.cs
 │   │   ├── Build/
 │   │   │   └── AutoBuildTool.cs
 │   │   ├── Building/
@@ -140,7 +138,6 @@ HY-Sandbox/
 │   │   │   │   ├── DebrisFireBaker.cs
 │   │   │   │   ├── EnemySpawnPortalBaker.cs
 │   │   │   │   ├── NativeVfxLibraryBuilder.cs
-│   │   │   │   ├── NativeVfxMigration.cs
 │   │   │   │   └── VfxGraphAuthoring.cs
 │   │   │   ├── Interface/
 │   │   │   │   ├── BlockStatusSetup.cs
@@ -150,8 +147,7 @@ HY-Sandbox/
 │   │   │   ├── Resources/
 │   │   │   │   ├── BlockVfxLibraryEditor.cs
 │   │   │   │   ├── PresentationAssetIndex.cs
-│   │   │   │   ├── PresentationResourceWindow.cs
-│   │   │   │   └── VfxCatalogMigration.cs
+│   │   │   │   └── PresentationResourceWindow.cs
 │   │   │   └── Validation/
 │   │   │       ├── CombatVfxCapture.cs
 │   │   │       ├── CombatVfxChecks.cs
@@ -167,10 +163,7 @@ HY-Sandbox/
 │   │   ├── Siege/
 │   │   │   ├── SiegeConstructionPlayChecks.cs
 │   │   │   ├── SiegePlayChecks.cs
-│   │   │   ├── SiegeSceneAuthoring.cs
 │   │   │   ├── Authoring/
-│   │   │   │   ├── SiegeArenaLookAuthoring.cs
-│   │   │   │   ├── SiegeBaseBlueprintAuthoring.cs
 │   │   │   │   ├── SiegeBlueprintSelectionAuthoring.cs
 │   │   │   │   ├── SiegeCleanupAuthoring.cs
 │   │   │   │   ├── SiegeCombatBaseAuthoring.cs
@@ -179,11 +172,8 @@ HY-Sandbox/
 │   │   │   │   ├── SiegeGameplayHudAuthoring.cs
 │   │   │   │   ├── SiegeInterfaceAuthoring.cs
 │   │   │   │   ├── SiegeIslandAuthoring.cs
-│   │   │   │   ├── SiegeMainInterfaceAuthoring.cs
-│   │   │   │   ├── SiegeMixedStressAuthoring.cs
 │   │   │   │   ├── SiegeObserverCameraAuthoring.cs
-│   │   │   │   ├── SiegeProgressAuthoring.cs
-│   │   │   │   └── SiegeStressAuthoring.cs
+│   │   │   │   └── SiegeProgressAuthoring.cs
 │   │   │   ├── Benchmarks/
 │   │   │   │   ├── SiegeBuildingBenchmark.cs
 │   │   │   │   ├── SiegePerformanceCapture.cs
@@ -198,7 +188,6 @@ HY-Sandbox/
 │   │   │   ├── Hangars/
 │   │   │   │   ├── HangarAssetChecks.cs
 │   │   │   │   ├── HangarPrefabAuthoring.cs
-│   │   │   │   ├── HangarSceneIntegration.cs
 │   │   │   │   ├── HangarShellChecks.cs
 │   │   │   │   ├── HangarWorkshopChecks.cs
 │   │   │   │   ├── ModularBaseExampleAuthoring.cs
@@ -207,8 +196,6 @@ HY-Sandbox/
 │   │   │   │   ├── SiegeHangarInterfaceAuthoring.cs
 │   │   │   │   ├── SiegeHangarPlayChecks.cs
 │   │   │   │   └── SiegeReturnChecks.cs
-│   │   │   ├── Player/
-│   │   │   │   └── SiegePlayerBuild.cs
 │   │   │   └── Validation/
 │   │   │       ├── SiegeCleanupChecks.cs
 │   │   │       ├── SiegeIslandChecks.cs
@@ -237,10 +224,7 @@ HY-Sandbox/
 │   │   │       │   └── SiegeUsabilityChecks.cs
 │   │   │       └── Rules/
 │   │   │           ├── SiegeDestructionLogChecks.cs
-│   │   │           ├── SiegeMixedStressChecks.cs
-│   │   │           ├── SiegePlayerSurveyChecks.cs
 │   │   │           ├── SiegeRulesChecks.cs
-│   │   │           ├── SiegeStressCancellationChecks.cs
 │   │   │           └── SiegeTransientEffectChecks.cs
 │   │   ├── Simulation/
 │   │   │   ├── GameModeAuthoring.cs
@@ -250,35 +234,22 @@ HY-Sandbox/
 │   │   │       └── WeatherPlayChecks.cs
 │   │   └── World/
 │   │       ├── WorldSessionAuthoring.cs
-│   │       ├── Buildings/
-│   │       │   └── WorldBuildingAuthoring.cs
 │   │       ├── Outposts/
 │   │       │   ├── OutpostContentAuthoring.cs
 │   │       │   └── OutpostHudAuthoring.cs
 │   │       ├── Player/
 │   │       │   └── WorldPlayerBuildChecks.cs
-│   │       ├── Terrain/
-│   │       │   └── ProceduralVoxelWorldEditor.cs
-│   │       ├── Validation/
-│   │       │   ├── Outposts/
-│   │       │   │   ├── OutpostContentChecks.cs
-│   │       │   │   └── OutpostResidentChecks.cs
-│   │       │   ├── Session/
-│   │       │   │   ├── WorldBuildingPlayProbe.cs
-│   │       │   │   ├── WorldSessionEdgeChecks.cs
-│   │       │   │   ├── WorldSessionPerformanceChecks.cs
-│   │       │   │   └── WorldSessionPlayChecks.cs
-│   │       │   ├── Terrain/
-│   │       │   │   ├── VoxelMeshingChecks.cs
-│   │       │   │   └── WorldTerrainIntegrationChecks.cs
-│   │       │   └── WorldLab/
-│   │       │       ├── WorldLabChecks.cs
-│   │       │       ├── WorldLabCollapseChecks.cs
-│   │       │       ├── WorldLabPerformanceChecks.cs
-│   │       │       ├── WorldLabPersistenceChecks.cs
-│   │       │       └── WorldLabSoakChecks.cs
-│   │       └── WorldLab/
-│   │           └── WorldLabAuthoring.cs
+│   │       └── Validation/
+│   │           ├── Outposts/
+│   │           │   ├── OutpostContentChecks.cs
+│   │           │   └── OutpostResidentChecks.cs
+│   │           ├── Session/
+│   │           │   ├── WorldSessionEdgeChecks.cs
+│   │           │   ├── WorldSessionPerformanceChecks.cs
+│   │           │   └── WorldSessionPlayChecks.cs
+│   │           └── Terrain/
+│   │               ├── VoxelMeshingChecks.cs
+│   │               └── WorldTerrainIntegrationChecks.cs
 │   └── Scripts/
 │       └── Features/
 │           ├── Bootstrap/
@@ -550,19 +521,6 @@ HY-Sandbox/
 │           │       ├── ReturnStatusPanel.cs
 │           │       ├── StatusIcon.cs
 │           │       └── UIInteractionFeedback.cs
-│           ├── Research/
-│           │   ├── Siege/
-│           │   │   ├── SiegeDrivingPlayerChecks.cs
-│           │   │   ├── SiegePlayerChecks.cs
-│           │   │   ├── SiegePlayerSurvey.cs
-│           │   │   └── SiegeStressPopulation.cs
-│           │   └── WorldLab/
-│           │       ├── BlueprintStructureCatalog.cs
-│           │       ├── BlueprintStructurePalette.cs
-│           │       ├── WorldLabController.cs
-│           │       ├── WorldLabDebrisProbe.cs
-│           │       ├── WorldLabPersistence.cs
-│           │       └── WorldLabPhysicsProbe.cs
 │           ├── Salvage/
 │           │   ├── SalvageSettings.cs
 │           │   ├── Cargo/
@@ -623,7 +581,6 @@ HY-Sandbox/
 │           │   │   ├── SiegeHud.cs
 │           │   │   └── SiegeObserverCamera.cs
 │           │   ├── Validation/
-│           │   │   ├── SiegeEngineCounters.cs
 │           │   │   └── SiegeGameplayPlayerChecks.cs
 │           │   └── Workshop/
 │           │       ├── SiegeWorkshop.cs
@@ -795,14 +752,12 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| EditableComponentChecks | [`string RunWorkshop()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L19) | public static |
-| EditableComponentChecks | [`string RunWorldPlay()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L41) | public static |
-| EditableComponentChecks | [`string VerifyWorldMotion()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L93) | public static |
-| EditableComponentChecks | [`string AuditAssets()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L101) | public static |
-| EditableComponentChecks | [`void CheckTree(GameObject root, string path)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L179) | private static |
-| EditableComponentChecks | [`string RunPlay()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L213) | public static |
-| EditableComponentChecks | [`string WriteReport(string name, List<string> checks)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L314) | private static |
-| EditableComponentChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L322) | private static |
+| EditableComponentChecks | [`string RunWorkshop()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L17) | public static |
+| EditableComponentChecks | [`string AuditAssets()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L39) | public static |
+| EditableComponentChecks | [`void CheckTree(GameObject root, string path)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L117) | private static |
+| EditableComponentChecks | [`string RunPlay()`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L151) | public static |
+| EditableComponentChecks | [`string WriteReport(string name, List<string> checks)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L252) | private static |
+| EditableComponentChecks | [`void Require(bool condition, string message)`](../Assets/Editor/Architecture/EditableComponentChecks.cs#L260) | private static |
 
 ## Assets/Editor/Architecture/FragmentRetentionChecks.cs
 
@@ -927,25 +882,6 @@ HY-Sandbox/
 | IndustrialArtGenerator | [`void CreatePreviewScene(IReadOnlyList<string> prefabPaths)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1758) | private static |
 | IndustrialArtGenerator | [`void AddPartToScene( string name, Mesh mesh, Vector3 position, Vector3 scale, Quaternion rotation, Material material)`](../Assets/Editor/Art/Authoring/IndustrialArtGenerator.cs#L1875) | private static |
 
-## Assets/Editor/Art/Authoring/SpaceKitCurator.cs
-
-// 职责：筛选科幻素材并创建可编辑备用 Prefab、材质及分类目录。 // 入口：CreateLibrary() / RepairLegacyImportArtifacts() / ValidateLibrary()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SpaceKitCurator | [`bool IsSource(string path)`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L77) | private static |
-| SpaceKitCurator | [`void EnsureFolder(string path)`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L78) | private static |
-| SpaceKitCurator | [`string Destination(string path, Dictionary<string, string> selected)`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L89) | private static |
-| SpaceKitCurator | [`string Hash(string path)`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L104) | private static |
-| SpaceKitCurator | [`void CreateLibrary()`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L115) | public static |
-| SpaceKitCurator | [`void Remap(Object target, Dictionary<Object, Object> objects)`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L254) | private static |
-| SpaceKitCurator | [`void CleanLegacyArtifacts(GameObject instance)`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L281) | private static |
-| SpaceKitCurator | [`void RepairLegacyImportArtifacts()`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L295) | public static |
-| SpaceKitCurator | [`void ConvertMaterial(Material material)`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L315) | private static |
-| SpaceKitCurator | [`void ValidateLibrary()`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L410) | public static |
-| SpaceKitCurator | [`void RenderAllPreviews()`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L546) | public static |
-| SpaceKitCurator | [`void RenderPreviews(int start, int count)`](../Assets/Editor/Art/Authoring/SpaceKitCurator.cs#L548) | public static |
-
 ## Assets/Editor/Art/BlockArtIntegrator.cs
 
 // 职责：把工业美术装配到可编辑方块 Prefab，并保持挂点/碰撞关系。 // 入口：Integrate() / MatchThrusterFlamesToHover()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
@@ -1035,15 +971,6 @@ HY-Sandbox/
 | BotNavigationPlayProbe | [`void Finish()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L428) | private static |
 | BotNavigationPlayProbe | [`void Restore()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L435) | private static |
 | BotNavigationPlayProbe | [`void WriteReport()`](../Assets/Editor/Bots/BotNavigationPlayProbe.cs#L444) | private static |
-
-## Assets/Editor/Bots/BotNavigationPolicyMigration.cs
-
-// 职责：通过 Editor 重存 Bot Prefab，清理已固化的旧导航字段并核对剩余创作数据。 // 入口：Run() / Tools/Bots/Migrate fixed navigation policy；不保存场景、不重建 GUID。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| BotNavigationPolicyMigration | [`string Run()`](../Assets/Editor/Bots/BotNavigationPolicyMigration.cs#L12) | public static |
-| BotNavigationPolicyMigration | [`string Snapshot(string path)`](../Assets/Editor/Bots/BotNavigationPolicyMigration.cs#L62) | private static |
 
 ## Assets/Editor/Build/AutoBuildTool.cs
 
@@ -1243,10 +1170,10 @@ HY-Sandbox/
 | BlueprintIntegrityAudit | [`string AuditAll()`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L34) | public static |
 | BlueprintIntegrityAudit | [`string QuarantineInvalidPersonal()`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L44) | public static |
 | BlueprintIntegrityAudit | [`Report InspectAll()`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L87) | public static |
-| BlueprintIntegrityAudit | [`Entry Inspect(string path, string category)`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L135) | public static |
-| BlueprintIntegrityAudit | [`void ValidateModules(BlockDataList data)`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L182) | private static |
-| BlueprintIntegrityAudit | [`string NewReportDirectory()`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L222) | private static |
-| BlueprintIntegrityAudit | [`string Hash(string path)`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L232) | private static |
+| BlueprintIntegrityAudit | [`Entry Inspect(string path, string category)`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L134) | public static |
+| BlueprintIntegrityAudit | [`void ValidateModules(BlockDataList data)`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L181) | private static |
+| BlueprintIntegrityAudit | [`string NewReportDirectory()`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L221) | private static |
+| BlueprintIntegrityAudit | [`string Hash(string path)`](../Assets/Editor/Building/Validation/BlueprintIntegrityAudit.cs#L231) | private static |
 
 ## Assets/Editor/Building/Validation/BlueprintSupportAudit.cs
 
@@ -1435,9 +1362,9 @@ HY-Sandbox/
 | EnemyAvoidanceLabAuthoring | [`void RefreshPresentation()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L359) | public static |
 | EnemyAvoidanceLabAuthoring | [`Material LabMaterial(string name, Color color)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L382) | private static |
 | EnemyAvoidanceLabAuthoring | [`void EnableDebug()`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L397) | public static |
-| EnemyAvoidanceLabAuthoring | [`void SetDebug(Scene scene)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L447) | private static |
-| EnemyAvoidanceLabAuthoring | [`void Set(UnityEngine.Object owner, string field, object value)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L456) | private static |
-| EnemyAvoidanceLabAuthoring | [`void Box(string name, Transform parent, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L476) | private static |
+| EnemyAvoidanceLabAuthoring | [`void SetDebug(Scene scene)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L445) | private static |
+| EnemyAvoidanceLabAuthoring | [`void Set(UnityEngine.Object owner, string field, object value)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L454) | private static |
+| EnemyAvoidanceLabAuthoring | [`void Box(string name, Transform parent, Vector3 position, Vector3 size, Material material)`](../Assets/Editor/Combat/EnemyAvoidanceLabAuthoring.cs#L474) | private static |
 
 ## Assets/Editor/Combat/EnemyLabComplexAuthoring.cs
 
@@ -1506,26 +1433,26 @@ HY-Sandbox/
 | SharedCombatHudAuthoring | [`void InstallNameplateExclusions()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L18) | public static |
 | SharedCombatHudAuthoring | [`void ConfigureNameplateExclusions(GameObject root)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L37) | private static |
 | SharedCombatHudAuthoring | [`void Install()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L58) | public static |
-| SharedCombatHudAuthoring | [`void InstallScene(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L99) | public static |
-| SharedCombatHudAuthoring | [`void EnsureAssets()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L204) | private static |
-| SharedCombatHudAuthoring | [`void RebuildPrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L249) | public static |
-| SharedCombatHudAuthoring | [`void BakePrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L261) | private static |
-| SharedCombatHudAuthoring | [`RectTransform BuildNameplate(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L294) | private static |
-| SharedCombatHudAuthoring | [`CombatThreatMarkers BuildThreats(Transform parent, CombatHud hud)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L347) | private static |
-| SharedCombatHudAuthoring | [`CombatNotifications BuildNotifications(RectTransform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L399) | private static |
-| SharedCombatHudAuthoring | [`void BuildPanels(RectTransform root)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L480) | private static |
-| SharedCombatHudAuthoring | [`ThrusterInfoPanel BuildThrusters(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L546) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Drawer(string name, Transform parent, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L643) | private static |
-| SharedCombatHudAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L651) | public static |
-| SharedCombatHudAuthoring | [`void Set(Object owner, string field, Object value)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L657) | public static |
-| SharedCombatHudAuthoring | [`void SetArray(Object owner, string field, Object[] values)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L664) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L677) | private static |
-| SharedCombatHudAuthoring | [`void Stretch(RectTransform rect)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L687) | private static |
-| SharedCombatHudAuthoring | [`Image Back(RectTransform rect, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L695) | private static |
-| SharedCombatHudAuthoring | [`RectTransform Fill(RectTransform parent, string name, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L703) | private static |
-| SharedCombatHudAuthoring | [`CanvasGroup Group(RectTransform rect, bool interactive = false)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L712) | private static |
-| SharedCombatHudAuthoring | [`TMP_Text Label( Transform parent, string name, string text, Vector2 position, Vector2 size, int fontSize, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L719) | private static |
-| SharedCombatHudAuthoring | [`Button Button(Transform parent, string title, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L743) | private static |
+| SharedCombatHudAuthoring | [`void InstallScene(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L98) | public static |
+| SharedCombatHudAuthoring | [`void EnsureAssets()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L203) | private static |
+| SharedCombatHudAuthoring | [`void RebuildPrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L248) | public static |
+| SharedCombatHudAuthoring | [`void BakePrefab()`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L260) | private static |
+| SharedCombatHudAuthoring | [`RectTransform BuildNameplate(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L293) | private static |
+| SharedCombatHudAuthoring | [`CombatThreatMarkers BuildThreats(Transform parent, CombatHud hud)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L346) | private static |
+| SharedCombatHudAuthoring | [`CombatNotifications BuildNotifications(RectTransform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L398) | private static |
+| SharedCombatHudAuthoring | [`void BuildPanels(RectTransform root)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L479) | private static |
+| SharedCombatHudAuthoring | [`ThrusterInfoPanel BuildThrusters(Transform parent)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L545) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Drawer(string name, Transform parent, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L642) | private static |
+| SharedCombatHudAuthoring | [`T Find(Scene scene)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L650) | public static |
+| SharedCombatHudAuthoring | [`void Set(Object owner, string field, Object value)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L656) | public static |
+| SharedCombatHudAuthoring | [`void SetArray(Object owner, string field, Object[] values)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L663) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Rect(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L676) | private static |
+| SharedCombatHudAuthoring | [`void Stretch(RectTransform rect)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L686) | private static |
+| SharedCombatHudAuthoring | [`Image Back(RectTransform rect, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L694) | private static |
+| SharedCombatHudAuthoring | [`RectTransform Fill(RectTransform parent, string name, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L702) | private static |
+| SharedCombatHudAuthoring | [`CanvasGroup Group(RectTransform rect, bool interactive = false)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L711) | private static |
+| SharedCombatHudAuthoring | [`TMP_Text Label( Transform parent, string name, string text, Vector2 position, Vector2 size, int fontSize, Color color)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L718) | private static |
+| SharedCombatHudAuthoring | [`Button Button(Transform parent, string title, Vector2 position, Vector2 size)`](../Assets/Editor/Combat/Interface/SharedCombatHudAuthoring.cs#L742) | private static |
 
 ## Assets/Editor/Combat/Interface/SharedCombatHudPreview.cs
 
@@ -1589,22 +1516,20 @@ HY-Sandbox/
 | CombatHudPlayProbe | [`void Run()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L34) | public static |
 | CombatHudPlayProbe | [`void RunArena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L40) | public static |
 | CombatHudPlayProbe | [`void RunExploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L46) | public static |
-| CombatHudPlayProbe | [`void RunLegacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L52) | public static |
-| CombatHudPlayProbe | [`void RunFlow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L58) | public static |
-| CombatHudPlayProbe | [`void RunRecovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L63) | public static |
-| CombatHudPlayProbe | [`void Begin(string kind, string path)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L68) | private static |
-| CombatHudPlayProbe | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L81) | private static |
-| CombatHudPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L111) | private static |
-| CombatHudPlayProbe | [`IEnumerator Siege()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L140) | private static |
-| CombatHudPlayProbe | [`IEnumerator Legacy()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L309) | private static |
-| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L344) | private static |
-| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L487) | private static |
-| CombatHudPlayProbe | [`IEnumerator RecoveryLoss(GameModeController modes, SiegeShipOption option, string loss)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L597) | private static |
-| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L653) | private static |
-| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L695) | private static |
-| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L736) | private static |
-| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L742) | private static |
-| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L753) | private static |
+| CombatHudPlayProbe | [`void RunFlow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L52) | public static |
+| CombatHudPlayProbe | [`void RunRecovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L57) | public static |
+| CombatHudPlayProbe | [`void Begin(string kind, string path)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L62) | private static |
+| CombatHudPlayProbe | [`void OnPlayModeChanged(PlayModeStateChange state)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L75) | private static |
+| CombatHudPlayProbe | [`void Tick()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L105) | private static |
+| CombatHudPlayProbe | [`IEnumerator Siege()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L134) | private static |
+| CombatHudPlayProbe | [`IEnumerator Flow()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L303) | private static |
+| CombatHudPlayProbe | [`IEnumerator Recovery()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L446) | private static |
+| CombatHudPlayProbe | [`IEnumerator RecoveryLoss(GameModeController modes, SiegeShipOption option, string loss)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L556) | private static |
+| CombatHudPlayProbe | [`IEnumerator Arena()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L612) | private static |
+| CombatHudPlayProbe | [`IEnumerator Exploration()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L654) | private static |
+| CombatHudPlayProbe | [`void Screenshot(string name)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L695) | private static |
+| CombatHudPlayProbe | [`void Check(string name, bool passed)`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L701) | private static |
+| CombatHudPlayProbe | [`void Finish()`](../Assets/Editor/Combat/Validation/CombatHudPlayProbe.cs#L712) | private static |
 
 ## Assets/Editor/Combat/Validation/EnemyBlueprintPoolChecks.cs
 
@@ -1838,6 +1763,8 @@ HY-Sandbox/
 | PhysicsSandboxProbe | [`void PrepareSceneEffects(Scene scene)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L395) | internal static |
 | PhysicsSandboxProbe | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L408) | private static |
 | PhysicsSandboxProbe | [`string Save(List<string> checks, string error)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L418) | private static |
+| PhysicsSandboxProbe | [`BlockDataList CreateSample()`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L426) | private static |
+| PhysicsSandboxProbe | [`void Add(BlockDataList blueprint, string resource, Vector3 position)`](../Assets/Editor/Diagnostics/PhysicsSandboxProbe.cs#L440) | private static |
 
 ## Assets/Editor/Diagnostics/ProfilerCaptureAnalysis.cs
 
@@ -2128,30 +2055,15 @@ HY-Sandbox/
 
 ## Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs
 
-// 职责：建立原生 VFX Graph 资源库并配置效果参数。 // 入口：Destination() / GraphPath() / RebuildPositionSafeEffects()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
+// 职责：建立原生 VFX Graph 资源库并配置效果参数。 // 入口：GraphPath() / RebuildPositionSafeEffects()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| NativeVfxLibraryBuilder | [`string Destination(string source)`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L30) | public static |
-| NativeVfxLibraryBuilder | [`string GraphPath(string name)`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L36) | public static |
-| NativeVfxLibraryBuilder | [`void RebuildPositionSafeEffects()`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L39) | public static |
-| NativeVfxLibraryBuilder | [`void SetSimulationSpace(object graph, string space)`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L147) | private static |
-| NativeVfxLibraryBuilder | [`void PrepareSources()`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L156) | public static |
-| NativeVfxLibraryBuilder | [`void ImportSources()`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L176) | public static |
-| NativeVfxLibraryBuilder | [`void CreateUtilityGraphs()`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L275) | public static |
-| NativeVfxLibraryBuilder | [`void BuildUtility(string name, bool loop, bool world, bool beam)`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L285) | private static |
-| NativeVfxLibraryBuilder | [`string Hash(string path)`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L381) | private static |
-
-## Assets/Editor/Presentation/Effects/NativeVfxMigration.cs
-
-// 职责：迁移旧特效引用到原生 VFX Graph 并检查依赖。 // 入口：Run() / Convert() / Validate()。 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| NativeVfxMigration | [`void Run()`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L16) | public static |
-| NativeVfxMigration | [`void Convert(GameObject root)`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L48) | public static |
-| NativeVfxMigration | [`void RemoveParticles(GameObject root)`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L127) | private static |
-| NativeVfxMigration | [`string Validate()`](../Assets/Editor/Presentation/Effects/NativeVfxMigration.cs#L140) | public static |
+| NativeVfxLibraryBuilder | [`string GraphPath(string name)`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L28) | public static |
+| NativeVfxLibraryBuilder | [`void RebuildPositionSafeEffects()`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L31) | public static |
+| NativeVfxLibraryBuilder | [`void SetSimulationSpace(object graph, string space)`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L139) | private static |
+| NativeVfxLibraryBuilder | [`void CreateUtilityGraphs()`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L148) | public static |
+| NativeVfxLibraryBuilder | [`void BuildUtility(string name, bool loop, bool world, bool beam)`](../Assets/Editor/Presentation/Effects/NativeVfxLibraryBuilder.cs#L158) | private static |
 
 ## Assets/Editor/Presentation/Effects/VfxGraphAuthoring.cs
 
@@ -2280,18 +2192,6 @@ HY-Sandbox/
 | PresentationResourceWindow | [`void SelectAsset(string guid)`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L133) | private |
 | PresentationResourceWindow | [`void DrawDetails()`](../Assets/Editor/Presentation/Resources/PresentationResourceWindow.cs#L149) | private |
 
-## Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs
-
-// 职责：将项目 Prefab 中的内嵌效果迁移为集中库编号，保留挂载变换和现有组件身份。 // 入口：Run()；通过 Unity API 保存，重复执行跳过已迁移节点，差异外观保存为独立模板。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| VfxCatalogMigration | [`void Run()`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L18) | public static |
-| VfxCatalogMigration | [`bool IsBuiltIn(string key)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L135) | private static |
-| VfxCatalogMigration | [`VfxEffect CreateTemplate(VfxEffect source, string key)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L151) | private static |
-| VfxCatalogMigration | [`string Signature(VfxEffect effect)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L177) | public static |
-| VfxCatalogMigration | [`JObject ComponentData(Component component)`](../Assets/Editor/Presentation/Resources/VfxCatalogMigration.cs#L198) | private static |
-
 ## Assets/Editor/Presentation/Validation/CombatVfxCapture.cs
 
 // 职责：在隔离 Play 场景自动拍摄残骸尾烟、激光和弹道，记录销毁后烟雾存活证据。 // 入口：StartCapture()；完成/超时恢复原场景，释放截图资源，不保存用户场景。
@@ -2348,11 +2248,10 @@ HY-Sandbox/
 
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
-| VfxCatalogChecks | [`string CheckPreservation(string baselineRoot)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L13) | public static |
-| VfxCatalogChecks | [`string CheckAssets()`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L45) | public static |
-| VfxCatalogChecks | [`string CheckPlay()`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L78) | public static |
-| VfxCatalogChecks | [`VfxEffect LoadAnchor(string path, string id, List<GameObject> fixtures)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L144) | private static |
-| VfxCatalogChecks | [`void Require(bool value, string message)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L152) | private static |
+| VfxCatalogChecks | [`string CheckAssets()`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L13) | public static |
+| VfxCatalogChecks | [`string CheckPlay()`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L46) | public static |
+| VfxCatalogChecks | [`VfxEffect LoadAnchor(string path, string id, List<GameObject> fixtures)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L112) | private static |
+| VfxCatalogChecks | [`void Require(bool value, string message)`](../Assets/Editor/Presentation/Validation/VfxCatalogChecks.cs#L120) | private static |
 
 ## Assets/Editor/Presentation/Validation/VfxPoolBudgetChecks.cs
 
@@ -2422,27 +2321,6 @@ HY-Sandbox/
 | SalvagePlayProbe | [`IEnumerator BuildingSalvage()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L282) | private static |
 | SalvagePlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/Salvage/SalvagePlayProbe.cs#L432) | private static |
 
-## Assets/Editor/Siege/Authoring/SiegeArenaLookAuthoring.cs
-
-// 职责：为阵地战场景建立夜色竞技场外观：程序化天空盒、雾色、环境光与主光，并保持可编辑资产。 // 入口：ApplyLook()；只改Siege场景与其天空盒材质，复用Main既有色调默认值，不改Main场景。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeArenaLookAuthoring | [`void ApplyLook()`](../Assets/Editor/Siege/Authoring/SiegeArenaLookAuthoring.cs#L18) | public static |
-| SiegeArenaLookAuthoring | [`void Pylons()`](../Assets/Editor/Siege/Authoring/SiegeArenaLookAuthoring.cs#L111) | private static |
-| SiegeArenaLookAuthoring | [`Material Material(string name, Color color, Color? emission)`](../Assets/Editor/Siege/Authoring/SiegeArenaLookAuthoring.cs#L157) | private static |
-
-## Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs
-
-// 职责：制作32×32m建筑蓝图基地，并通过Editor迁移已有Siege场景的建筑管理器/核心配置。 // 入口：UpgradeScene() / Generate()；写入真实资产，保留已有GUID，不修改Main或用户建筑目录。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeBaseBlueprintAuthoring | [`void UpgradeScene()`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L14) | public static |
-| SiegeBaseBlueprintAuthoring | [`void ConfigureManager(BlueprintStructureRegistry buildings)`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L55) | internal static |
-| SiegeBaseBlueprintAuthoring | [`TextAsset Generate(bool replace = false)`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L62) | public static |
-| SiegeBaseBlueprintAuthoring | [`void Add(BlockDataList blueprint, string resource, Vector3 position, string id = null)`](../Assets/Editor/Siege/Authoring/SiegeBaseBlueprintAuthoring.cs#L153) | private static |
-
 ## Assets/Editor/Siege/Authoring/SiegeBlueprintSelectionAuthoring.cs
 
 // 职责：保留旧蓝图选择菜单并委托当前界面迁移，避免恢复固定Bays布局。 // 入口：Install()。
@@ -2458,10 +2336,10 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeCleanupAuthoring | [`string Install()`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L16) | public static |
-| SiegeCleanupAuthoring | [`void Configure(Scene scene)`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L62) | public static |
-| SiegeCleanupAuthoring | [`LineRenderer Line( Transform parent, string name, Material material, int count, float width, bool loop)`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L126) | private static |
-| SiegeCleanupAuthoring | [`Material Surface()`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L149) | private static |
-| SiegeCleanupAuthoring | [`MaterialBreakEffect Effect(Material material)`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L170) | private static |
+| SiegeCleanupAuthoring | [`void Configure(Scene scene)`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L58) | public static |
+| SiegeCleanupAuthoring | [`LineRenderer Line( Transform parent, string name, Material material, int count, float width, bool loop)`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L122) | private static |
+| SiegeCleanupAuthoring | [`Material Surface()`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L145) | private static |
+| SiegeCleanupAuthoring | [`MaterialBreakEffect Effect(Material material)`](../Assets/Editor/Siege/Authoring/SiegeCleanupAuthoring.cs#L166) | private static |
 
 ## Assets/Editor/Siege/Authoring/SiegeCombatBaseAuthoring.cs
 
@@ -2507,16 +2385,16 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeGameplayHudAuthoring | [`void Upgrade()`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L16) | public static |
-| SiegeGameplayHudAuthoring | [`void ConfigureStage(SiegeGameplayStage stage)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L91) | public static |
-| SiegeGameplayHudAuthoring | [`void ConfigureNameplateExclusions(SiegeCombatHud entry)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L234) | public static |
-| SiegeGameplayHudAuthoring | [`void Restyle(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L284) | public static |
-| SiegeGameplayHudAuthoring | [`void Soften(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L311) | private static |
-| SiegeGameplayHudAuthoring | [`RectTransform Box(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L321) | private static |
-| SiegeGameplayHudAuthoring | [`TMP_Text Label( Transform parent, string name, TMP_FontAsset font, Vector2 position, Vector2 size, int fontSize, Vector2? anchor = null)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L335) | private static |
-| SiegeGameplayHudAuthoring | [`Button Button( Transform parent, string name, string caption, TMP_FontAsset font, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L359) | private static |
-| SiegeGameplayHudAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L386) | private static |
-| SiegeGameplayHudAuthoring | [`T Ensure(Transform owner)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L391) | private static |
-| SiegeGameplayHudAuthoring | [`void Remove(Transform owned)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L398) | private static |
+| SiegeGameplayHudAuthoring | [`void ConfigureStage(SiegeGameplayStage stage)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L90) | public static |
+| SiegeGameplayHudAuthoring | [`void ConfigureNameplateExclusions(SiegeCombatHud entry)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L233) | public static |
+| SiegeGameplayHudAuthoring | [`void Restyle(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L283) | public static |
+| SiegeGameplayHudAuthoring | [`void Soften(Transform root)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L310) | private static |
+| SiegeGameplayHudAuthoring | [`RectTransform Box(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L320) | private static |
+| SiegeGameplayHudAuthoring | [`TMP_Text Label( Transform parent, string name, TMP_FontAsset font, Vector2 position, Vector2 size, int fontSize, Vector2? anchor = null)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L334) | private static |
+| SiegeGameplayHudAuthoring | [`Button Button( Transform parent, string name, string caption, TMP_FontAsset font, Vector2 anchor, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L358) | private static |
+| SiegeGameplayHudAuthoring | [`void Set(SerializedObject data, string field, Object value)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L385) | private static |
+| SiegeGameplayHudAuthoring | [`T Ensure(Transform owner)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L390) | private static |
+| SiegeGameplayHudAuthoring | [`void Remove(Transform owned)`](../Assets/Editor/Siege/Authoring/SiegeGameplayHudAuthoring.cs#L397) | private static |
 
 ## Assets/Editor/Siege/Authoring/SiegeInterfaceAuthoring.cs
 
@@ -2541,24 +2419,7 @@ HY-Sandbox/
 | SiegeIslandAuthoring | [`void PreviewCurrent()`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L14) | public static |
 | SiegeIslandAuthoring | [`string BakeCurrent()`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L53) | public static |
 | SiegeIslandAuthoring | [`string Install()`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L89) | public static |
-| SiegeIslandAuthoring | [`void Configure(Scene scene)`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L131) | public static |
-
-## Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs
-
-// 职责：将 Main 的真实建造UI、管理器与轴工具迁移至Siege，保留Main源场景与战场布局。 // 入口：Install()；显式菜单保存资产，可在Inspector继续编辑。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeMainInterfaceAuthoring | [`void Install()`](../Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs#L14) | public static |
-| SiegeMainInterfaceAuthoring | [`void FitLayout()`](../Assets/Editor/Siege/Authoring/SiegeMainInterfaceAuthoring.cs#L167) | public static |
-
-## Assets/Editor/Siege/Authoring/SiegeMixedStressAuthoring.cs
-
-// 职责：制作四栋建筑/六舰/十二敌舰的独立混合压力Scene和配置，保留正常阵地战资产。 // 入口：Create()；首次创建后可编辑保存，已有目标不覆盖，恢复原活动场景。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeMixedStressAuthoring | [`void Create()`](../Assets/Editor/Siege/Authoring/SiegeMixedStressAuthoring.cs#L15) | public static |
+| SiegeIslandAuthoring | [`void Configure(Scene scene)`](../Assets/Editor/Siege/Authoring/SiegeIslandAuthoring.cs#L127) | public static |
 
 ## Assets/Editor/Siege/Authoring/SiegeObserverCameraAuthoring.cs
 
@@ -2575,18 +2436,6 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeProgressAuthoring | [`void ClearRecords()`](../Assets/Editor/Siege/Authoring/SiegeProgressAuthoring.cs#L8) | public static |
-
-## Assets/Editor/Siege/Authoring/SiegeStressAuthoring.cs
-
-// 职责：从阵地战场景制作六舰/2048模块建筑压力资产，隔离测试经济与正常游戏参数。 // 入口：Create() / CreateLarge()；首次创建不覆盖既有资产，保存后恢复原活动场景。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeStressAuthoring | [`void Create()`](../Assets/Editor/Siege/Authoring/SiegeStressAuthoring.cs#L18) | public static |
-| SiegeStressAuthoring | [`void CreateLarge()`](../Assets/Editor/Siege/Authoring/SiegeStressAuthoring.cs#L24) | public static |
-| SiegeStressAuthoring | [`void CreateProfile(string scenePath, string settingsPath, string sourcePath, bool large)`](../Assets/Editor/Siege/Authoring/SiegeStressAuthoring.cs#L31) | private static |
-| SiegeStressAuthoring | [`TextAsset GenerateLargeBlueprint(TextAsset source)`](../Assets/Editor/Siege/Authoring/SiegeStressAuthoring.cs#L124) | private static |
-| SiegeStressAuthoring | [`SiegeSession FindSession(Scene scene)`](../Assets/Editor/Siege/Authoring/SiegeStressAuthoring.cs#L166) | private static |
 
 ## Assets/Editor/Siege/Benchmarks/SiegeBuildingBenchmark.cs
 
@@ -2724,17 +2573,6 @@ HY-Sandbox/
 | HangarPrefabAuthoring | [`Text Text( Transform parent, string name, string value, int size, Vector2 dimensions, Vector2 position)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L336) | private static |
 | HangarPrefabAuthoring | [`Material Material(string name, Color color, bool transparent = false)`](../Assets/Editor/Siege/Hangars/HangarPrefabAuthoring.cs#L362) | private static |
 
-## Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs
-
-// 职责：迁移预研泊位为建筑蓝图机库，并保存Main基地编辑入口；保留旧基地原始资产。 // 入口：Install()；仅在保存后的Edit Mode执行，可重复更新工具拥有的引用。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| HangarSceneIntegration | [`void Install()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L15) | public static |
-| HangarSceneIntegration | [`void InstallPrototype()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L36) | private static |
-| HangarSceneIntegration | [`void InstallStarter()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L88) | private static |
-| HangarSceneIntegration | [`void InstallWorkshop()`](../Assets/Editor/Siege/Hangars/HangarSceneIntegration.cs#L110) | private static |
-
 ## Assets/Editor/Siege/Hangars/HangarShellChecks.cs
 
 // 职责：验证逻辑机库展开、预算拒绝、独立墙体损伤、快照缺口与原设计维修。 // 入口：Run()；只使用隔离建筑实例，不读写玩家存档。
@@ -2787,17 +2625,16 @@ HY-Sandbox/
 | --- | --- | --- |
 | SiegeHangarHostChecks | [`void RunStage()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L41) | public static |
 | SiegeHangarHostChecks | [`void RunWideStage()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L47) | public static |
-| SiegeHangarHostChecks | [`void RunPrototype()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L52) | public static |
-| SiegeHangarHostChecks | [`void Start(string target, string path)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L58) | private static |
-| SiegeHangarHostChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L69) | private static |
-| SiegeHangarHostChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L90) | private static |
-| SiegeHangarHostChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L116) | private static |
-| SiegeHangarHostChecks | [`int ClearWave(SiegeMatch match)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L434) | private static |
-| SiegeHangarHostChecks | [`void BackupPreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L460) | private static |
-| SiegeHangarHostChecks | [`void RestorePreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L475) | private static |
-| SiegeHangarHostChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L497) | private static |
-| SiegeHangarHostChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L507) | private static |
-| SiegeHangarHostChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L515) | private static |
+| SiegeHangarHostChecks | [`void Start(string target, string path)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L52) | private static |
+| SiegeHangarHostChecks | [`void Changed(PlayModeStateChange state)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L63) | private static |
+| SiegeHangarHostChecks | [`void Tick()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L84) | private static |
+| SiegeHangarHostChecks | [`IEnumerator Scenario()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L110) | private static |
+| SiegeHangarHostChecks | [`int ClearWave(SiegeMatch match)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L428) | private static |
+| SiegeHangarHostChecks | [`void BackupPreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L454) | private static |
+| SiegeHangarHostChecks | [`void RestorePreferences()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L469) | private static |
+| SiegeHangarHostChecks | [`void Check(bool success, string description)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L491) | private static |
+| SiegeHangarHostChecks | [`void LogError(string message, string stack, LogType type)`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L501) | private static |
+| SiegeHangarHostChecks | [`void Finish()`](../Assets/Editor/Siege/Hangars/SiegeHangarHostChecks.cs#L509) | private static |
 
 ## Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs
 
@@ -2807,13 +2644,13 @@ HY-Sandbox/
 | --- | --- | --- |
 | SiegeHangarInterfaceAuthoring | [`void Install()`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L13) | public static |
 | SiegeHangarInterfaceAuthoring | [`void UpgradeScenes()`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L129) | public static |
-| SiegeHangarInterfaceAuthoring | [`void UpgradeActions(SiegeDeploymentView view)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L163) | public static |
-| SiegeHangarInterfaceAuthoring | [`void PlaceAction(SerializedObject data, string field, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L248) | private static |
-| SiegeHangarInterfaceAuthoring | [`void Bind(SerializedObject data, string field, UnityEngine.Object value)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L256) | private static |
-| SiegeHangarInterfaceAuthoring | [`RectTransform Panel(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L261) | private static |
-| SiegeHangarInterfaceAuthoring | [`Text Label( string name, Transform parent, string value, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L270) | private static |
-| SiegeHangarInterfaceAuthoring | [`Button Button(string name, Transform parent, string caption, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L291) | private static |
-| SiegeHangarInterfaceAuthoring | [`void Place(RectTransform rect, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L308) | private static |
+| SiegeHangarInterfaceAuthoring | [`void UpgradeActions(SiegeDeploymentView view)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L159) | public static |
+| SiegeHangarInterfaceAuthoring | [`void PlaceAction(SerializedObject data, string field, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L244) | private static |
+| SiegeHangarInterfaceAuthoring | [`void Bind(SerializedObject data, string field, UnityEngine.Object value)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L252) | private static |
+| SiegeHangarInterfaceAuthoring | [`RectTransform Panel(string name, Transform parent, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L257) | private static |
+| SiegeHangarInterfaceAuthoring | [`Text Label( string name, Transform parent, string value, Vector2 position, Vector2 size, int fontSize)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L266) | private static |
+| SiegeHangarInterfaceAuthoring | [`Button Button(string name, Transform parent, string caption, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L287) | private static |
+| SiegeHangarInterfaceAuthoring | [`void Place(RectTransform rect, Vector2 position, Vector2 size)`](../Assets/Editor/Siege/Hangars/SiegeHangarInterfaceAuthoring.cs#L304) | private static |
 
 ## Assets/Editor/Siege/Hangars/SiegeHangarPlayChecks.cs
 
@@ -2866,20 +2703,6 @@ HY-Sandbox/
 | SiegeReturnChecks | [`void CheckEconomy(Report report)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L224) | private static |
 | SiegeReturnChecks | [`void Check(Report report, string description, bool success)`](../Assets/Editor/Siege/Hangars/SiegeReturnChecks.cs#L282) | private static |
 
-## Assets/Editor/Siege/Player/SiegePlayerBuild.cs
-
-// 职责：构建以Siege为入口的独立Windows D3D11验证包，不改全局构建场景或用户发布包。 // 入口：Build() / BuildStress() / BuildLargeStress() / BuildMixedStress() / BuildLargeProfiling()；独立Development包用于引擎归因。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegePlayerBuild | [`void Build()`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L16) | public static |
-| SiegePlayerBuild | [`void BuildStress()`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L22) | public static |
-| SiegePlayerBuild | [`void BuildLargeStress()`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L32) | public static |
-| SiegePlayerBuild | [`void BuildLargeProfiling()`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L42) | public static |
-| SiegePlayerBuild | [`void BuildMixedStress()`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L53) | public static |
-| SiegePlayerBuild | [`void Schedule(string scene, string output, string statusPath, BuildOptions options = BuildOptions.None)`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L63) | private static |
-| SiegePlayerBuild | [`void BuildNow(string scene, string output, string statusPath, BuildOptions options)`](../Assets/Editor/Siege/Player/SiegePlayerBuild.cs#L83) | private static |
-
 ## Assets/Editor/Siege/SiegeConstructionPlayChecks.cs
 
 // 职责：在真实Main Play Mode验证副场景切换、取消/重试、建造原稿隔离和旧Siege不被启动。 // 入口：Run()；只修改运行时夹具，报告写Temp/BaseConstruction，不写玩家存档或场景。
@@ -2903,26 +2726,6 @@ HY-Sandbox/
 | SiegePlayChecks | [`string Run()`](../Assets/Editor/Siege/SiegePlayChecks.cs#L14) | public static |
 | SiegePlayChecks | [`int SetComboBonus(SiegeSession session, int value)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L230) | private static |
 | SiegePlayChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/SiegePlayChecks.cs#L241) | private static |
-
-## Assets/Editor/Siege/SiegeSceneAuthoring.cs
-
-// 职责：通过Unity API创建独立、可编辑的阵地战场景和默认配置，不重写Main场景或用户存档。 // 入口：Create() / Open()；已有场景不覆盖，泊位、UI、材质和波次配置均保存为真实资产。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeSceneAuthoring | [`void Create()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L20) | public static |
-| SiegeSceneAuthoring | [`void Open()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L79) | public static |
-| SiegeSceneAuthoring | [`void FitHudToViewport()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L90) | public static |
-| SiegeSceneAuthoring | [`void RegenerateDefaultBase()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L116) | public static |
-| SiegeSceneAuthoring | [`TextAsset CreateBaseBlueprint(bool replace = false)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L134) | private static |
-| SiegeSceneAuthoring | [`SiegeSettings CreateSettings(TextAsset baseBlueprint)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L139) | private static |
-| SiegeSceneAuthoring | [`void CreateManagers()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L184) | private static |
-| SiegeSceneAuthoring | [`void CreateEnvironment()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L200) | private static |
-| SiegeSceneAuthoring | [`Transform[] CreateDocks(Transform parent)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L223) | private static |
-| SiegeSceneAuthoring | [`Material MaterialAsset(string name, Color color)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L244) | private static |
-| SiegeSceneAuthoring | [`void CreateCamera()`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L261) | private static |
-| SiegeSceneAuthoring | [`void CreateHud(SiegeSession session, SiegeSettings settings, int bays)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L278) | private static |
-| SiegeSceneAuthoring | [`void SetArray(SerializedProperty property, Object[] values)`](../Assets/Editor/Siege/SiegeSceneAuthoring.cs#L292) | private static |
 
 ## Assets/Editor/Siege/Validation/Buildings/SiegeBuildingChecks.cs
 
@@ -3151,26 +2954,6 @@ HY-Sandbox/
 | SiegeDestructionLogChecks | [`string Run()`](../Assets/Editor/Siege/Validation/Rules/SiegeDestructionLogChecks.cs#L15) | public static |
 | SiegeDestructionLogChecks | [`void Check(Report report, string name, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegeDestructionLogChecks.cs#L118) | private static |
 
-## Assets/Editor/Siege/Validation/Rules/SiegeMixedStressChecks.cs
-
-// 职责：验证独立混合压力场的实际建筑规模、预算、模块身份和卫星损毁/清理边界。 // 入口：Start() / Status；真实Play加载完成后执行，仅作用于该测试会话。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeMixedStressChecks | [`void Start()`](../Assets/Editor/Siege/Validation/Rules/SiegeMixedStressChecks.cs#L16) | public static |
-| SiegeMixedStressChecks | [`void Tick()`](../Assets/Editor/Siege/Validation/Rules/SiegeMixedStressChecks.cs#L31) | private static |
-| SiegeMixedStressChecks | [`void Check(Report report, string label, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegeMixedStressChecks.cs#L117) | private static |
-
-## Assets/Editor/Siege/Validation/Rules/SiegePlayerSurveyChecks.cs
-
-// 职责：在真实Siege Play中校验刚体分类、闲置池过滤与显式采样的计时开关恢复，避免诊断污染玩法。 // 入口：Run()；分类用真实基地/舰船，慢帧边界用合成delta，不是性能或物理步证据。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegePlayerSurveyChecks | [`string Run()`](../Assets/Editor/Siege/Validation/Rules/SiegePlayerSurveyChecks.cs#L12) | public static |
-| SiegePlayerSurveyChecks | [`Rigidbody CreateBody(List<GameObject> roots, string name)`](../Assets/Editor/Siege/Validation/Rules/SiegePlayerSurveyChecks.cs#L128) | private static |
-| SiegePlayerSurveyChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegePlayerSurveyChecks.cs#L138) | private static |
-
 ## Assets/Editor/Siege/Validation/Rules/SiegeRulesChecks.cs
 
 // 职责：验证阵地战阶段、波次预算和经济的边界；无需进入Play或读写玩家存档。 // 入口：Run() / 菜单 HY-Sandbox/Validation/Siege Rules。
@@ -3180,16 +2963,6 @@ HY-Sandbox/
 | SiegeRulesChecks | [`void RunFromMenu()`](../Assets/Editor/Siege/Validation/Rules/SiegeRulesChecks.cs#L11) | public static |
 | SiegeRulesChecks | [`string Run()`](../Assets/Editor/Siege/Validation/Rules/SiegeRulesChecks.cs#L17) | public static |
 | SiegeRulesChecks | [`void Check(List<string> checks, string name, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegeRulesChecks.cs#L117) | private static |
-
-## Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs
-
-// 职责：在首次分帧恢复中取消压力组件，验证HUD恢复与未发布建筑的回滚。 // 入口：Start() / Status；全新普通Siege Play，两个实际帧后检查无残留根对象。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeStressCancellationChecks | [`string Start()`](../Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs#L19) | public static |
-| SiegeStressCancellationChecks | [`void Complete()`](../Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs#L66) | private static |
-| SiegeStressCancellationChecks | [`void Check(string label, bool passed)`](../Assets/Editor/Siege/Validation/Rules/SiegeStressCancellationChecks.cs#L96) | private static |
 
 ## Assets/Editor/Siege/Validation/Rules/SiegeTransientEffectChecks.cs
 
@@ -3291,17 +3064,6 @@ HY-Sandbox/
 | WeatherPlayChecks | [`int CountActiveHazards(WeatherEventDirector weather)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L198) | private static |
 | WeatherPlayChecks | [`void Require(bool passed, string message)`](../Assets/Editor/Simulation/Weather/WeatherPlayChecks.cs#L203) | private static |
 
-## Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs
-
-// 职责：为独立 WorldLab 安装建筑库、示例模板和场景组合；已有模板与布局不覆盖。 // 入口：Tools/HY-Sandbox/World/Install building integration；只保存 WorldLab 与 Assets/WorldLab/Buildings。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldBuildingAuthoring | [`void Install()`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L12) | public static |
-| WorldBuildingAuthoring | [`BlockDataList CreateSample()`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L94) | public static |
-| WorldBuildingAuthoring | [`void Add(BlockDataList blueprint, string resource, Vector3 position)`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L108) | private static |
-| WorldBuildingAuthoring | [`Vector3 FindFlatPosition(ProceduralVoxelWorld world, BlockDataList blueprint)`](../Assets/Editor/World/Buildings/WorldBuildingAuthoring.cs#L114) | private static |
-
 ## Assets/Editor/World/Outposts/OutpostContentAuthoring.cs
 
 // 职责：制作三套普通建筑与三套敌机轮廓底座JSON，保留可重建的项目源。 // 入口：Bake()；只写项目Resources，不修改用户蓝图或存档；已有JSON保留，编辑后可单独删除重建。
@@ -3344,14 +3106,6 @@ HY-Sandbox/
 | WorldPlayerBuildChecks | [`void BuildAuthoringNow()`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L70) | private static |
 | WorldPlayerBuildChecks | [`void BuildPlayer(string output, string reportPath, BuildOptions options)`](../Assets/Editor/World/Player/WorldPlayerBuildChecks.cs#L78) | private static |
 
-## Assets/Editor/World/Terrain/ProceduralVoxelWorldEditor.cs
-
-// 职责：为选中的程序化世界提供Undo预览、重生成与真实网格Bake入口。 // 入口：ProceduralVoxelWorld Inspector；只写所选世界及WorldLab网格目录。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| ProceduralVoxelWorldEditor | [`void OnInspectorGUI()`](../Assets/Editor/World/Terrain/ProceduralVoxelWorldEditor.cs#L9) | public override |
-
 ## Assets/Editor/World/Validation/Outposts/OutpostContentChecks.cs
 
 // 职责：在Main Play隔离物理场景逐套验证建筑模型/连接/供电/驻军数据并渲染预览。 // 入口：Run()；仅写Temp，不保存场景或用户数据。
@@ -3369,24 +3123,6 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | OutpostResidentChecks | [`IEnumerator Run(Action<string, bool> check)`](../Assets/Editor/World/Validation/Outposts/OutpostResidentChecks.cs#L12) | public static |
-
-## Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs
-
-// 职责：在 WorldLab 真实物理帧验证建筑放置、战斗、事务恢复、支撑坍塌和输入预览。 // 入口：Run()；临时文件仓/目录自包含，结束恢复运行状态；报告只写 Temp/Reuse，不覆盖历史验证。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| ProbeFixture | [`void Install()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L66) | public |
-| ProbeFixture | [`void Dispose()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L101) | public |
-| WorldBuildingPlayProbe | [`void Run()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L142) | public static |
-| WorldBuildingPlayProbe | [`void StateChanged(PlayModeStateChange state)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L154) | private static |
-| WorldBuildingPlayProbe | [`void CaptureError(string message, string stack, LogType type)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L172) | private static |
-| WorldBuildingPlayProbe | [`void Tick()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L180) | private static |
-| WorldBuildingPlayProbe | [`void Check(bool result, string description)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L209) | private static |
-| WorldBuildingPlayProbe | [`IEnumerator Scenario()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L219) | private static |
-| WorldBuildingPlayProbe | [`void InvokeUpdate(MonoBehaviour behaviour)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L525) | private static |
-| WorldBuildingPlayProbe | [`void ExpectRejected(WorldLabController controller, WorldLabSnapshot snapshot, string name)`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L530) | private static |
-| WorldBuildingPlayProbe | [`void Finish()`](../Assets/Editor/World/Validation/Session/WorldBuildingPlayProbe.cs#L545) | private static |
 
 ## Assets/Editor/World/Validation/Session/WorldSessionEdgeChecks.cs
 
@@ -3459,68 +3195,6 @@ HY-Sandbox/
 | WorldTerrainIntegrationChecks | [`string Run()`](../Assets/Editor/World/Validation/Terrain/WorldTerrainIntegrationChecks.cs#L13) | public static |
 | WorldTerrainIntegrationChecks | [`int CountSites(WorldGenerationSettings settings, List<BlockDataList> templates)`](../Assets/Editor/World/Validation/Terrain/WorldTerrainIntegrationChecks.cs#L103) | private static |
 | WorldTerrainIntegrationChecks | [`void Require(bool valid, string message)`](../Assets/Editor/World/Validation/Terrain/WorldTerrainIntegrationChecks.cs#L121) | private static |
-
-## Assets/Editor/World/Validation/WorldLab/WorldLabChecks.cs
-
-// 职责：检查种子、网格边界与真实PhysX破坏/填补/炮弹命中，并将结果写入验证文件。 // 入口：RunDataChecks() / RunPlayChecks()；只在独立WorldLab执行运行检查，不操作玩家存档。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabChecks | [`void Check(bool result, string name)`](../Assets/Editor/World/Validation/WorldLab/WorldLabChecks.cs#L12) | private static |
-| WorldLabChecks | [`string RunDataChecks()`](../Assets/Editor/World/Validation/WorldLab/WorldLabChecks.cs#L22) | public static |
-| WorldLabChecks | [`void Clear(VoxelWorldData data)`](../Assets/Editor/World/Validation/WorldLab/WorldLabChecks.cs#L66) | private static |
-| WorldLabChecks | [`string RunPlayChecks()`](../Assets/Editor/World/Validation/WorldLab/WorldLabChecks.cs#L81) | public static |
-| WorldLabChecks | [`string Save(string phase)`](../Assets/Editor/World/Validation/WorldLab/WorldLabChecks.cs#L176) | private static |
-
-## Assets/Editor/World/Validation/WorldLab/WorldLabCollapseChecks.cs
-
-// 职责：验证六邻接支撑、尺寸/数量上限及真实世界片段转刚体、再生清理。 // 入口：RunData() / RunPlay()；动态检查仅在WorldLab，真实下落由配套跨帧探针记录。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabCollapseChecks | [`void Check(bool value, string name)`](../Assets/Editor/World/Validation/WorldLab/WorldLabCollapseChecks.cs#L13) | private static |
-| WorldLabCollapseChecks | [`string RunData()`](../Assets/Editor/World/Validation/WorldLab/WorldLabCollapseChecks.cs#L23) | public static |
-| WorldLabCollapseChecks | [`string RunPlay()`](../Assets/Editor/World/Validation/WorldLab/WorldLabCollapseChecks.cs#L54) | public static |
-| WorldLabCollapseChecks | [`string Save(string phase)`](../Assets/Editor/World/Validation/WorldLab/WorldLabCollapseChecks.cs#L102) | private static |
-
-## Assets/Editor/World/Validation/WorldLab/WorldLabPerformanceChecks.cs
-
-// 职责：在WorldLab测量真实生成、球形破坏和脏块网格/碰撞重建的同步CPU成本。 // 入口：Run()；固定种子/爆点和样本记录，不把微基准当作帧率或GPU性能。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabPerformanceChecks | [`string Run()`](../Assets/Editor/World/Validation/WorldLab/WorldLabPerformanceChecks.cs#L13) | public static |
-| WorldLabPerformanceChecks | [`double Median(double[] values)`](../Assets/Editor/World/Validation/WorldLab/WorldLabPerformanceChecks.cs#L80) | private static |
-
-## Assets/Editor/World/Validation/WorldLab/WorldLabPersistenceChecks.cs
-
-// 职责：验证差量保存/读取、原子替换备份与损坏文件拒绝，使用独立临时路径。 // 入口：Run()；不读写玩家或WorldLab真实存档；结束删除本次测试文件。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabPersistenceChecks | [`string Run()`](../Assets/Editor/World/Validation/WorldLab/WorldLabPersistenceChecks.cs#L9) | public static |
-
-## Assets/Editor/World/Validation/WorldLab/WorldLabSoakChecks.cs
-
-// 职责：在真实帧后台持续爆破/重生成，周期落盘并检查分块/网格有界及输入遮罩下帧推进。 // 入口：Begin(minutes)；最多15分钟，Stop()或离开Play安全结束，不接触真实玩家存档。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabSoakChecks | [`string Begin(int minutes = 15)`](../Assets/Editor/World/Validation/WorldLab/WorldLabSoakChecks.cs#L28) | public static |
-| WorldLabSoakChecks | [`void Tick()`](../Assets/Editor/World/Validation/WorldLab/WorldLabSoakChecks.cs#L55) | private static |
-| WorldLabSoakChecks | [`void Stop()`](../Assets/Editor/World/Validation/WorldLab/WorldLabSoakChecks.cs#L138) | public static |
-| WorldLabSoakChecks | [`void Finish(bool complete)`](../Assets/Editor/World/Validation/WorldLab/WorldLabSoakChecks.cs#L147) | private static |
-| WorldLabSoakChecks | [`void WriteCheckpoint()`](../Assets/Editor/World/Validation/WorldLab/WorldLabSoakChecks.cs#L162) | private static |
-
-## Assets/Editor/World/WorldLab/WorldLabAuthoring.cs
-
-// 职责：创建独立WorldLab场景并将生成网格保存为真实资产；Inspector支持种子与分块参数。 // 入口：Tools/HY-Sandbox/World/Create or open World Lab；不保存或改写Main。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabAuthoring | [`void CreateOrOpen()`](../Assets/Editor/World/WorldLab/WorldLabAuthoring.cs#L13) | public static |
-| WorldLabAuthoring | [`Material MaterialAt(string name, Color color, float metallic)`](../Assets/Editor/World/WorldLab/WorldLabAuthoring.cs#L79) | private static |
-| WorldLabAuthoring | [`void BakeMeshes(ProceduralVoxelWorld world)`](../Assets/Editor/World/WorldLab/WorldLabAuthoring.cs#L99) | public static |
 
 ## Assets/Editor/World/WorldSessionAuthoring.cs
 
@@ -6342,133 +6016,6 @@ HY-Sandbox/
 | VisualEffectsManager | [`void DecorateMeteor(Meteor meteor)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L503) | private |
 | VisualEffectsManager | [`void PlayMeteorImpact(Vector3 position, Vector3 normal, float scale, float speed)`](../Assets/Scripts/Features/Presentation/VisualEffectsManager.cs#L543) | private |
 
-## Assets/Scripts/Features/Research/Siege/SiegeDrivingPlayerChecks.cs
-
-// 职责：显式Player验证通过虚拟Input System设备走键盘、HUD点击与真实飞行物理链。 // 入口：Run()；只由-siege-checks-driving调用，finally恢复设备与后台输入设置。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeDrivingPlayerChecks | [`IEnumerator Run(SiegeSession session, Action<string, bool> check, Report report)`](../Assets/Scripts/Features/Research/Siege/SiegeDrivingPlayerChecks.cs#L15) | internal static |
-| SiegeDrivingPlayerChecks | [`Thruster[] DirectionalThrusters(ControlUnit unit)`](../Assets/Scripts/Features/Research/Siege/SiegeDrivingPlayerChecks.cs#L194) | private static |
-| SiegeDrivingPlayerChecks | [`float HorizontalDistance(Vector3 from, Vector3 to)`](../Assets/Scripts/Features/Research/Siege/SiegeDrivingPlayerChecks.cs#L199) | private static |
-
-## Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs
-
-// 职责：仅显式-siege-checks-report参数启动独立Player验证，记录真实帧、玩法契约与自然多波结果。 // 入口：Initialize()；smoke使用明确损伤刺激验证闭环，soak只自然战斗/整备，不把两种结果混用。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegePlayerChecks | [`void Initialize()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L30) | private static |
-| SiegePlayerChecks | [`void Update()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L93) | private |
-| SiegePlayerChecks | [`void LateUpdate()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L114) | private |
-| SiegePlayerChecks | [`void OnDestroy()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L132) | private |
-| SiegePlayerChecks | [`IEnumerator Run()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L140) | private |
-| SiegePlayerChecks | [`bool SupportsDriving(SiegeShipOption option)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L475) | private static |
-| SiegePlayerChecks | [`string ImagePath(string suffix)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L482) | private |
-| SiegePlayerChecks | [`void Check(string name, bool passed)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L489) | private |
-| SiegePlayerChecks | [`void CaptureError(string condition, string trace, LogType type)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L499) | private |
-| SiegePlayerChecks | [`void Finish()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L507) | private |
-| SiegePlayerChecks | [`float Percentile(float fraction)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerChecks.cs#L526) | private |
-
-## Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs
-
-// 职责：显式Player检查的低频规模普查、有限慢帧记录和可选嵌套CPU计时；不参与正常游戏。 // 入口：Observe() / Dispose()；帧间隔对应前一观察窗口，普查自身开销单独记录，不能据相关性推断瓶颈。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegePlayerSurvey | [`void Observe(SiegeSession session, float milliseconds)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L39) | public |
-| SiegePlayerSurvey | [`BodyCounts Classify(Rigidbody[] bodies)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L75) | public static |
-| SiegePlayerSurvey | [`Census TakeCensus(SiegeSession session, float seconds, Work work)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L128) | private static |
-| SiegePlayerSurvey | [`void KeepSlowFrame(SlowFrame frame)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L156) | private |
-| SiegePlayerSurvey | [`Work ReadWork()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L175) | private |
-| SiegePlayerSurvey | [`StageWork ReadStage(SimulationWorkMetrics.Stage stage)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L203) | private static |
-| SiegePlayerSurvey | [`void Dispose()`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L214) | public |
-| Work | [`Work Subtract(Work current, Work previous)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L315) | public static |
-| Work | [`StageWork Difference(StageWork current, StageWork previous)`](../Assets/Scripts/Features/Research/Siege/SiegePlayerSurvey.cs#L337) | private static |
-
-## Assets/Scripts/Features/Research/Siege/SiegeStressPopulation.cs
-
-// 职责：在独立压力场景分帧恢复附加建筑，沿用生产建筑预算/支撑/损毁，不参与基地胜负。 // 入口：Start()；Inspector配置真实建筑蓝图与锚点，加载期间暂停HUD交互，场景退出释放拥有的建筑。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeStressPopulation | [`IEnumerator Start()`](../Assets/Scripts/Features/Research/Siege/SiegeStressPopulation.cs#L40) | private |
-| SiegeStressPopulation | [`void OnDestroy()`](../Assets/Scripts/Features/Research/Siege/SiegeStressPopulation.cs#L138) | private |
-| SiegeStressPopulation | [`void RestoreHud()`](../Assets/Scripts/Features/Research/Siege/SiegeStressPopulation.cs#L154) | private |
-
-## Assets/Scripts/Features/Research/WorldLab/BlueprintStructureCatalog.cs
-
-// 职责：保存建筑制作参考与WorldLab初始布局；运行时内容只从BuildingBlueprints按名称解析。
-
-数据/配置/接口定义，无方法体。
-
-## Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs
-
-// 职责：WorldLab 建筑库面板、只含网格的放置预览与输入；模板读取失败不影响世界。 // 入口：Update() / OnGUI()；B开关建筑模式，Q/T旋转，左键放置，Esc取消。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| BlueprintStructurePalette | [`void Start()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L37) | private |
-| BlueprintStructurePalette | [`void RefreshCatalog()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L42) | public |
-| BlueprintStructurePalette | [`void Update()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L56) | private |
-| BlueprintStructurePalette | [`void BeginPlacement()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L131) | public |
-| BlueprintStructurePalette | [`void AddPreviewMeshes(GameObject prefab, Vector3 localPosition, Quaternion localRotation, Vector3? size = null)`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L161) | private |
-| BlueprintStructurePalette | [`void Cancel()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L203) | public |
-| BlueprintStructurePalette | [`void OnDisable()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L218) | private |
-| BlueprintStructurePalette | [`void OnGUI()`](../Assets/Scripts/Features/Research/WorldLab/BlueprintStructurePalette.cs#L223) | private |
-
-## Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs
-
-// 职责：独立世界实验场的自由镜头、采掘/爆破/填补输入及性能读数。 // 入口：Update()读取Input System；不接管Main场景的玩家、蓝图与存档。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabController | [`void Awake()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L38) | private |
-| WorldLabController | [`void Start()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L47) | private |
-| WorldLabController | [`void OnEnable()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L52) | private |
-| WorldLabController | [`void OnDisable()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L65) | private |
-| WorldLabController | [`WorldLabSnapshot CaptureWorld()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L78) | public |
-| WorldLabController | [`void RestoreWorld(WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L97) | public |
-| WorldLabController | [`void ResetBuildings()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L113) | public |
-| WorldLabController | [`void Update()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L156) | private |
-| WorldLabController | [`void MoveView(Keyboard keyboard, Mouse mouse)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L249) | private |
-| WorldLabController | [`void ResetView()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L270) | private |
-| WorldLabController | [`void TransferEdits(bool save)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L281) | private |
-| WorldLabController | [`void OnGUI()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabController.cs#L321) | private |
-
-## Assets/Scripts/Features/Research/WorldLab/WorldLabDebrisProbe.cs
-
-// 职责：记录真实帧物理碎片下落，并在完成后重生成清理测试碎片。 // 入口：Begin()；2秒后比较真实位置，非手动Physics.Simulate。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabDebrisProbe | [`void Begin(VoxelStructureCollapse owner, ProceduralVoxelWorld source)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabDebrisProbe.cs#L13) | public |
-| WorldLabDebrisProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabDebrisProbe.cs#L21) | private |
-
-## Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs
-
-// 职责：独立WorldLab差量JSON的原子保存、上一份备份与有大小限制的读取。 // 入口：Save() / Load()；仅写调用者传入路径，不接触玩家载具蓝图和货仓。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabPersistence | [`void Save(string path, VoxelWorldEdits edits)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L10) | public static |
-| WorldLabPersistence | [`void SaveSnapshot(string path, WorldLabSnapshot snapshot)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L15) | public static |
-| WorldLabPersistence | [`void WriteJson(string path, string json)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L20) | private static |
-| WorldLabPersistence | [`VoxelWorldEdits Load(string path)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L57) | public static |
-| WorldLabPersistence | [`WorldLabSnapshot LoadSnapshot(string path, float legacyCellSize)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L68) | public static |
-| WorldLabPersistence | [`string ReadJson(string path)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPersistence.cs#L90) | private static |
-
-## Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs
-
-// 职责：实验场真实帧落体与体素地面接触探针，输出接触证据而不驱动Physics.Simulate。 // 入口：Begin()由WorldLabChecks调用；10秒超时失败，结束移除探针对象。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| WorldLabPhysicsProbe | [`void Begin(string path)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs#L11) | public |
-| WorldLabPhysicsProbe | [`void FixedUpdate()`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs#L17) | private |
-| WorldLabPhysicsProbe | [`void OnCollisionEnter(Collision collision)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs#L26) | private |
-| WorldLabPhysicsProbe | [`void Save(bool contact)`](../Assets/Scripts/Features/Research/WorldLab/WorldLabPhysicsProbe.cs#L34) | private |
-
 ## Assets/Scripts/Features/Salvage/Cargo/CargoHold.cs
 
 // 职责：管理货仓容量、内容增减、恢复和快照，不负责无人机导航。 // 入口：CanReceive() / Reserve() / ReleaseReservation()。
@@ -7120,16 +6667,6 @@ HY-Sandbox/
 | 类型 | 方法签名 | 可见性 |
 | --- | --- | --- |
 | SiegeSettings | [`SiegeMatch CreateMatch()`](../Assets/Scripts/Features/Siege/SiegeSettings.cs#L116) | public |
-
-## Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs
-
-// 职责：显式性能诊断时读取可用的引擎计时/GC计数，记录缺失和缓冲溢出，避免旧值冒充新帧。 // 入口：Read() / Dispose()；只读已完成样本并清空缓冲，跨帧发布延迟不保证与delta严格对齐。
-
-| 类型 | 方法签名 | 可见性 |
-| --- | --- | --- |
-| SiegeEngineCounters | [`Sample Read()`](../Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs#L60) | public |
-| SiegeEngineCounters | [`long ReadCounter(int index)`](../Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs#L81) | private |
-| SiegeEngineCounters | [`void Dispose()`](../Assets/Scripts/Features/Siege/Validation/SiegeEngineCounters.cs#L122) | public |
 
 ## Assets/Scripts/Features/Siege/Validation/SiegeGameplayPlayerChecks.cs
 

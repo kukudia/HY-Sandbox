@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 public static class SiegeCleanupAuthoring
 {
-    private const string Folder = "Assets/Siege/Cleanup";
+    private const string Folder = "Assets/Art/Siege/Cleanup";
     [MenuItem("HY-Sandbox/Siege/Install Interwave Salvage Sweep")]
     public static string Install()
     {
@@ -26,10 +26,6 @@ public static class SiegeCleanupAuthoring
         string[] paths =
         {
             "Assets/Scenes/SiegeGameplay.unity",
-            "Assets/Scenes/Research/Siege.unity",
-            "Assets/Scenes/SiegeStress.unity",
-            "Assets/Scenes/Research/SiegeMixedStress.unity",
-            "Assets/Scenes/Research/SiegeLargeStress.unity"
         };
         foreach (string path in paths)
         {
@@ -102,7 +98,7 @@ public static class SiegeCleanupAuthoring
             rect.anchoredPosition = new Vector2(0, -180);
             rect.sizeDelta = new Vector2(820, 68);
             Text text = textObject.GetComponent<Text>();
-            text.font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+            text.font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
             text.fontSize = 16;
             text.alignment = TextAnchor.MiddleCenter;
             text.color = new Color(.3f, 1f, .85f);

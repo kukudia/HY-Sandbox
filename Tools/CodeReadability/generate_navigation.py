@@ -308,13 +308,13 @@ def main():
         "特效集中配置与挂载生命周期",
         "源码推导：制作工具只创建效果编号挂载点，统一库持有模板引用。首次启用/设置参数生成一次内容；组合控制器聚合子挂载点，禁用清理并保留内容供复用，销毁随拥有者释放。替换库影响新实例，不做逐帧热更新。",
         {
-            "A": "BlockVfxBaker.Populate", "B": "VfxCatalogMigration.Run",
+            "A": "BlockVfxBaker.Populate",
             "C": "VfxEffect.OnEnable", "D": "VfxEffect.EnsureContent",
             "E": "BlockVfxLibrary.Resolve", "F": "VfxEffect.SetIntensity",
             "G": "VfxEffect.Clear", "H": "VfxEffect.OnDisable",
             "I": "VfxEffect.StopAndRelease", "J": "VfxEffect.ReleaseAfterPlayback",
         },
-        ['A -.->|保存挂载点后实例化| C', 'B -.->|迁移资产后实例化| C',
+        ['A -.->|保存挂载点后实例化| C',
          'C --> D', 'D --> E', 'C -->|自动播放| F', 'F --> D',
          'H --> G', 'I --> F', 'I --> J'],
     )
@@ -1142,7 +1142,7 @@ def main():
     )
     graph(
         "用户建筑库、自然出生和远景",
-        "源码推导：World和WorldLab通过SaveManager.GetBuildingBlueprintFiles共用建筑文件仓；每次会话只读取BuildingBlueprints中的有效JSON，不合并内置模板；目录为空不生成建筑，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。",
+        "源码推导：世界会话通过SaveManager.GetBuildingBlueprintFiles共用建筑文件仓；每次会话只读取BuildingBlueprints中的有效JSON，不合并内置模板；目录为空不生成建筑，单独报告坏文件并快照每套蓝图实际占地；落点按同一模板索引居中，半格支撑边距外6m接回自然坡面。进入时按载具覆盖范围最高地面加净空抬升。详细地形外分帧缓存无碰撞体素列，保持同样阶梯及草土材质，按列版本隐藏已加载列代理；默认12圈后衔接8m采样远景，空洞与外环原子切换，裙边遮缝、距离雾过渡背景。跨四列重采样，淘汰外环缓存并释放网格；退出恢复相机/雾并销毁自有网格。",
         {
             "A": "WorldSessionManager.PrepareWorld",
             "B": "BlueprintStructureLibrary.LoadRoutine",
@@ -1209,7 +1209,7 @@ def main():
     )
     graph(
         "体素快照与贪心网格",
-        "源码推导：仅主线程读取可变体素/稀疏修改及调用Unity Mesh和PhysX；一格halo消除跨块内部面。后台任务只拥有byte快照和独立结果，合并同方向同材质矩形并保留平铺UV。提交前检查列请求及数据版本，取消结果丢弃，实时编辑变化重新采样。每个列加载器仅一个在途任务；WorldLab和显式FlushDirty保留同步路径，LateUpdate同时受块数/毫秒预算限制。",
+        "源码推导：仅主线程读取可变体素/稀疏修改及调用Unity Mesh和PhysX；一格halo消除跨块内部面。后台任务只拥有byte快照和独立结果，合并同方向同材质矩形并保留平铺UV。提交前检查列请求及数据版本，取消结果丢弃，实时编辑变化重新采样。每个列加载器仅一个在途任务；有限地形和显式FlushDirty保留同步路径，LateUpdate同时受块数/毫秒预算限制。",
         {
             "A": "ProceduralVoxelWorld.LoadColumn",
             "B": "VoxelChunkSnapshot.Capture",
@@ -1298,79 +1298,6 @@ def main():
             "A -.->|装配单个标签组件，UnityGUI回调| D", "B -.->|活动注册| D", "C -.->|移除注册| D",
             "E --> F", "F -->|到达搜索间隔或已有目标失效| G", "G --> H",
             "B -.->|版本失效| H", "C -.->|版本失效| H", "I -.->|版本失效| H", "J -.->|快照失效| H",
-        ],
-    )
-    graph(
-        "WorldLab 程序化世界与破坏",
-        "源码推导：独立场景不初始化Main存档；固定种子和序列化单元是数据源。采掘/炮塔命中积累伤害，破坏只标记相邻受影响分块；LateUpdate按预算更新渲染和真实MeshCollider。装配建筑组件后F5/F9走下一图的完整快照；纯地形配置仍可保存旧差量。Inspector显式Bake保存网格资产。无无限流式加载。",
-        {
-            "A": "WorldLabAuthoring.CreateOrOpen",
-            "B": "ProceduralVoxelWorld.Generate",
-            "C": "VoxelWorldData.Generate",
-            "D": "VoxelWorldChunk.Rebuild",
-            "E": "VoxelSurfaceMesher.Build",
-            "F": "WorldLabAuthoring.BakeMeshes",
-            "G": "WorldLabController.Update",
-            "H": "ProceduralVoxelWorld.DamageSphere",
-            "I": "ProceduralVoxelWorld.SetCell",
-            "J": "ProceduralVoxelWorld.QueueCell",
-            "K": "ProceduralVoxelWorld.LateUpdate",
-            "L": "ProceduralVoxelWorld.FlushDirty",
-            "M": "TurretHitResolver.Apply",
-            "N": "VoxelWorldChunk.OnDestroy",
-            "O": "VoxelWorldChunk.ReleaseMesh",
-            "P": "WorldLabController.TransferEdits",
-            "Q": "WorldLabPersistence.Save",
-            "R": "WorldLabPersistence.Load",
-            "S": "ProceduralVoxelWorld.RestoreEdits",
-            "T": "VoxelWorldEdits.Restore",
-        },
-        [
-            "A --> B", "B --> C", "B --> D", "D --> E", "A --> F",
-            "G -->|采掘与爆破| H", "G -->|填补| I", "M -->|命中WorldChunk| H",
-            "H -->|达到材质硬度| I", "I --> J", "J -.->|排队，不立即烘焙碰撞| K",
-            "K --> L", "L -->|仅脏块，预算2块每帧| D", "N --> O",
-            "G -->|F5或F9| P", "P -->|无建筑组件时F5| Q", "P -->|无建筑组件时F9| R", "P -->|纯地形加载后| S",
-            "S -->|先校验独立数据| T", "S -.->|提交数据后排队全部分块| K",
-        ],
-    )
-    graph(
-        "WorldLab 建筑放置与快照",
-        "源码推导：BuildingBlueprints是建筑库唯一来源；Catalog仅保留制作参考和初始布局，布局按名称解析共用文件仓，缺失或无效跳过。预览只复制Mesh，B/Q/T/左键触发放置，所有实例使用底座局部坐标、独立身份和ControlUnit战斗注册。F5保存体素差量与当前建筑快照；F9校验资源、身份、耐久和地形后暂存禁用层级，成功才替换活动世界。快照恢复保留已放置实例，不用于生成新建筑。旧差量迁移为空建筑列表。",
-        {
-            "A": "WorldBuildingAuthoring.Install",
-            "B": "BlueprintStructurePalette.RefreshCatalog",
-            "C": "BlueprintStructurePalette.Update",
-            "D": "BlueprintStructurePalette.BeginPlacement",
-            "E": "BlueprintStructureRegistry.CanPlace",
-            "F": "BlueprintStructurePlacement.Check",
-            "G": "BlueprintStructureRegistry.Place",
-            "H": "BlueprintStructureRegistry.Stage",
-            "I": "BlueprintStructureRuntime.Initialize",
-            "J": "BlueprintStructureRuntime.Activate",
-            "K": "WorldLabController.TransferEdits",
-            "L": "WorldLabController.CaptureWorld",
-            "M": "BlueprintStructureRuntime.Capture",
-            "N": "WorldLabPersistence.SaveSnapshot",
-            "O": "WorldLabPersistence.LoadSnapshot",
-            "P": "WorldLabController.RestoreWorld",
-            "Q": "BlueprintStructureValidation.ValidateState",
-            "R": "VoxelWorldEdits.Restore",
-            "S": "ProceduralVoxelWorld.RestoreEdits",
-            "T": "BlueprintStructureRegistry.ReplaceStructures",
-            "U": "BlueprintStructureRegistry.RestoreBuilding",
-            "V": "SaveManager.GetBuildingBlueprintFiles",
-            "W": "BlueprintStructureLibrary.Load",
-            "X": "WorldLabController.ResetBuildings",
-        },
-        [
-            "A -.->|保存场景/目录供Start读取| B", "B --> V", "B --> W", "C -->|B键| D",
-            "C --> E", "E --> F", "C -->|有效预览左键| G", "G --> U", "U --> H",
-            "H --> I", "U -->|活动根下| J", "K -->|F5| L", "L --> M", "K -->|原子写盘| N",
-            "K -->|F9| O", "K -->|完整快照| P", "P --> R", "P -->|全部实例| Q",
-            "P -->|校验后暂存禁用层级，失败销毁暂存| H", "P -->|暂存全部成功| S",
-            "P --> T", "P -->|启用后恢复尺寸与耐久| J",
-            "X --> V", "X --> W", "X -->|仅存在且有效的同名文件| G",
         ],
     )
     graph(
@@ -1759,34 +1686,6 @@ def main():
         ],
     )
     graph(
-        "阵地战独立Player验证",
-        "源码推导：制作工具只构建Siege入口到独立验证目录，不改默认BuildSettings。Player仅显式命令行参数启动；受控smoke使用真实伤害刺激验证闭环，自然soak只执行整备维修和下一波，两者分开报告。LateUpdate记录帧间隔，每秒普查按刚体根组件分类并测量自身开销，保留有限慢帧及前一观察窗口的嵌套工作量；显式profile才启用计时并读取可用引擎已完成样本并保留线程覆盖限制，缺失或空样本不冒充零耗时；Development分析包与发布包独立，完成、异常或销毁释放记录器并恢复开关。",
-        {
-            "A": "SiegePlayerBuild.Build", "B": "SiegePlayerBuild.BuildNow",
-            "C": "SiegePlayerChecks.Initialize", "D": "SiegePlayerChecks.Update",
-            "E": "SiegePlayerChecks.Run", "F": "SiegePlayerChecks.LateUpdate",
-            "G": "SiegePlayerChecks.Finish", "H": "SiegeSession.TryRepair",
-            "I": "SiegeSession.BeginNextWave", "J": "SiegeSession.TryDeploy",
-            "K": "SiegePlayerChecks.CaptureError", "L": "SiegePlayerBuild.BuildStress",
-            "M": "SiegeStressAuthoring.Create", "N": "SiegePlayerBuild.Schedule",
-            "O": "SiegePlayerSurvey.Observe", "P": "SiegePlayerSurvey.Classify",
-            "Q": "SiegePlayerSurvey.Dispose", "R": "SiegePlayerChecks.OnDestroy",
-            "S": "SiegePlayerSurvey.TakeCensus", "T": "SiegePlayerSurvey.KeepSlowFrame",
-            "U": "SiegeEngineCounters.Read", "V": "SiegeEngineCounters.ReadCounter",
-            "W": "SiegeEngineCounters.Dispose", "X": "SiegePlayerBuild.BuildLargeProfiling",
-            "Y": "SiegeDrivingPlayerChecks.Run", "Z": "SiegeSession.TryTakeControl",
-        },
-        [
-            "A --> N", "L --> M", "L --> N", "N -.->|一次性Editor update| B", "C -.->|MonoBehaviour Update| D",
-            "D -->|推进显式迭代器| E", "E --> H", "E --> I", "E --> J",
-            "C -.->|真实帧 LateUpdate| F", "C -.->|日志事件| K",
-            "D -->|结束或异常| G", "F --> O", "O --> S", "S --> P",
-            "O --> T", "G --> Q", "R --> Q", "O --> U", "U --> V",
-            "Q --> W", "X --> N",
-            "E -.->|显式驾驶迭代器，finally恢复虚拟设备| Y", "Y -.->|真实HUD指针点击| Z",
-        ],
-    )
-    graph(
         "阵地战性能观察与分项计时",
         "源码推导：采样器仅在Siege真实Play显式启动；Editor update观察推进的游戏帧，保留跳帧及游戏delta。连接遍历、物理组重建和完整刷新是嵌套累计CPU计时，不可相加。每秒一次场景查询本身有分配；停止Play或脚本重载会保存已取得的样本并解绑，报告不代表Player/GPU性能。",
         {
@@ -1801,34 +1700,6 @@ def main():
             "A -.->|Editor update| B", "B --> C", "B --> F", "B -->|超时或停止| D",
             "J --> D", "I --> E", "I -->|经AssignBlocksToParentGroups| H", "H --> E",
             "H --> G", "G --> E", "K -->|隔离夹具重复同步调用| G",
-        ],
-    )
-    graph(
-        "阵地战压力资产制作",
-        "源码推导：首次创建独立压力Scene/配置，已有资产不覆盖；2048布局细分237块2m装甲并加一块受支撑顶层块，保留核心与炮塔，但独立耐久和损毁分量不同，不能作为等价战况。Editor API保存后恢复原活动场景；独立构建不改变全局构建列表，Player按配置核对完整模块数。",
-        {
-            "A": "SiegeStressAuthoring.Create", "B": "SiegeStressAuthoring.CreateLarge",
-            "C": "SiegeStressAuthoring.CreateProfile", "D": "SiegeStressAuthoring.GenerateLargeBlueprint",
-            "E": "BlueprintStructureValidation.ValidateBlueprint", "F": "SiegePlayerBuild.BuildLargeStress",
-            "G": "SiegePlayerBuild.Schedule", "H": "SiegePlayerBuild.BuildNow",
-        },
-        [
-            "A --> C", "B --> A", "B --> C", "C -->|首次创建大基地配置| D", "D --> E",
-            "F --> B", "F --> G", "G -.->|一次性Editor update| H",
-        ],
-    )
-    graph(
-        "阵地战混合规模压力场",
-        "源码推导：独立Scene包含三个可编辑建筑锚点，分帧沿生产恢复链加载6144附加模块，与主基地合计8192建筑预算；六舰和十二敌舰另计，是否超过万模块以实际普查为准，不代表万动态刚体。加载时暂停HUD，成功/失败/销毁恢复交互；主基地核心仍是唯一失败目标。",
-        {
-            "A": "SiegeMixedStressAuthoring.Create", "B": "SiegePlayerBuild.BuildMixedStress",
-            "C": "SiegeStressPopulation.Start", "D": "BlueprintStructureRegistry.RestoreBuildingRoutine",
-            "E": "BlueprintStructureRegistry.HasCapacity", "F": "SiegeStressPopulation.RestoreHud",
-            "G": "SiegeStressPopulation.OnDestroy", "H": "BlueprintStructureRegistry.RemoveBuilding",
-        },
-        [
-            "B --> A", "C --> E", "C -.->|显式推进分帧迭代器| D",
-            "C -->|finally| F", "G --> F", "G -->|仅拥有的卫星| H",
         ],
     )
     graph(

@@ -1,22 +1,20 @@
 // 职责：建立原生 VFX Graph 资源库并配置效果参数。
-// 入口：Destination() / GraphPath() / RebuildPositionSafeEffects()。
+// 入口：GraphPath() / RebuildPositionSafeEffects()。
 // 环境：仅 Unity Editor；资产写入/运行验证以具体菜单入口为准。
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.VFX;
 using Object = UnityEngine.Object;
 
-/// <summary>Copies native UNI graphs and authors small utility graphs through Unity's graph model.</summary>
+/// <summary>Maintains the curated native and utility graphs in Art.</summary>
 public static class NativeVfxLibraryBuilder
 {
     public const string Root = "Assets/Art/VFX";
-    private const string Vendor = "Assets/UNI VFX/";
-    private const string Pack = Vendor + "Realistic Explosions, Fire & Smoke/";
+    private const string NativeGraphs = Root + "/UNI/Realistic Explosions, Fire & Smoke/Visual Effects/";
     public static readonly string[] NativeNames =
     {
         "UNI_Aerial_Explosion",
@@ -27,13 +25,7 @@ public static class NativeVfxLibraryBuilder
         "UNI_Gas_Fire",
         "UNI_Steam_Leak"
     };
-    public static string Destination(string source)
-    {
-        string path = Root + "/UNI/" + source.Substring(Vendor.Length);
-        return path.EndsWith(".tga", StringComparison.OrdinalIgnoreCase) ? Path.ChangeExtension(path, ".png").Replace('\\', '/') : path;
-    }
-
-    public static string GraphPath(string name) => NativeNames.Contains(name) ? Destination(Pack + "Visual Effects/" + name + ".vfx") : Root + "/Graphs/" + name + ".vfx";
+    public static string GraphPath(string name) => NativeNames.Contains(name) ? NativeGraphs + name + ".vfx" : Root + "/Graphs/" + name + ".vfx";
     public static string ThrusterGraphPath => GraphPath("UNI_Gas_Fire_Thruster");
 
     [MenuItem("Tools/HY Sandbox/VFX Graph/6 Rebuild Position-Safe Effects")]
@@ -153,125 +145,6 @@ public static class NativeVfxLibraryBuilder
         }
     }
 
-    [MenuItem("Tools/HY Sandbox/VFX Graph/1 Prepare UNI Dependency Manifest")]
-    public static void PrepareSources()
-    {
-        BlockArtDependencies.EnsureFolder(Root);
-        string shader = Vendor + "Common/Shaders/UNI-Masked.shadergraph";
-        AssetDatabase.ImportAsset(shader, ImportAssetOptions.ForceUpdate);
-        string[] graphs = NativeNames.Select(n => Pack + "Visual Effects/" + n + ".vfx").ToArray();
-        foreach (string path in graphs)
-        {
-            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
-        }
-
-        string[] sources = AssetDatabase.GetDependencies(graphs.Append(shader).ToArray(), true).Where(p => p.StartsWith(Vendor)).Append(shader).Distinct().OrderBy(p => p).ToArray();
-        File.WriteAllText(
-            Root + "/Sources.json",
-            Newtonsoft.Json.JsonConvert.SerializeObject(
-                sources.Select(p => new { source = p, destination = Destination(p), sourceSha256 = Hash(p) }),
-                Newtonsoft.Json.Formatting.Indented));
-    }
-
-    [MenuItem("Tools/HY Sandbox/VFX Graph/2 Import Native Graphs")]
-    public static void ImportSources()
-    {
-        AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-        var records = Newtonsoft.Json.Linq.JArray.Parse(File.ReadAllText(Root + "/Sources.json"));
-        var paths = records.ToDictionary(r => (string)r["source"], r => (string)r["destination"]);
-        foreach (var pair in paths.OrderBy(p => p.Key.EndsWith(".vfx") ? 1 : 0))
-        {
-            BlockArtDependencies.EnsureFolder(Path.GetDirectoryName(pair.Value).Replace('\\', '/'));
-            if (!File.Exists(pair.Value))
-            {
-                if (pair.Key.EndsWith(".tga"))
-                {
-                    throw new FileNotFoundException("Run ArtSource/VfxGraph/prepare_textures.py first", pair.Value);
-                }
-
-                if (!AssetDatabase.CopyAsset(pair.Key, pair.Value))
-                {
-                    throw new IOException(pair.Key);
-                }
-            }
-
-            AssetDatabase.ImportAsset(pair.Value, ImportAssetOptions.ForceSynchronousImport);
-            if (AssetImporter.GetAtPath(pair.Key) is TextureImporter original && AssetImporter.GetAtPath(pair.Value) is TextureImporter copy)
-            {
-                var settings = new TextureImporterSettings();
-                original.ReadTextureSettings(settings);
-                copy.SetTextureSettings(settings);
-                copy.SetPlatformTextureSettings(original.GetDefaultPlatformTextureSettings());
-                copy.SaveAndReimport();
-            }
-        }
-
-        var guids = paths.ToDictionary(p => AssetDatabase.AssetPathToGUID(p.Key), p => AssetDatabase.AssetPathToGUID(p.Value));
-        var objects = new Dictionary<Object, Object>();
-        foreach (var pair in paths)
-        {
-            Object[] copies = AssetDatabase.LoadAllAssetsAtPath(pair.Value);
-            foreach (Object original in AssetDatabase.LoadAllAssetsAtPath(pair.Key).Where(o => o != null))
-            {
-                AssetDatabase.TryGetGUIDAndLocalFileIdentifier(original, out string unused, out long id);
-                Object copy = copies.FirstOrDefault(o =>
-                {
-                    AssetDatabase.TryGetGUIDAndLocalFileIdentifier(o, out string guid, out long localId);
-                    return localId == id && o.GetType() == original.GetType();
-                });
-                if (copy != null)
-                {
-                    objects[original] = copy;
-                }
-            }
-        }
-
-        foreach (var pair in paths.Where(p => p.Key.EndsWith(".vfx")))
-        {
-            VfxGraphAuthoring.Graph(pair.Value);
-            foreach (Object content in VfxGraphAuthoring.Contents(pair.Value).Where(o => o != null))
-            {
-                using (var data = new SerializedObject(content))
-                {
-                    var property = data.GetIterator();
-                    while (property.Next(true))
-                    {
-                        if (property.propertyType == SerializedPropertyType.ObjectReference && property.objectReferenceValue != null && objects.TryGetValue(property.objectReferenceValue, out Object replacement))
-                        {
-                            property.objectReferenceValue = replacement;
-                        }
-
-                        if (property.propertyType == SerializedPropertyType.String)
-                        {
-                            string value = property.stringValue;
-                            foreach (var guid in guids)
-                            {
-                                value = value.Replace(guid.Key, guid.Value);
-                            }
-
-                            property.stringValue = value;
-                        }
-                    }
-
-                    data.ApplyModifiedPropertiesWithoutUndo();
-                }
-            }
-
-            VfxGraphAuthoring.Save(pair.Value);
-            // A final output alpha multiplier leaves UNI's simulation and authored gradients intact at 1.
-            VfxGraphAuthoring.AddIntensity(pair.Value);
-        }
-
-        foreach (var record in records)
-        {
-            record["destinationSha256"] = Hash((string)record["destination"]);
-            record["guid"] = AssetDatabase.AssetPathToGUID((string)record["destination"]);
-        }
-
-        File.WriteAllText(Root + "/Sources.json", records.ToString());
-        AssetDatabase.SaveAssets();
-    }
-
     [MenuItem("Tools/HY Sandbox/VFX Graph/3 Create Utility Graphs")]
     public static void CreateUtilityGraphs()
     {
@@ -369,20 +242,12 @@ public static class NativeVfxLibraryBuilder
         VfxGraphAuthoring.Value(
             output,
             "mainTexture",
-            beam ? Texture2D.whiteTexture : AssetDatabase.LoadAssetAtPath<Texture2D>(Destination(Vendor + "Common/Textures/uni_glow.png")));
+            beam ? Texture2D.whiteTexture : AssetDatabase.LoadAssetAtPath<Texture2D>(Root + "/UNI/Common/Textures/uni_glow.png"));
         object color = VfxGraphAuthoring.Attribute(output, "color", new Vector3(0.25f, 2f, 3f));
         VfxGraphAuthoring.Link(
             VfxGraphAuthoring.Parameter(graph, "Tint", new Vector3(0.25f, 2f, 3f)),
             VfxGraphAuthoring.Items(color, "inputSlots")[0]);
         VfxGraphAuthoring.Save(path);
         VfxGraphAuthoring.AddIntensity(path);
-    }
-
-    private static string Hash(string path)
-    {
-        using (var sha = SHA256.Create())
-        {
-            return BitConverter.ToString(sha.ComputeHash(File.ReadAllBytes(path))).Replace("-", "").ToLowerInvariant();
-        }
     }
 }

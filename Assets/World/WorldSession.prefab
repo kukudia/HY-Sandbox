@@ -186,7 +186,6 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::BlueprintStructureRegistry
   world: {fileID: 8209032205409739865}
-  catalog: {fileID: 11400000, guid: 1129955a528af3d4790209f6c09d2d93, type: 2}
   initializeOnStart: 0
   minimumSupportRatio: 0.5
   collapseUnsupported: 1

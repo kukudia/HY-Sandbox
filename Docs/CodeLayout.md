@@ -23,7 +23,6 @@
 | Siege | SiegeSession、SiegeMatch、SiegeSettings、SiegeProgress | Battle；Fleet；Gameplay（新版基地战）；Interface；Workshop；Validation |
 | Simulation | PlayManager、Block | Connections；Groups；Units；Modes（副场景选择与原稿）；Physics；Presentation；Diagnostics |
 | World | WorldSessionManager、WorldGenerationSettings | Terrain；Outposts；Streaming；Presentation；Validation |
-| Research | 由场景手动开启 | WorldLab（实验布局、快照、建造面板）；Siege（压力人口与独立 Player 探针） |
 
 ## World 的递归结构
 

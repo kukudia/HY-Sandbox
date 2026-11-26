@@ -49,12 +49,6 @@ public static class CombatHudPlayProbe
         Begin("exploration", "Assets/Scenes/Build.unity");
     }
 
-    [MenuItem("Tools/HY-Sandbox/Combat/Validate shared HUD in legacy Siege")]
-    public static void RunLegacy()
-    {
-        Begin("legacy", "Assets/Scenes/Research/Siege.unity");
-    }
-
     public static void RunFlow()
     {
         Begin("flow", "Assets/Scenes/Build.unity");
@@ -93,7 +87,7 @@ public static class CombatHudPlayProbe
             checks.Clear();
             error = null;
             Status = "running " + mode;
-            scenario = mode == "arena" ? Arena() : mode == "exploration" ? Exploration() : mode == "legacy" ? Legacy() : mode == "flow" ? Flow() : mode == "recovery" ? Recovery() : Siege();
+            scenario = mode == "arena" ? Arena() : mode == "exploration" ? Exploration() : mode == "flow" ? Flow() : mode == "recovery" ? Recovery() : Siege();
             deadline = EditorApplication.timeSinceStartup + 180;
             nextStep = 0;
             EditorApplication.update += Tick;
@@ -304,41 +298,6 @@ public static class CombatHudPlayProbe
         {
             yield return .1f;
         }
-    }
-
-    private static IEnumerator Legacy()
-    {
-        SiegeSession session = Object.FindAnyObjectByType<SiegeSession>();
-        while (session.Match == null)
-        {
-            yield return .1f;
-        }
-
-        CombatHud hud = MainUIPanels.instance.CombatHud;
-        Check("Legacy Siege starts real wave", session.BeginNextWave());
-        while (!hud.Candidates.Any(unit => unit.faction == UnitFaction.Enemy))
-        {
-            yield return .1f;
-        }
-
-        Check("Legacy Siege has one shared HUD", Object.FindObjectsByType<CombatHud>().Length == 1);
-        Check("Legacy HUD binds its battlefield", hud.Battlefield == session.gameObject.scene);
-        Time.timeScale = 0f;
-        Durability victim = hud.Candidates.First(unit => unit.faction == UnitFaction.Enemy).cockpit.GetComponent<Durability>();
-        int kills = session.Match.DefeatedAttackers;
-        int messages = hud.Notifications.TotalMessages;
-        victim.ApplyDamage(999999, null);
-        victim.ApplyDamage(999999, null);
-        yield return .4f;
-        Check("Legacy repeated lethal damage settles once", session.Match.DefeatedAttackers == kills + 1);
-        Check(
-            "Legacy rule settlement produces one shared notice",
-            hud.Notifications.TotalMessages == messages + 1);
-        hud.Panels.ToggleDebug();
-        yield return .2f;
-        Check("Legacy debug drawer opens", hud.Panels.IsOpen);
-        Screenshot("Legacy-tools");
-        Time.timeScale = 1f;
     }
 
     private static IEnumerator Flow()

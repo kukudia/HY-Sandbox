@@ -23,11 +23,7 @@ public static class SiegeFlightAuthoring
         int changed = 0;
         foreach (string path in new[]
         {
-            "Assets/Scenes/Research/Siege.unity",
             "Assets/Scenes/SiegeGameplay.unity",
-            "Assets/Scenes/SiegeStress.unity",
-            "Assets/Scenes/Research/SiegeMixedStress.unity",
-            "Assets/Scenes/Research/SiegeLargeStress.unity"
         }
 
         )

@@ -49,7 +49,7 @@ public static class BuildPaletteBaker
         var ui = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<MainUIButtons>(true)).Single();
         RectTransform root = (RectTransform)ui.transform.Find("BuildPanel/ButtonContent");
         var palette = root.GetComponent<BuildPalette>() ?? root.gameObject.AddComponent<BuildPalette>();
-        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
         var prefabs = Resources.LoadAll<GameObject>("Blocks").Where(p => p.GetComponent<Block>() != null && p.name != "Connector").OrderBy(p => Category(p.name)).ThenBy(p => p.name).ToArray();
         foreach (GameObject prefab in prefabs)
         {
@@ -245,7 +245,7 @@ public static class BuildPaletteBaker
         var ui = scene.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<MainUIButtons>(true)).Single();
         RectTransform root = (RectTransform)ui.transform.Find("BuildPanel/ButtonContent");
         BuildPalette palette = root.GetComponent<BuildPalette>();
-        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
         Text name = root.Find("HoveredBlockName").GetComponent<Text>();
         Set(palette, "_hoveredName", name);
         Text info = root.Find("HoveredBlockInfo")?.GetComponent<Text>() ?? Label(root, "HoveredBlockInfo", font, 15);

@@ -32,7 +32,7 @@ public static class OutpostHudAuthoring
             rect.anchoredPosition = new Vector2(0f, -82f);
             rect.sizeDelta = new Vector2(520f, 52f);
             Text label = root.AddComponent<Text>();
-            label.font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+            label.font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
             label.fontSize = 18;
             label.color = new Color(1f, 0.75f, 0.4f);
             label.alignment = TextAnchor.UpperCenter;

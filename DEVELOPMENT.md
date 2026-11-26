@@ -19,7 +19,7 @@
 本轮验收补充：隔离 Siege 伤害门控后重跑炮塔检查 32 项全部通过；直接在 Siege 部署阶段运行时，3 项伤害断言会被战斗阶段门控拒绝，不能作为 Fire 回归证据。
 炮塔追踪复用上次命中的碰撞体，冷却结束且炮口对准后才确认遮挡，实际发射成功才开始冷却。建筑、基地与飞船共用 BlueprintAssemblyBuilder、BatchConnectionBuilder 和 RuntimeGroupBuilder，建筑单独负责地基、逐块耐久和流式生命周期。
 
-Siege、SiegeLargeStress、SiegeMixedStress 和 WorldLab 归入 Assets/Scenes/Research，默认构建不包含这些场景。实验场布局、保存和探针归入 Features/Research。SiegeGameplay 与 Exploration 仍从正式入口加载。
+旧 Siege、压测场景和 WorldLab 已从项目中移出并归档。正式入口加载 SiegeGameplay 与 Exploration。EnemyAvoidanceLab 和 Random5v5Arena 保留为调试场景。项目使用的字体、材质、地形网格和特效集中在 Assets/Art，PolygonSciFiSpace 保留完整资源包。
 
 建筑失撑直接将已准备的 BFS 分组交给飞船断裂使用的刚体重组器。敌舰索敌、避障、重规划、预测及推进输入按 HY.Enemy 子标记采样。
 
@@ -49,7 +49,7 @@ Siege：战斗双击接管，Tab 或按住 Alt 点击 FREE VIEW 返回观察；R
 
 ## 方块结构损毁与重组（2026-11-19）
 
-飞船、建筑、基地和独立 WorldLab 共用 `DestroyManager.DestroyTarget` → `ExplosionPropagation.DisconnectBlocksInExplosionRange` → `RuntimeGroupBuilder.RefreshUnit`。爆炸源的概率按源单位及同场景建筑/基地、半径内的候选块各判定一次；命中断开该块全部连接，不扣邻块耐久。重组完成后对附近刚体施加冲量，体素伤害仍由 explosionDamage 控制。
+飞船、建筑和基地 共用 `DestroyManager.DestroyTarget` → `ExplosionPropagation.DisconnectBlocksInExplosionRange` → `RuntimeGroupBuilder.RefreshUnit`。爆炸源的概率按源单位及同场景建筑/基地、半径内的候选块各判定一次；命中断开该块全部连接，不扣邻块耐久。重组完成后对附近刚体施加冲量，体素伤害仍由 explosionDamage 控制。
 
 地基通过 `IBlockFoundation` 提供共享锚点：接地的多个分量保留在同一主体，其余分量取得独立刚体并继续参与损毁。建筑只消费销毁事件、更新存档成员和跟踪残骸寿命。新增无地基结构只需使用 Block 和 ControlUnit，不需要新增销毁或重组分支。验证记录见 [风险登记 R34](Docs/ProjectRiskRegister.md)。
 
@@ -142,7 +142,7 @@ Main底部真实uGUI快捷栏提供8槽：1–8或点击选择，Shift+1–8记�
 
 ## 统一爆炸伤害（2026-11-16）
 
-舰船与建筑爆炸统一由 `DestroyManager` / `ExplosionDamageSession` 排队结算：同 PhysicsScene 的模块按中心距离受一次径向伤害，体素地形同步受损；连锁结束后各建筑一次支撑刷新、各舰船一次重组，随后施加原有有限冲量。独立 WorldLab 使用同一会话实现。保留友伤、攻击者归因、碰撞保护与残骸生命周期，不添加遮挡规则。
+舰船与建筑爆炸统一由 `DestroyManager` / `ExplosionDamageSession` 排队结算：同 PhysicsScene 的模块按中心距离受一次径向伤害，体素地形同步受损；连锁结束后各建筑一次支撑刷新、各舰船一次重组，随后施加原有有限冲量。保留友伤、攻击者归因、碰撞保护与残骸生命周期，不添加遮挡规则。
 
 `Block.explosionDamage` / CSV 爆炸伤害与 `explosionForce` 分开。此次制作迁移按原冲量×0.1且上限100设置50/80/100的初始伤害；这是有意的暂定平衡，原建筑直接使用500/800冲量作为伤害的行为已改变。跨对象14项、建筑18项、物理33项、CSV Play4项和Edit17项通过；实际多舰平衡与视觉仍待验证。详见 [验证记录](Docs/Validation/2026-11-16-shared-explosions.md)。
 
@@ -250,7 +250,7 @@ BuildingFoundationData的offsetX/offsetZ缺省0兼容旧坐标。相关入口：
 
 敌舰从岛内周边空中入口生成；超过坠落/远离界限后释放波次登记，不虚构击杀奖励。友舰复用Scrap退场，基地核心坠落触发失败。岛外没有隐藏接盘地板，正常飞行可越过岛缘，保留200m空中恢复缓冲。
 
-制作：`SiegeIslandAuthoring.Install()`迁移五个场景并保存备份；**Preview Island For Current Base**按当前配置生成预览；**Bake Current Island Preview**保存真实Scene、体素数据与网格资产，重复烘焙保留Mesh GUID。正式SiegeGameplay已烘焙72个分块以便编辑查看；运行部署会按本次基地重新生成。新旧地形均经 `ProceduralVoxelWorld.RebuildFinite` 重建；WorldLab生成/差量存档流程保留。证据见[浮空岛验证](Docs/Validation/2026-11-16-siege-island.md)。
+制作：`SiegeIslandAuthoring.Install()`配置正式 SiegeGameplay 并保存备份；**Preview Island For Current Base**按当前配置生成预览；**Bake Current Island Preview**保存真实Scene、体素数据与网格资产，重复烘焙保留Mesh GUID。正式SiegeGameplay已烘焙72个分块以便编辑查看；运行部署会按本次基地重新生成。正式地形使用 `ProceduralVoxelWorld.RebuildFinite` 重建。证据见[浮空岛验证](Docs/Validation/2026-11-16-siege-island.md)。
 
 ## 可编辑机库与舰队返航
 
@@ -352,7 +352,7 @@ Unity 菜单 **Tools → HY Sandbox → 资源管理 → 特效与音频** 打�
 
 “运行时播放库”直接编辑既有 `Resources/VFX/BlockVfxLibrary.asset`。一次性效果以及 HoverJet、ThrusterJet、BotFlight、RepairContact、EnergyTrail、LootBurst 和保留外观变体全部集中配置。29 个项目 Prefab 的 54 个挂载点只保留效果编号、位置、朝向、缩放和自动播放标记；3 个组合控制器只引用子挂载点。`VfxEffect.EnsureContent` 在 Play 首次使用时从库实例化模板，保留对象生命周期。替换库中 Prefab 后，新实例使用新效果；已有实例需重新生成或重新进入 Play。
 
-迁移保留原组件 fileID、Prefab GUID 和全部外观参数；两种特殊外观另存到 `Assets/Art/BlockVisuals/VFX/Variants`。`VfxCatalogMigration.Run` 可重复执行；`BlockArtIntegrator` / `BlockVfxBaker.Populate` 后续制作只建立编号挂载点，`PopulateTemplate` 只制作库模板。`BakeMissing` 不覆盖已有非空库选择。第三方原包未迁移，项目已使用的 Art/Resources 特效全部纳入。验证见 [集中引用迁移](Docs/Validation/2026-11-06-vfx-catalog.md)。
+迁移保留原组件 fileID、Prefab GUID 和全部外观参数；两种特殊外观另存到 `Assets/Art/BlockVisuals/VFX/Variants`。一次性集中迁移工具已移除。`BlockArtIntegrator` / `BlockVfxBaker.Populate` 后续制作只建立编号挂载点，`PopulateTemplate` 只制作库模板。`BakeMissing` 不覆盖已有非空库选择。正式特效使用已整理到 Art 的资源。验证见 [集中引用迁移](Docs/Validation/2026-11-06-vfx-catalog.md)。
 
 特效与音频两页共用 `PresentationAssetIndex` 的 GUID 索引、搜索与直接引用查询，项目变更后刷新、窗口关闭释放内嵌 Inspector。音频已支持 AudioClip 浏览及 Unity 原生预览，后续音频播放策略可独立接入，不将 GPU 特效生命周期套用到音频。直接引用不包含字符串动态加载；依赖资源也可能服务于其他功能，编辑会影响其所有使用者。
 

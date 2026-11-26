@@ -86,7 +86,7 @@ public static class BuildHotbarAuthoring
         Image background = Component<Image>(root);
         background.color = new Color(.015f, .035f, .055f, .94f);
         BuildHotbar bar = Component<BuildHotbar>(root);
-        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+        Font font = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
         Text details = Text(root, "Details", font, 13);
         Place((RectTransform)details.transform, new Vector2(8, 110), new Vector2(744, 20));
         details.alignment = TextAnchor.MiddleLeft;

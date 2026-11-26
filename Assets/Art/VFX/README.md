@@ -16,7 +16,7 @@ Unity 6000.6.8f1 / URP 与 VFX Graph 17.6.0，1 Unity 单位 = 1 米。目标为
 
 原生 Steam Leak 同时保存在素材库，可用于手动替换漏气效果。维修、建造、拾取与能量光束使用项目补充 Graph；这些效果没有匹配的 UNI 火烟素材。
 
-- Prefab、Graph、贴图、运动向量、Shader Graph、网格全部位于可跟踪的 Assets/Art。原包保持不动，来源/许可证沿用用户本地 UNI VFX 包条款，Sources.json 记录源路径、源哈希、目标路径、GUID 与目标哈希。
+- Prefab、Graph、贴图、运动向量、Shader Graph、网格全部位于可跟踪的 Assets/Art。原包已移出项目，来源/许可证沿用 UNI VFX 包条款，Sources.json 记录源路径、源哈希、目标路径、GUID 与目标哈希。
 - TGA 无损转为 PNG，保留原始分辨率和像素，并复制 Unity 纹理导入设置。ArtSource/VfxGraph/prepare_textures.py 可复现转换。
 - VfxEffect 的 Graphs 数组、回收延时、自动播放开关均可在 Inspector 编辑。连续效果通过 Intensity 调透明度，避免低推力发射断续；Stop 保留最后透明度以自然消散，Clear 显式清空 GPU 模拟。
 - UNI Gas Fire 原生喷射轴为 -X，Prefab 子节点旋转至挂点 +Z；推进器变体保留三套火焰系统，删除完整烟雾系统，模拟统一为 Local。ScaleWSP 随实例实际缩放。修改喷口位置请编辑 Block Prefab 的 Nozzle 挂点。
@@ -29,17 +29,14 @@ Unity 6000.6.8f1 / URP 与 VFX Graph 17.6.0，1 Unity 单位 = 1 米。目标为
 
 Tools/HY Sandbox/VFX Graph：
 
-1. Prepare UNI Dependency Manifest：收集原生图与完整依赖。
-2. 运行 `python ArtSource/VfxGraph/prepare_textures.py`，然后 Import Native Graphs。
-3. Create Utility Graphs：补齐能量图；已有参数化图不覆盖。
-4. Migrate Project Prefabs：只迁移仍含旧粒子的项目 Prefab，通过 Editor API 保存和绑定。
-5. Capture Lifecycle Suite：在实际 Play Mode 和自动相机渲染中采样，结束恢复原场景。
-6. Rebuild Position-Safe Effects：生成并检查无烟推进器变体，调整 Device Fire/Steam Leak 模拟空间，重绑项目 Prefab。
-7. `NativeVfxPlaybackProbe.RunBlockTest(prefab, output)`：在实际 Play Mode 中隔离拍摄 Block 的连续喷焰，停机、清空后恢复原场景。
+1. Create Utility Graphs：补齐能量图；已有参数化图不覆盖。
+2. Capture Lifecycle Suite：在实际 Play Mode 和自动相机渲染中采样，结束恢复原场景。
+3. Rebuild Position-Safe Effects：生成并检查无烟推进器变体，调整 Device Fire/Steam Leak 模拟空间，重绑项目 Prefab。
+4. `NativeVfxPlaybackProbe.RunBlockTest(prefab, output)`：在实际 Play Mode 中隔离拍摄 Block 的连续喷焰，停机、清空后恢复原场景。
 
 资源管理菜单下的“制作战斗特效”补齐 DebrisSmoke、LaserBeam 和 ProjectileTracer 及其集中引用；已有非空选择和 Graph 不覆盖。规格、源制作脚本和参数说明见 `ArtSource/VfxGraph/CombatVfx.md`。
 
-VfxGraphAuthoring 是 Unity 6000.6 内部编辑器 API 的隔离桥接；运行时没有反射，也不依赖此工具。重新导入会重映射图依赖；手动改图后应先提交再执行来源重建。
+VfxGraphAuthoring 是 Unity 6000.6 内部编辑器 API 的隔离桥接；运行时没有反射，也不依赖此工具。可直接在 Art 内编辑现有 Graph。
 
 ## 验证说明
 

@@ -69,7 +69,6 @@ public static class SharedCombatHudAuthoring
         string[] paths =
         {
             "Assets/Scenes/Build.unity",
-            "Assets/Scenes/Research/Siege.unity",
             "Assets/Scenes/Random5v5Arena.unity",
             "Assets/Scenes/SiegeGameplay.unity"
         };
@@ -218,7 +217,7 @@ public static class SharedCombatHudAuthoring
         font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(Folder + "/ChakraPetch SDF.asset");
         if (font == null)
         {
-            Font source = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fonts/ChakraPetch-Medium.ttf");
+            Font source = AssetDatabase.LoadAssetAtPath<Font>("Assets/Art/Fonts/ChakraPetch-Medium.ttf");
             font = TMP_FontAsset.CreateFontAsset(
                 source,
                 48,
